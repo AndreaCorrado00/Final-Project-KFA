@@ -14,8 +14,8 @@
 //   }
 // }
 
-import 'package:application_wearable/loginpage.dart';
-import 'package:application_wearable/signup.dart';
+import 'package:application_wearable/LoginPage.dart';
+import 'package:application_wearable/SignUp.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 

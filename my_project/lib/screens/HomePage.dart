@@ -13,6 +13,9 @@ import 'package:animated_digit/animated_digit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:my_project/utils/constants.dart';
+
+//test
+
 // ------------- Everything must be readed before creating the homepage
 
 // Using DateTime to read the date and handling the daily advice
@@ -389,12 +392,12 @@ class HomePage extends State<HomePageState> {
                 print('still in the homepage ');
               }
 
-            //break;
+              break;
             case 1:
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => const TipsPage()));
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const TipsPage()));
 
-            //break;
+              break;
             case 2:
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => const StatisticsPage()));
@@ -477,4 +480,4 @@ class HomePage extends State<HomePageState> {
         MaterialPageRoute(builder: (context) => const LoginPage()));
   }
 } //HomePage
-// test home page 
+// test home page

@@ -14,9 +14,8 @@
 //   }
 // }
 
-
-import 'package:my_project/screens/Loginpage.dart';
-import 'package:my_project/screens/signup.dart';
+import 'package:my_project/screens/LoginPage.dart';
+import 'package:my_project/screens/SignUp.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
@@ -97,7 +96,6 @@ class _loginState extends State<login> {
                   ),
                 ],
               ),
-
               MaterialButton(
                 minWidth: double.infinity,
                 height: 60,

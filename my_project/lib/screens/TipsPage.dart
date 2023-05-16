@@ -1,13 +1,27 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:my_project/screens/HomePage.dart';
 import 'package:my_project/screens/StatisticsPage.dart';
-import 'package:http/http.dart' as http;
-import 'package:my_project/utils/impact.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_project/utils/constants.dart';
+import 'package:my_project/Database/Advice_Database.dart';
+
+
+// Using DateTime to read the date and handling the daily advice
+DateTime _now = DateTime.now();
+String formattedDate = DateFormat.d().format(_now);
+int today = int.parse(formattedDate);
+int today_index = today % 17;
+final Uri _url = Uri.parse(Advices[today_index]['url']);
+
+// A possible idea: 
+// Using a random number generator, choosing averyday a new number (the generation is made if the day is changed). A shered preferences variable is created ad hoc to remeber the day
+// Then, what we advice for the day is choosen into a database created similary to the Advice_Database. Once you have the random number, you can scale it with the 
+// number of elements of the database (possibly, this coud be a variable into the DB) and select the random element for today.
+// Probably, using a map will be the best solution to implement the DB.
+// I image something like 30 possibilities of choosing for each element advised 
 
 class TipsPage extends StatefulWidget {
   const TipsPage({super.key});
@@ -16,8 +30,9 @@ class TipsPage extends StatefulWidget {
   TipsPageState createState() => TipsPageState();
 }
 
+
 class TipsPageState extends State<TipsPage> {
- //-------------- Index used trought the code to build widgets
+  //-------------- Index used trought the code to build widgets
   int _selectedIndex = 1;
   static const routename = 'TipsPage';
   @override
@@ -29,41 +44,96 @@ class TipsPageState extends State<TipsPage> {
         title: Text('Advice and Tips'),
         //automaticallyImplyLeading: true,
       ),
-
       backgroundColor: Constants.primaryLightColor,
-      body:
-      Center(
-        
-        child: Column(
-        children:[ TextButton (
-          
-          onPressed: () async{
-            final resoult = await _pingImpact();
-            if (resoult == true){print('Request Succesfull'); }
-            
-          },
-          child: Text('ping Impact'), style: Constants.TextButtonStyle_Alert),
-          TextButton (
-          
-          onPressed: () async{
-            final resoult = await _getAndStoreTokens();
-            if (resoult == 200){print('Stored');}
-            else {print('No way ');} 
-          },
-          child: Text('get and store tokens'), style: Constants.TextButtonStyle_Alert),
+      body: ListView(
+        padding: EdgeInsets.all(30),
+        children: [
+          ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                height: 200,
+                color: Constants.thirdColor,
+                child:Row(children:const [
+                  Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Advice of the day',
+                      style: TextStyle(
+                          color: Constants.secondaryColor,
+                          fontSize: 20,
+                          fontFamily: Constants.myfontFamily,
+                          fontWeight: FontWeight.bold),)],)],
+                      
+                )
+                ),),
+                
+          SizedBox(height: 25),
+          ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                height: 200,
+                color: Constants.thirdColor,
+                child:Row(children:const [
+                  Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Recipe of the day',
+                      style: TextStyle(
+                          color: Constants.secondaryColor,
+                          fontSize: 20,
+                          fontFamily: Constants.myfontFamily,
+                          fontWeight: FontWeight.bold),)],)],
+                      
+                )
+                ),),
 
-          TextButton (
-          
-          onPressed: () async{
-            final resoult = await _getAndStoreTokens();
-            if (resoult == 200){print('refreshed');}
-            else {print('No way ');} 
-          },
-          child: Text('refresh tokens'), style: Constants.TextButtonStyle_Alert),],),),
+          SizedBox(height: 25),
+          ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                height: 200,
+                color: Constants.thirdColor,
+                child:Row(children:const [
+                  Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Curiosity of the day',
+                      style: TextStyle(
+                          color: Constants.secondaryColor,
+                          fontSize: 20,
+                          fontFamily: Constants.myfontFamily,
+                          fontWeight: FontWeight.bold),)],)],
+                      
+                )
+                ),),
 
+          SizedBox(height: 25),
+          ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                height: 200,
+                color: Constants.thirdColor,
+                child:Row(children:const [
+                  Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Statistic of the day',
+                      style: TextStyle(
+                          color: Constants.secondaryColor,
+                          fontSize: 20,
+                          fontFamily: Constants.myfontFamily,
+                          fontWeight: FontWeight.bold),)],)],
+                      
+                )
+                ),)
+        ],
+      ),
 
-
-          bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -90,21 +160,18 @@ class TipsPageState extends State<TipsPage> {
                   builder: (context) => const HomePageState()));
             //break;
             case 1:
-            if (index != 1) {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const TipsPage()));
+              if (index != 1) {
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => const TipsPage()));
               } else {
                 print('still in the Statistics page ');
               }
-            
-
-    
 
             //break;
             case 2:
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => const StatisticsPage()));
-              
+
               // Probably in this case you have to put an if: if the index is not pointing the home and you are in the case of the home, return to home
               break;
           }
@@ -116,70 +183,6 @@ class TipsPageState extends State<TipsPage> {
           );
         },
       ),
-
     );
   }
-
-
-
-  //Handling http request
-  Future<bool> _pingImpact() async{
-    
-    final url=Impact.baseUrl + Impact.pingEndpoint;
-
-    // finally the call
-    final response =await http.get(Uri.parse(url)); // is an async function
-    
-    return response.statusCode==200;
-
-
-  }
-
-  Future<int> _getAndStoreTokens() async {
-
-    //Create the request
-    final url = Impact.baseUrl + Impact.tokenEndpoint;
-    final body = {'username': Impact.username, 'password': Impact.password};
-
-    //Get the response
-    print('Calling: $url');
-    final response = await http.post(Uri.parse(url), body: body);
-
-    //If response is OK, decode it and store the tokens. Otherwise do nothing.
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      final sp = await SharedPreferences.getInstance();
-      await sp.setString('access', decodedResponse['access']);
-      await sp.setString('refresh', decodedResponse['refresh']);
-    } //if
-
-    //Just return the status code
-    return response.statusCode;
-  } //_getAndStoreTokens
-
-  //This method allows to refrsh the stored JWT in SharedPreferences
-  Future<int> _refreshTokens() async {
-
-    //Create the request 
-    final url = Impact.baseUrl + Impact.refreshEndpoint;
-    final sp = await SharedPreferences.getInstance();
-    final refresh = sp.getString('refresh');
-    final body = {'refresh': refresh};
-
-    //Get the response
-    print('Calling: $url');
-    final response = await http.post(Uri.parse(url), body: body);
-
-    //If the response is OK, set the tokens in SharedPreferences to the new values
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      final sp = await SharedPreferences.getInstance();
-      await sp.setString('access', decodedResponse['access']);
-      await sp.setString('refresh', decodedResponse['refresh']);
-    } //if
-
-    //Just return the status code
-    return response.statusCode;
-    
-  } //_refreshTokens
 }

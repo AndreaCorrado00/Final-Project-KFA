@@ -70,12 +70,7 @@ Map<String, String> adv17={
   'url':'https://www.un.org/sustainabledevelopment/globalpartnerships/'};
 
 
-// My idea of how can we use these link
-// A widget (algrthm) with the 'Goal-curiosity of the day'
-// Proving a way to read the current date and to convert the current date into a number between 1 and 17
-// The widget (HomePage) could show a certain costant text and a mutable text wich is inside this databese. Than there is a link to the page
-
-
+//final lenght_adv=Advices.length;
   
 
 

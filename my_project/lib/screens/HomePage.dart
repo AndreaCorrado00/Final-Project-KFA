@@ -482,7 +482,10 @@
 // } //HomePage
 // // test home page
 
-import 'package:my_project/screens/ProfilePage.dart';
+import 'ProfilePage.dart';
+import 'TipsPage.dart';
+import 'SensPage.dart';
+import 'StatisticsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
@@ -497,8 +500,10 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenstate extends State<HomeScreen> {
   int page = 0;
 
-  final page1 = const HomePage();
-  get page2 => ProfilePage();
+  final page1 = const ProfilePage();
+  get page2 => SensPage();
+  get page3 => StatisticsPage();
+  get page4 => TipsPage();
 
   @override
   void initState() {
@@ -512,6 +517,9 @@ class HomeScreenstate extends State<HomeScreen> {
       case 1:
         return page2;
       case 2:
+        return page3;
+      case 3:
+        return page4;
       default:
         return const Text("Invalid page");
     }
@@ -528,7 +536,7 @@ class HomeScreenstate extends State<HomeScreen> {
         height: 60.0,
         items: const <Widget>[
           Icon(
-            Icons.menu_sharp,
+            Icons.person,
             size: 30.0,
             color: Colors.green,
           ),
@@ -582,69 +590,5 @@ class Page3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Text("Page3");
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Positioned(
-              child: Text('How Do You Feel Today?',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 121, 25, 57),
-                      fontSize: 24,
-                      fontStyle: FontStyle.italic)),
-            ),
-            const Positioned(
-              child: Text(
-                '😊',
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-            const Positioned(
-              child: Text(
-                '😐',
-                style: TextStyle(fontSize: 24),
-              ),
-            ),
-            Positioned(
-              child: GestureDetector(
-                child: const Text(
-                  '😔',
-                  style: TextStyle(fontSize: 24),
-                ),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('Feeling Down?'),
-                        content: const Text(
-                            'Is there anything I can do to help you feel better?'),
-                        actions: [
-                          TextButton(
-                            child: const Text('Close'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

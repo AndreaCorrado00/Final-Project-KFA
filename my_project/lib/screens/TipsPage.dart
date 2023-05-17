@@ -59,18 +59,14 @@ class TipsPageState extends State<TipsPage> {
             borderRadius: BorderRadius.circular(20),
             child: Container(
                 height: 200,
-                color: Color.fromARGB(255, 253, 253, 253),
+                color: Constants.containerColor,
                 child: Column(children: [
                   SizedBox(height: 10),
                   Align(
                     alignment: Alignment.center,
                     child: Text(
                       'Curiosity of the day',
-                      style: TextStyle(
-                          color: Constants.secondaryColor,
-                          fontSize: 20,
-                          fontFamily: Constants.myfontFamily,
-                          fontWeight: FontWeight.bold),
+                      style: Constants.Tips_Title_style,
                     ),
                   ),
                   SizedBox(
@@ -85,108 +81,169 @@ class TipsPageState extends State<TipsPage> {
                           height: 105,
                           child: Text(
                             Curiosities[cur_id]['text'],
-                            style: TextStyle(fontSize: 15),
+                            style: TextStyle(fontSize: 16),
                             textAlign: TextAlign.justify,
                           ),
                         ),
-                  SizedBox(width: 15),
-                  Image(image: NetworkImage(
-                              'https://img.freepik.com/free-vector/save-planet-concept-with-people-taking-care-earth_23-2148522570.jpg?w=740&t=st=1683661017~exp=1683661617~hmac=644c9c528c5a3fba74cea62bd1f4cf9dc8d5285466a89496f8942c8ece9a0ccc',
-                              scale: 7)
-                              
-                              ),
+                        SizedBox(width: 15),
+                        Image(image: NetworkImage(
+                              'https://img.freepik.com/premium-vector/marketing-research-illustration_335657-4800.jpg',
+                              scale: 6)),
                         
                         ]),
-                        Align(alignment: Alignment(-0.95,1),
+                    Align(alignment: Alignment(-0.95,1),
                         child:TextButton(
                             onPressed: () async {
                               //final daily_constants = await SharedPreferences.getInstance();
                               //int? id=daily_constants.getInt('today_index') !% 17;
                               final Uri cur_url =
                                   Uri.parse(Curiosities[cur_id]['url']);
-                              launchUrl(cur_url);
-                            },
-                            child: Text(
-                              'Learn more',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 0, 174, 255),
-                                  fontFamily: Constants.myfontFamily,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),))),
-                                  ]))
+                              launchUrl(cur_url);},
+                            child: Text('Learn more',
+                              style: Constants.Url_Button_style,))),]))
           ),
           SizedBox(height: 25),
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Container(
                 height: 200,
-                color: Constants.thirdColor,
-                child: Row(
-                  children: const [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Recipe of the day',
-                          style: TextStyle(
-                              color: Constants.secondaryColor,
-                              fontSize: 20,
-                              fontFamily: Constants.myfontFamily,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    )
-                  ],
-                )),
+                color: Constants.containerColor,
+                child: Column(children: [
+                  SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Recipe of the day',
+                      style: Constants.Tips_Title_style,
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  Row(
+                    children: [
+                        // ignore: prefer_const_literals_to_create_immutables
+                        Container(
+                          padding: EdgeInsets.only(left: 15),
+                          width: 215,
+                          height: 105,
+                          child: Text(
+                           'We have selected this recipe for you: ' + Recipes[rep_id]['text'] + '. Will you try it?',
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.justify,
+                          ),
+                        ),
+                        SizedBox(width: 15),
+                        Image(image: NetworkImage(
+                              'https://img.freepik.com/free-vector/quarantine-cooking-abstract-illustration_335657-5310.jpg?w=740&t=st=1684330850~exp=1684331450~hmac=44990ef8874ec0ead1dda066efc8c49d222afe160b7bffbfdddd71e11fa76354',
+                              scale: 7)),
+                        
+                        ]),
+                    Align(alignment: Alignment(-0.95,1),
+                        child:TextButton(
+                            onPressed: () async {
+                              //final daily_constants = await SharedPreferences.getInstance();
+                              //int? id=daily_constants.getInt('today_index') !% 17;
+                              final Uri rep_url =
+                                  Uri.parse(Recipes[rep_id]['url']);
+                              launchUrl(rep_url);},
+                            child: Text('Let\'s cook',
+                              style: Constants.Url_Button_style,))),]))
           ),
           SizedBox(height: 25),
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Container(
                 height: 200,
-                color: Constants.thirdColor,
-                child: Row(
-                  children: const [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Advice of the day',
-                          style: TextStyle(
-                              color: Constants.secondaryColor,
-                              fontSize: 20,
-                              fontFamily: Constants.myfontFamily,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    )
-                  ],
-                )),
+                color: Constants.containerColor,
+                child: Column(children: [
+                  SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Advice of the day',
+                      style: Constants.Tips_Title_style,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                        // ignore: prefer_const_literals_to_create_immutables
+                        Container(
+                          padding: EdgeInsets.only(left: 15),
+                          width: 220,
+                          height: 105,
+                          child: Text(
+                            'What can you concretely do? Today we will leave you this advice: ' + Adivices[adv_id]['text']+ '. Try to figure out how to do it!',
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.justify,
+                          ),
+                        ),
+                        SizedBox(width: 15),
+                        Image(image: NetworkImage(
+                              'https://img.freepik.com/premium-vector/social-network-monitoring-illustration_335657-4667.jpg',
+                              scale: 6)),
+                        
+                        ]),
+                    Align(alignment: Alignment(-0.95,1),
+                        child:TextButton(
+                            onPressed: () async {
+                              //final daily_constants = await SharedPreferences.getInstance();
+                              //int? id=daily_constants.getInt('today_index') !% 17;
+                              final Uri adv_url =
+                                  Uri.parse(Adivices[adv_id]['url']);
+                              launchUrl(adv_url);},
+                            child: Text('Tell me more',
+                              style: Constants.Url_Button_style,))),]))
           ),
           SizedBox(height: 25),
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Container(
                 height: 200,
-                color: Constants.thirdColor,
-                child: Row(
-                  children: const [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Statistic of the day',
-                          style: TextStyle(
-                              color: Constants.secondaryColor,
-                              fontSize: 20,
-                              fontFamily: Constants.myfontFamily,
-                              fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    )
-                  ],
-                )),
-          )
+                color: Constants.containerColor,
+                child: Column(children: [
+                  SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Statistics of the day',
+                      style: Constants.Tips_Title_style,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                        // ignore: prefer_const_literals_to_create_immutables
+                        Container(
+                          padding: EdgeInsets.only(left: 15),
+                          width: 220,
+                          height: 105,
+                          child: Text(
+                            'Do you know? ' + Statistics[sta_id]['text']+ '.',
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.justify,
+                          ),
+                        ),
+                        SizedBox(width: 15),
+                        Image(image: NetworkImage(
+                              'https://img.freepik.com/premium-vector/social-media-dashboard-abstract-concept-illustration_335657-4875.jpg?w=740',
+                              scale: 7)),
+                        
+                        ]),
+                    Align(alignment: Alignment(-0.95,1),
+                        child:TextButton(
+                            onPressed: () async {
+                              //final daily_constants = await SharedPreferences.getInstance();
+                              //int? id=daily_constants.getInt('today_index') !% 17;
+                              final Uri sta_url =
+                                  Uri.parse(Statistics[sta_id]['url']);
+                              launchUrl(sta_url);},
+                            child: Text('More about',
+                              style: Constants.Url_Button_style,))),]))
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

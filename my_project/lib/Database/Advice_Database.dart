@@ -213,7 +213,7 @@ Map<String, String> adv2={
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv3={
-  'text': 'If you see an interesting social media post on sustainability, share it!',
+  'text': 'If you see an interesting social media post on sustainability, share it',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv4={
@@ -221,7 +221,7 @@ Map<String, String> adv4={
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv5={
-  'text': 'Turn off the lights if you don’t need them.',
+  'text': 'Turn off the lights if you don’t need them',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv6={
@@ -229,11 +229,11 @@ Map<String, String> adv6={
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv7={
-  'text': 'Eat less meat, poultry, and fish.',
+  'text': 'Eat less meat, poultry, and fish',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv8={
-  'text': 'Freeze fresh produce and leftovers if you don’t eat them before they go bad. ',
+  'text': 'Freeze fresh produce and leftovers if you don’t eat them before they go bad',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv9={
@@ -249,19 +249,19 @@ Map<String, String> adv11={
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv12={
-  'text': 'Plan meals, use shopping lists and avoid impulse buys.',
+  'text': 'Plan meals, use shopping lists and avoid impulse buys',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv13={
-  'text': 'Bike, walk or take public transport. Save the car trips.',
+  'text': 'Bike, walk or take public transport. Save the car trips',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv14={
-  'text': 'Use a refillable water bottle and coffee cup.',
+  'text': 'Use a refillable water bottle and coffee cup',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv15={
-  'text': 'Bring your own bag when you shop.',
+  'text': 'Bring your own bag when you shop',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv16={
@@ -277,7 +277,7 @@ Map<String, String> adv17={
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv19={
-  'text': 'Find out what your rights are to work.',
+  'text': 'Find out what your rights are to work',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv20={
@@ -285,11 +285,11 @@ Map<String, String> adv20={
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv21={
-  'text': ' Voice your support for equal pay for equal work.',
+  'text': ' Voice your support for equal pay for equal work',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv22={
-  'text': 'Stay informed. Read about workers in other countries and business practices.',
+  'text': 'Stay informed. Read about workers in other countries and business practices',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 // Statistic
@@ -298,83 +298,83 @@ Map<int, dynamic> Statistics={0: Sta1,1: Sta2,2: Sta3,3: Sta4,4: Sta5,5: Sta6,6:
 
 
 Map<String, String> Sta1={
-  'text': 'Around 90% of people globally breathe polluted air.',
+  'text': 'Around 90% of people globally breathe polluted air',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta2={
-  'text': 'In the last 40 years, 33% of arable land has been lost.',
+  'text': 'In the last 40 years, 33% of arable land has been lost',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta3={
-  'text': 'Every year, the average American throws away around 1,200 pounds of organic garbage that can be composted.',
+  'text': 'Every year, the average American throws away around 1,200 pounds of organic garbage that can be composted',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta4={
-  'text': 'In order to produce Sunday newspapers every week, 500,000 trees are cut down.',
+  'text': 'In order to produce Sunday newspapers every week, 500,000 trees are cut down',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta5={
-  'text': 'Approximately 12 million cars are recycled each year in the US.',
+  'text': 'Approximately 12 million cars are recycled each year in the US',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta6={
-  'text': 'Just 1% of the water on Earth is safe for drinking.',
+  'text': 'Just 1% of the water on Earth is safe for drinking',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta7={
-  'text': 'Globally, around 1.4 billion people live without drinking water.',
+  'text': 'Globally, around 1.4 billion people live without drinking water',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta8={
-  'text': 'It takes 660 gallons of water to make a burger.',
+  'text': 'It takes 660 gallons of water to make a burger',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta9={
-  'text': 'An American household wastes around 180 gallons of water a week.',
+  'text': 'An American household wastes around 180 gallons of water a week',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta10={
-  'text': 'In order to make one pair of jeans, 1,850 gallons of water are used.',
+  'text': 'In order to make one pair of jeans, 1,850 gallons of water are used',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta11={
-  'text': 'Only 10% of the energy that an incandescent bulb uses is converted to light.',
+  'text': 'Only 10% of the energy that an incandescent bulb uses is converted to light',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta12={
-  'text': 'One-third of food is wasted or lost.',
+  'text': 'One-third of food is wasted or lost',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta13={
-  'text': 'By 2050, food production will have to increase by 60% for the world to have enough food.',
+  'text': 'By 2050, food production will have to increase by 60% for the world to have enough food',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta14={
-  'text': 'It takes 4,000 years for a glass bottle to decompose.',
+  'text': 'It takes 4,000 years for a glass bottle to decompose',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta15={
-  'text': '83.4% of people surveyed by Southern Cross University are recycling.',
+  'text': '83.4% of people surveyed by Southern Cross University are recycling',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta16={
-  'text': 'In the UK, 13% of the products that arrive at construction sites are thrown away without being used.',
+  'text': 'In the UK, 13% of the products that arrive at construction sites are thrown away without being used',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta17={
-  'text': 'Companies can make a big impact and cut emissions by 60%.',
+  'text': 'Companies can make a big impact and cut emissions by 60%',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
   Map<String, String> Sta18={
-  'text': 'With a recycling rate of 63%, Austria is first on the global list.',
+  'text': 'With a recycling rate of 63%, Austria is first on the global recycling list',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta19={
-  'text': 'In 2020, Canada had the highest waste generation rate in the whole world.',
+  'text': 'In 2020, Canada had the highest waste generation rate in the whole world',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 Map<String, String> Sta20={
-  'text': 'Over the past century, the amount of waste that humans generate has increased by 10,000%.',
+  'text': 'Over the past century, the amount of waste that humans generate has increased by 10,000%',
   'url':'https://seedscientific.com/environment/sustainability-statistics/'};
 
 // Variuous length

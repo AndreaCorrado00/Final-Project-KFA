@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -36,6 +38,20 @@ class Constants {
       ));
 
   static final double defaultPadding = 16.0;
+
+  // Tips Page Constants
+  static const containerColor=Color.fromARGB(255, 253, 253, 253);
+  static final Tips_Title_style =TextStyle(
+                          color: Constants.secondaryColor,
+                          fontSize: 20,
+                          fontFamily: Constants.myfontFamily,
+                          fontWeight: FontWeight.bold);
+
+  static final Url_Button_style=TextStyle(
+                                  color: Color.fromARGB(255, 0, 174, 255),
+                                  fontFamily: Constants.myfontFamily,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold);
 
   
 }

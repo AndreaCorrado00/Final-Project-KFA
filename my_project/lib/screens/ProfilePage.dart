@@ -1,5 +1,4 @@
-// ignore_for_file: prefer_const_constructors
-
+//run
 import 'package:flutter/material.dart';
 import 'package:my_project/screens/AboutThisApp.dart';
 import 'package:my_project/screens/HomePage.dart';
@@ -124,10 +123,10 @@ class ProfilePageState extends State<ProfilePage> {
                   fit: BoxFit.cover,
                 ),
               ),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const <Widget>[
+                children: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
@@ -236,13 +235,13 @@ class ProfilePageState extends State<ProfilePage> {
                   child: Container(
                     width: 100,
                     height: 100,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Color.fromARGB(255, 220, 211, 51),
                     ),
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
                           '100',
                           textAlign: TextAlign.center,
@@ -265,18 +264,19 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
 
-                SizedBox(width: 16), // Add spacing between the circular boxes
+                const SizedBox(
+                    width: 16), // Add spacing between the circular boxes
                 Expanded(
                   child: Container(
                     width: 100,
                     height: 100,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Color.fromARGB(255, 196, 186, 58),
                     ),
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
                           '500',
                           textAlign: TextAlign.center,
@@ -299,18 +299,19 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
 
-                SizedBox(width: 16), // Add spacing between the circular boxes
+                const SizedBox(
+                    width: 16), // Add spacing between the circular boxes
                 Expanded(
                   child: Container(
                     width: 100,
                     height: 100,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Color.fromARGB(255, 176, 167, 37),
                     ),
-                    child: Column(
+                    child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Text(
                           '1',
                           textAlign: TextAlign.center,
@@ -428,8 +429,8 @@ class ProfilePageState extends State<ProfilePage> {
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Logout"),
-      content: Text("Are you sure you want to logout?"),
+      title: const Text("Logout"),
+      content: const Text("Are you sure you want to logout?"),
       actions: [
         cancelButton,
         continueButton,

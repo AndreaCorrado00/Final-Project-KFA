@@ -22,8 +22,8 @@ import 'package:my_project/utils/constants.dart';
 DateTime _now = DateTime.now();
 String formattedDate = DateFormat.d().format(_now);
 int today = int.parse(formattedDate);
-int today_index = 1; //today % 17;
-final Uri _url = Uri.parse(Advices[today_index]['url']);
+int today_index =today % 17;
+final Uri _url = Uri.parse(Curiosities[today_index]['url']);
 
 // Computing of the level of susteinabilty
 // My idea: probably the level could be computed by using a shered preferences dictionaty. Ence, everytime you upload a new activity (even if not automatically)
@@ -183,7 +183,7 @@ class HomePage extends State<HomePageState> {
                         height: 125,
                         width: 270,
                         child: Text(
-                          Advices[today_index]['adv_text'],
+                          Curiosities[today_index]['text'],
                           style: TextStyle(fontSize: 15),
                           textAlign: TextAlign.justify,
                         )),

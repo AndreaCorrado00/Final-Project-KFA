@@ -26,8 +26,9 @@ class StatisticsPageState extends State<StatisticsPage> {
         appBar: AppBar(
           backgroundColor: Constants.primaryColor,
           title: Text('Statistics'),
+          automaticallyImplyLeading: false,
         ),
-        //automaticallyImplyLeading: true,
+        
 
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[

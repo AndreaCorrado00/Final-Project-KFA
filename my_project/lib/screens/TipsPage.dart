@@ -42,7 +42,7 @@ class TipsPageState extends State<TipsPage> {
       appBar: AppBar(
         backgroundColor: Constants.primaryColor,
         title: Text('Advice and Tips'),
-        //automaticallyImplyLeading: true,
+        automaticallyImplyLeading:false,
       ),
       backgroundColor: Constants.primaryLightColor,
       body: ListView(

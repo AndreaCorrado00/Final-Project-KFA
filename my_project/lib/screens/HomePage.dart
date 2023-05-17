@@ -22,7 +22,7 @@ import 'package:my_project/utils/constants.dart';
 DateTime _now = DateTime.now();
 String formattedDate = DateFormat.d().format(_now);
 int today = int.parse(formattedDate);
-int today_index = today % 17;
+int today_index = 1; //today % 17;
 final Uri _url = Uri.parse(Advices[today_index]['url']);
 
 // Computing of the level of susteinabilty

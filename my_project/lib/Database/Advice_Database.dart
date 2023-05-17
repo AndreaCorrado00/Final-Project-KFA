@@ -78,15 +78,21 @@ Map<int, dynamic> Recipes={0: Rep1,1: Rep2,2: Rep3,3: Rep4,4: Rep5,5: Rep6,6: Re
 
 Map<String, String> Rep1={
   'text': 'Filo-wrapped hake with saffron yogurt',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/filo-wrapped-hake-with-saffron-yogurt/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/filo-wrapped-hake-with-saffron-yogurt/',
+  'image':'https://img.freepik.com/free-vector/quarantine-cooking-abstract-illustration_335657-5310.jpg?w=740&t=st=1684330850~exp=1684331450~hmac=44990ef8874ec0ead1dda066efc8c49d222afe160b7bffbfdddd71e11fa76354'
+  };
 
 Map<String, String> Rep2={
   'text': 'Peppercorn mushrooms with butter bean mash',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/peppercorn-mushrooms-with-butter-bean-mash/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/peppercorn-mushrooms-with-butter-bean-mash/',
+  'image':'https://img.freepik.com/free-vector/mediterranean-diet-abstract-illustration_335657-5246.jpg?w=740&t=st=1684354989~exp=1684355589~hmac=5cd5a1c01daefbb94df7ca9455bad310c6c90e39381e3d3d6a9421cb8bbfc60e'
+  };
 
 Map<String, String> Rep3={
   'text': 'Sea bream with spring onion and brown butter rice',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/sea-bream-with-spring-onion-and-brown-butter-rice/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/sea-bream-with-spring-onion-and-brown-butter-rice/',
+  'image':'https://img.freepik.com/free-vector/vegetarianism-abstract-illustration_335657-5242.jpg?w=740&t=st=1684354912~exp=1684355512~hmac=3505ad5f3cb05528144eb01bda770d20cb013797a599ad8470418ba591304288'
+  };
 
 Map<String, String> Rep4={
   'text': 'Turmeric-roasted hake with coconut sauce',
@@ -94,107 +100,159 @@ Map<String, String> Rep4={
 
 Map<String, String> Rep5={
   'text': 'Speedy poached pollock with aromatic spices',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/speedy-poached-pollock-with-aromatic-spices/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/speedy-poached-pollock-with-aromatic-spices/',
+  'image':'https://img.freepik.com/free-vector/mediterranean-diet-abstract-illustration_335657-5246.jpg?w=740&t=st=1684354989~exp=1684355589~hmac=5cd5a1c01daefbb94df7ca9455bad310c6c90e39381e3d3d6a9421cb8bbfc60e'
+  };
 
 Map<String, String> Rep6={
   'text': 'Pressure cooker refried beans',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/pressure-cooker-refried-beans/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/pressure-cooker-refried-beans/',
+  'image':'https://img.freepik.com/free-vector/vegetarianism-abstract-illustration_335657-5242.jpg?w=740&t=st=1684354912~exp=1684355512~hmac=3505ad5f3cb05528144eb01bda770d20cb013797a599ad8470418ba591304288'
+  };
 
 Map<String, String> Rep7={
   'text': 'Ultimate venison burgers',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/ultimate-venison-burgers/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/ultimate-venison-burgers/',
+  'image':'https://img.freepik.com/free-vector/mediterranean-diet-abstract-illustration_335657-5246.jpg?w=740&t=st=1684354989~exp=1684355589~hmac=5cd5a1c01daefbb94df7ca9455bad310c6c90e39381e3d3d6a9421cb8bbfc60e'
+  };
 
 Map<String, String> Rep8={
   'text': 'Coffee-marinated roast venison saddle',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/coffee-marinated-roast-venison-saddle/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/coffee-marinated-roast-venison-saddle/',
+  'image':'https://img.freepik.com/free-vector/vegetarianism-abstract-illustration_335657-5242.jpg?w=740&t=st=1684354912~exp=1684355512~hmac=3505ad5f3cb05528144eb01bda770d20cb013797a599ad8470418ba591304288'
+  };
 
 Map<String, String> Rep9={
   'text': 'Black bean chilli soup with corn dumplings',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/black-bean-chilli-soup-with-corn-dumplings/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/black-bean-chilli-soup-with-corn-dumplings/',
+  'image':'https://img.freepik.com/free-vector/quarantine-cooking-abstract-illustration_335657-5310.jpg?w=740&t=st=1684330850~exp=1684331450~hmac=44990ef8874ec0ead1dda066efc8c49d222afe160b7bffbfdddd71e11fa76354'
+  };
 
 Map<String, String> Rep10={
   'text': 'Grilled mussels with garlic and parsley',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/grilled-mussels-with-garlic-and-parsley/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/grilled-mussels-with-garlic-and-parsley/',
+  'image':'https://img.freepik.com/free-vector/mediterranean-diet-abstract-illustration_335657-5246.jpg?w=740&t=st=1684354989~exp=1684355589~hmac=5cd5a1c01daefbb94df7ca9455bad310c6c90e39381e3d3d6a9421cb8bbfc60e'
+  };
 
 Map<String, String> Rep11={
   'text': 'Vegan cabbage cacciatore',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/vegan-cabbage-cacciatore/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/vegan-cabbage-cacciatore/',
+  'image':'https://img.freepik.com/free-vector/mediterranean-diet-abstract-illustration_335657-5246.jpg?w=740&t=st=1684354989~exp=1684355589~hmac=5cd5a1c01daefbb94df7ca9455bad310c6c90e39381e3d3d6a9421cb8bbfc60e'
+  };
 
 Map<String, String> Rep12={
   'text': 'Vegan butternut squash risotto with millet',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/vegan-butternut-squash-risotto-with-millet/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/vegan-butternut-squash-risotto-with-millet/',
+  'image':'https://img.freepik.com/free-vector/vegetarianism-abstract-illustration_335657-5242.jpg?w=740&t=st=1684354912~exp=1684355512~hmac=3505ad5f3cb05528144eb01bda770d20cb013797a599ad8470418ba591304288'
+  };
 
 Map<String, String> Rep13={
-  'text': 'Vegan butternut squash risotto with millet',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/vegan-butternut-squash-risotto-with-millet/'};
+  'text': 'Mussel and egg pancake with soy beansprouts',
+  'url':'https://www.deliciousmagazine.co.uk/recipes/mussel-and-egg-pancake-with-soy-beansprouts/',
+  'image':'https://img.freepik.com/free-vector/vegetarianism-abstract-illustration_335657-5242.jpg?w=740&t=st=1684354912~exp=1684355512~hmac=3505ad5f3cb05528144eb01bda770d20cb013797a599ad8470418ba591304288'
+  };
 
 Map<String, String> Rep14={
   'text': 'Brussels sprout stir-fry with paneer and coconut',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/brussels-sprout-stir-fry-with-paneer-and-coconut/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/brussels-sprout-stir-fry-with-paneer-and-coconut/',
+  'image':'https://img.freepik.com/free-vector/mediterranean-diet-abstract-illustration_335657-5246.jpg?w=740&t=st=1684354989~exp=1684355589~hmac=5cd5a1c01daefbb94df7ca9455bad310c6c90e39381e3d3d6a9421cb8bbfc60e'
+  };
 
 Map<String, String> Rep15={
   'text': 'Leftover roast potato breakfast hash',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/leftover-roast-potato-breakfast-hash/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/leftover-roast-potato-breakfast-hash/',
+  'image':'https://img.freepik.com/free-vector/quarantine-cooking-abstract-illustration_335657-5310.jpg?w=740&t=st=1684330850~exp=1684331450~hmac=44990ef8874ec0ead1dda066efc8c49d222afe160b7bffbfdddd71e11fa76354'
+  };
 
 Map<String, String> Rep16={
   'text': 'Mackerel, watercress and mustard fishcakes',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/mackerel-watercress-and-mustard-fishcakes/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/mackerel-watercress-and-mustard-fishcakes/',
+  'image':'https://img.freepik.com/free-vector/mediterranean-diet-abstract-illustration_335657-5246.jpg?w=740&t=st=1684354989~exp=1684355589~hmac=5cd5a1c01daefbb94df7ca9455bad310c6c90e39381e3d3d6a9421cb8bbfc60e'
+  };
 
 Map<String, String> Rep17={
   'text': 'Runner bean and apple chutney',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/runner-bean-and-apple-chutney/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/runner-bean-and-apple-chutney/',
+  'image':'https://img.freepik.com/free-vector/vegetarianism-abstract-illustration_335657-5242.jpg?w=740&t=st=1684354912~exp=1684355512~hmac=3505ad5f3cb05528144eb01bda770d20cb013797a599ad8470418ba591304288'
+  };
 
   Map<String, String> Rep18={
   'text': 'Venison with pumpkin mash and cavolo nero',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/venison-with-pumpkin-mash-and-cavolo-nero/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/venison-with-pumpkin-mash-and-cavolo-nero/',
+  'image':'https://img.freepik.com/free-vector/mediterranean-diet-abstract-illustration_335657-5246.jpg?w=740&t=st=1684354989~exp=1684355589~hmac=5cd5a1c01daefbb94df7ca9455bad310c6c90e39381e3d3d6a9421cb8bbfc60e'
+  };
 
 Map<String, String> Rep19={
   'text': 'Prebranac (caramelised-onion baked beans)',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/prebranac-caramelised-onion-baked-beans/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/prebranac-caramelised-onion-baked-beans/',
+  'image':'https://img.freepik.com/free-vector/vegetarianism-abstract-illustration_335657-5242.jpg?w=740&t=st=1684354912~exp=1684355512~hmac=3505ad5f3cb05528144eb01bda770d20cb013797a599ad8470418ba591304288'
+  };
 
 Map<String, String> Rep20={
   'text': 'Mussels and clams with beans and sobrasada',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/mussels-and-clams-with-beans-and-sobrasada/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/mussels-and-clams-with-beans-and-sobrasada/',
+  'image':'https://img.freepik.com/free-vector/quarantine-cooking-abstract-illustration_335657-5310.jpg?w=740&t=st=1684330850~exp=1684331450~hmac=44990ef8874ec0ead1dda066efc8c49d222afe160b7bffbfdddd71e11fa76354'
+  };
 
 Map<String, String> Rep21={
   'text': 'Veggie bean casserole with pesto garlic croûtes',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/veggie-bean-casserole-with-pesto-garlic-croutes/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/veggie-bean-casserole-with-pesto-garlic-croutes/',
+  'image':'https://img.freepik.com/free-vector/mediterranean-diet-abstract-illustration_335657-5246.jpg?w=740&t=st=1684354989~exp=1684355589~hmac=5cd5a1c01daefbb94df7ca9455bad310c6c90e39381e3d3d6a9421cb8bbfc60e'
+  };
 
 Map<String, String> Rep22={
   'text': 'Fish kievs',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/fish-kievs/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/fish-kievs/',
+  'image':'https://img.freepik.com/free-vector/vegetarianism-abstract-illustration_335657-5242.jpg?w=740&t=st=1684354912~exp=1684355512~hmac=3505ad5f3cb05528144eb01bda770d20cb013797a599ad8470418ba591304288'
+  };
 
 Map<String, String> Rep23={
   'text': 'Root vegetable and lentil tagine',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/root-vegetable-and-lentil-tagine/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/root-vegetable-and-lentil-tagine/',
+  'image':'https://img.freepik.com/free-vector/quarantine-cooking-abstract-illustration_335657-5310.jpg?w=740&t=st=1684330850~exp=1684331450~hmac=44990ef8874ec0ead1dda066efc8c49d222afe160b7bffbfdddd71e11fa76354'
+  };
 
 Map<String, String> Rep24={
   'text': 'Grilled mackerel with apple and radish salad',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/grilled-mackerel-apple-radish-salad/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/grilled-mackerel-apple-radish-salad/',
+  'image':'https://img.freepik.com/free-vector/quarantine-cooking-abstract-illustration_335657-5310.jpg?w=740&t=st=1684330850~exp=1684331450~hmac=44990ef8874ec0ead1dda066efc8c49d222afe160b7bffbfdddd71e11fa76354'
+  };
 
 Map<String, String> Rep25={
   'text': 'Veggie hash with fried eggs',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/veggie-hash-with-fried-eggs/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/veggie-hash-with-fried-eggs/',
+  'image':'https://img.freepik.com/free-vector/vegetarianism-abstract-illustration_335657-5242.jpg?w=740&t=st=1684354912~exp=1684355512~hmac=3505ad5f3cb05528144eb01bda770d20cb013797a599ad8470418ba591304288'
+  };
 
 Map<String, String> Rep26={
   'text': 'Saffron chicken stew with greens and chickpeas',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/saffron-chicken-stew-with-greens-and-chickpeas/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/saffron-chicken-stew-with-greens-and-chickpeas/',
+  'image':'https://img.freepik.com/free-vector/vegetarianism-abstract-illustration_335657-5242.jpg?w=740&t=st=1684354912~exp=1684355512~hmac=3505ad5f3cb05528144eb01bda770d20cb013797a599ad8470418ba591304288'
+  };
 
 Map<String, String> Rep27={
   'text': 'Strawberry and elderflower sorbet',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/strawberry-elderflower-sorbet/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/strawberry-elderflower-sorbet/',
+  'image':'https://img.freepik.com/free-vector/kids-birthday-abstract-illustration_335657-5447.jpg?w=740&t=st=1684354302~exp=1684354902~hmac=3a585c48429291885d2418f43b2bbcea16080556d1de9caa0b50a366df397080'
+  };
 
 Map<String, String> Rep28={
   'text': 'Harissa-spiced butter beans with peppers and feta',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/harissa-butter-beans-peppers-feta/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/harissa-butter-beans-peppers-feta/',
+  'image':'https://img.freepik.com/free-vector/vegetarianism-abstract-illustration_335657-5242.jpg?w=740&t=st=1684354912~exp=1684355512~hmac=3505ad5f3cb05528144eb01bda770d20cb013797a599ad8470418ba591304288'
+  };
   
 Map<String, String> Rep29={
   'text': 'Bramble and bay jam',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/bramble-and-bay-jam/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/bramble-and-bay-jam/',
+  'image':'https://img.freepik.com/free-vector/kids-birthday-abstract-illustration_335657-5447.jpg?w=740&t=st=1684354302~exp=1684354902~hmac=3a585c48429291885d2418f43b2bbcea16080556d1de9caa0b50a366df397080'
+  };
 
 Map<String, String> Rep30={
   'text': 'Vegan chilli with rice',
-  'url':'https://www.deliciousmagazine.co.uk/recipes/vegan-chilli-with-rice/'};
+  'url':'https://www.deliciousmagazine.co.uk/recipes/vegan-chilli-with-rice/',
+  'image':'https://img.freepik.com/free-vector/mediterranean-diet-abstract-illustration_335657-5246.jpg?w=740&t=st=1684354989~exp=1684355589~hmac=5cd5a1c01daefbb94df7ca9455bad310c6c90e39381e3d3d6a9421cb8bbfc60e'
+  };
 
 
 

@@ -132,8 +132,7 @@ class TipsPageState extends State<TipsPage> {
                           ),
                         ),
                         SizedBox(width: 15),
-                        Image(image: NetworkImage(
-                              'https://img.freepik.com/free-vector/quarantine-cooking-abstract-illustration_335657-5310.jpg?w=740&t=st=1684330850~exp=1684331450~hmac=44990ef8874ec0ead1dda066efc8c49d222afe160b7bffbfdddd71e11fa76354',
+                        Image(image: NetworkImage(Recipes[rep_id]['image'],
                               scale: 7)),
                         
                         ]),

@@ -65,7 +65,7 @@ class TipsPageState extends State<TipsPage> {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      'Curiosity of the day',
+                      'New daily curiosity',
                       style: Constants.Tips_Title_style,
                     ),
                   ),
@@ -82,7 +82,7 @@ class TipsPageState extends State<TipsPage> {
                           child: Text(
                             Curiosities[cur_id]['text'],
                             style: TextStyle(fontSize: 16),
-                            textAlign: TextAlign.justify,
+                            textAlign: TextAlign.left,
                           ),
                         ),
                         SizedBox(width: 15),
@@ -113,7 +113,7 @@ class TipsPageState extends State<TipsPage> {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      'Recipe of the day',
+                      'New daily recipe for you',
                       style: Constants.Tips_Title_style,
                     ),
                   ),
@@ -128,7 +128,7 @@ class TipsPageState extends State<TipsPage> {
                           child: Text(
                            'We have selected this recipe for you: ' + Recipes[rep_id]['text'] + '. Will you try it?',
                             style: TextStyle(fontSize: 16),
-                            textAlign: TextAlign.justify,
+                            textAlign: TextAlign.left,
                           ),
                         ),
                         SizedBox(width: 15),
@@ -159,7 +159,7 @@ class TipsPageState extends State<TipsPage> {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      'Advice of the day',
+                      'Every day a small step forward',
                       style: Constants.Tips_Title_style,
                     ),
                   ),
@@ -176,7 +176,7 @@ class TipsPageState extends State<TipsPage> {
                           child: Text(
                             'What can you concretely do? Today we will leave you this advice: ' + Adivices[adv_id]['text']+ '. Try to figure out how to do it!',
                             style: TextStyle(fontSize: 16),
-                            textAlign: TextAlign.justify,
+                            textAlign: TextAlign.left,
                           ),
                         ),
                         SizedBox(width: 15),
@@ -207,7 +207,7 @@ class TipsPageState extends State<TipsPage> {
                   Align(
                     alignment: Alignment.center,
                     child: Text(
-                      'Statistics of the day',
+                      'Stay informed, stay sustainable',
                       style: Constants.Tips_Title_style,
                     ),
                   ),
@@ -224,7 +224,7 @@ class TipsPageState extends State<TipsPage> {
                           child: Text(
                             'Do you know? ' + Statistics[sta_id]['text']+ '.',
                             style: TextStyle(fontSize: 16),
-                            textAlign: TextAlign.justify,
+                            textAlign: TextAlign.left,
                           ),
                         ),
                         SizedBox(width: 15),

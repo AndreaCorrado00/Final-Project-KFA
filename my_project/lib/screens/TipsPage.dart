@@ -58,7 +58,7 @@ class TipsPageState extends State<TipsPage> {
           ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Container(
-                height: 200,
+                height:  double.parse(Curiosities[cur_id]['big_cont_h']),
                 color: Constants.containerColor,
                 child: Column(children: [
                   SizedBox(height: 10),
@@ -78,7 +78,7 @@ class TipsPageState extends State<TipsPage> {
                         Container(
                           padding: EdgeInsets.only(left: 15),
                           width: 220,
-                          height: 105,
+                          height:  double.parse(Curiosities[cur_id]['child_cont_h']),
                           child: Text(
                             Curiosities[cur_id]['text'],
                             style: TextStyle(fontSize: 16),

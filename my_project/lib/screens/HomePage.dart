@@ -500,10 +500,10 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenstate extends State<HomeScreen> {
   int page = 0;
 
-  final page1 = const ProfilePage();
-  get page2 => SensPage();
-  get page3 => StatisticsPage();
-  get page4 => TipsPage();
+  final page1 = SensPage();
+  get page2 => StatisticsPage();
+  get page3 => TipsPage();
+  get page4 => ProfilePage();
 
   @override
   void initState() {
@@ -528,18 +528,13 @@ class HomeScreenstate extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green.shade100,
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       bottomNavigationBar: CurvedNavigationBar(
         color: Colors.white,
         backgroundColor: Colors.transparent,
         buttonBackgroundColor: Colors.green.shade100,
         height: 60.0,
         items: const <Widget>[
-          Icon(
-            Icons.person,
-            size: 30.0,
-            color: Colors.green,
-          ),
           Icon(
             Icons.home,
             size: 30.0,
@@ -552,6 +547,11 @@ class HomeScreenstate extends State<HomeScreen> {
           ),
           Icon(
             Icons.tips_and_updates_outlined,
+            size: 30.0,
+            color: Colors.green,
+          ),
+          Icon(
+            Icons.person,
             size: 30.0,
             color: Colors.green,
           ),

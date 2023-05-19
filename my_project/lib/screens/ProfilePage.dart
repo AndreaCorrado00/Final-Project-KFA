@@ -88,7 +88,7 @@ class ProfilePageState extends State<ProfilePage> {
                     },
                     child: const Text('Logout'),
                   ),
-                  Icon(
+                  const Icon(
                     IconData(0xe3b3, fontFamily: 'MaterialIcons'),
                     color: Constants.secondarylightColor,
                     size: 24.0,
@@ -96,14 +96,14 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
-              SizedBox(
-                width: 300,
-                height: 1,
+              const SizedBox(
+                width: 200,
+                height: 10,
               ),
             ],
           ),
         ),
-        backgroundColor: Colors.green.shade100,
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
         body: ListView(
           children: <Widget>[
             Container(
@@ -117,9 +117,11 @@ class ProfilePageState extends State<ProfilePage> {
                 //   begin: Alignment.bottomCenter,
                 //   end: Alignment.topCenter,
                 //   stops: [0.2, 0.9],
+                //  borderRadius: BorderRadius.circular(200),
                 image: DecorationImage(
                   image: NetworkImage(
-                      'https://img.freepik.com/free-vector/different-colorful-leaves-collection-flat-design_23-2149112268.jpg?w=740&t=st=1684360667~exp=1684361267~hmac=6fa0275bc5b93080c06a7ee690dfcf36d09c2d960fd430c01fa78dec27b26396'),
+                      'https://img.freepik.com/free-vector/green-trees-leaves-flat-icons-set-oak-aspen-linden-maple-chestnut-clover-plants-isolated-vector-illustration_1284-3022.jpg?w=740&t=st=1684410201~exp=1684410801~hmac=f2643f557b94232a485bd203a769a09ad29aab8c4cb127f98c4fd6bb9fc54341'),
+                  // 'https://img.freepik.com/free-vector/different-colorful-leaves-collection-flat-design_23-2149112268.jpg?w=740&t=st=1684360667~exp=1684361267~hmac=6fa0275bc5b93080c06a7ee690dfcf36d09c2d960fd430c01fa78dec27b26396'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -164,7 +166,7 @@ class ProfilePageState extends State<ProfilePage> {
                     style: TextStyle(
                       fontSize: 35,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 39, 98, 39),
+                      color: Color.fromARGB(255, 33, 92, 33),
                     ),
                   ),
                 ],
@@ -411,6 +413,7 @@ class ProfilePageState extends State<ProfilePage> {
 // ignore: non_constant_identifier_names
   void _OnLogoutTapConfirm(BuildContext context) {
     // set up the buttons
+
     Widget cancelButton = TextButton(
       child: Text("Cancel"),
       onPressed: () {

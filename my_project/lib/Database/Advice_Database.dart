@@ -306,11 +306,11 @@ Map<String, String> adv2={
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv3={
-  'text': 'if you see an interesting social media post on sustainability, share it',
+  'text': 'share interesting social media post on sustainability',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv4={
-  'text': 'ask to engage in initiatives that don’t harm people or the planet',
+  'text': 'ask for initiatives that don’t harm people or the planet',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv5={
@@ -326,7 +326,7 @@ Map<String, String> adv7={
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv8={
-  'text': 'freeze fresh produce and leftovers if you don’t eat them before they go bad',
+  'text': 'freeze fresh foods if you don’t eat them before they go bad',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv9={
@@ -334,7 +334,7 @@ Map<String, String> adv9={
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv10={
-  'text': 'plug air leaks in windows and doors to increase energy efficiency',
+  'text': 'plug air leaks in windows to increase energy efficiency',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv11={
@@ -358,7 +358,7 @@ Map<String, String> adv15={
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv16={
-  'text': 'donate what you don’t use. Local charities will give your gently used things',
+  'text': 'donate what you don’t use to local charities',
   'url':'https://www.un.org/sustainabledevelopment/takeaction/'};
 
 Map<String, String> adv17={

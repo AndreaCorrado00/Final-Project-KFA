@@ -173,7 +173,7 @@ class TipsPageState extends State<TipsPage> {
                           width: 220,
                           height: 105,
                           child: Text(
-                            'What can you concretely do? Today we will leave you this advice: ' + Adivices[adv_id]['text']+ '. Try to figure out how to do it!',
+                            'What can you concretely do? Today we leave you this advice: ' + Adivices[adv_id]['text']+ '. Try to do it!',
                             style: TextStyle(fontSize: 16),
                             textAlign: TextAlign.left,
                           ),

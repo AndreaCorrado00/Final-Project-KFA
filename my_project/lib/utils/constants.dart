@@ -37,5 +37,13 @@ class Constants {
 
   static final double defaultPadding = 16.0;
 
+  static const containerColor=Color.fromARGB(255, 253, 253, 253);
+  static final Tips_Title_style =TextStyle(
+                          color: Constants.secondaryColor,
+                          fontSize: 20,
+                          fontFamily: Constants.myfontFamily,
+                          fontWeight: FontWeight.bold);
+
+
   
 }

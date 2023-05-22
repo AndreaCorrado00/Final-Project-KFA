@@ -13,6 +13,7 @@ class AboutThisAppState extends StatefulWidget {
 }
 
 class AboutThisApp extends State<AboutThisAppState>{
+  bool _visible=false;
 
   static const routename = 'AboutThisApp';
 
@@ -101,8 +102,94 @@ class AboutThisApp extends State<AboutThisAppState>{
           ],
         ),
       ),
+
+
+
+
+
       backgroundColor: Constants.primaryLightColor,
-      //body: TO BE IMPLEMENTED
+      body:AnimatedOpacity(
+        opacity: 1.0,
+          duration: const Duration(seconds: 1),
+          child: ListView(
+          padding: EdgeInsets.all(30),
+      
+          children: [ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+                height:  300,
+                color: Constants.containerColor,
+                child: Column(children: [
+                  SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment(-0.9,0),
+                    child: Text(
+                      'Nice to meet you!',
+                      style: Constants.Tips_Title_style,
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  const Align(
+                    alignment: Alignment(-0.85,0),
+                    child:Text(
+                      'We are ...',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),]))),
+                  SizedBox(height: 15,),
+                ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+                height:  300,
+                color: Constants.containerColor,
+                child: Column(children: [
+                  SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment(-0.9,0),
+                    child: Text(
+                      'Why this app?',
+                      style: Constants.Tips_Title_style,
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  const Align(
+                    alignment: Alignment(-0.85,0),
+                    child:Text(
+                      'The purpose of this app is ...',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),]))),
+                   SizedBox(height: 15,),
+                ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+                height:  300,
+                color: Constants.containerColor,
+                child: Column(children: [
+                  SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment(-0.9,0),
+                    child: Text(
+                      'How to use this app?',
+                      style: Constants.Tips_Title_style,
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  const Align(
+                    alignment: Alignment(-0.85,0),
+                    child:Text(
+                      'The app has ...',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  ),])))
+                  
+                  ])),
+
+
+
+
+
+      
       floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.home),
           onPressed: () {Navigator.push(context,MaterialPageRoute(builder: (context) => HomePageState()));},
@@ -111,8 +198,13 @@ class AboutThisApp extends State<AboutThisAppState>{
           splashColor: Constants.primaryLightColor,
           ),
     floatingActionButtonLocation:FloatingActionButtonLocation.endFloat,
+
+    
       );
-  } //build
+  
+  } 
+  
+  
   void _OnLogoutTapConfirm(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(

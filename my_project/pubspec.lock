@@ -9,14 +9,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  animated_text_kit:
+    dependency: "direct main"
+    description:
+      name: animated_text_kit
+      sha256: "37392a5376c9a1a503b02463c38bc0342ef814ddbb8f9977bc90f2a84b22fa92"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.2"
   another_flushbar:
     dependency: transitive
     description:
       name: another_flushbar
-      sha256: fa09f8a4ca582c417669b7b1d0e85ce65bd074d80bb0dcbb1302ad1b22bdc3ef
+      sha256: "19bf9520230ec40b300aaf9dd2a8fefcb277b25ecd1c4838f530566965befc2a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.12.29"
+    version: "1.12.30"
   another_transformer_page_view:
     dependency: transitive
     description:
@@ -465,26 +473,26 @@ packages:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_charts
-      sha256: bdb7cc5814ceb187793cea587f4a5946afcffd96726b219cee79df8460f44b7b
+      sha256: a3694508b7a7bc366a5ce27b6ab3be60a32bc994d1fd806f6d57e81ed9ca637c
       url: "https://pub.dev"
     source: hosted
-    version: "21.2.4"
+    version: "21.2.5"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: dfd138a0cea87d6b1c624513b4b620f06515d884d65f1fa5fb93345266c7592c
+      sha256: b2ad1c93239b094d6de1b4679c1835b1bc4332e6c6548bd2da44bd2594e6cdc5
       url: "https://pub.dev"
     source: hosted
-    version: "21.2.4"
+    version: "21.2.5"
   syncfusion_flutter_gauges:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_gauges
-      sha256: a8e75d7418be1694d39e4b32b2ceacdfcda24edf7e2416af15e0887548313c8e
+      sha256: "126a6ee4a6513bba1df3370b1b607c0e8e22cb922fef300a8f809f54f59c6e54"
       url: "https://pub.dev"
     source: hosted
-    version: "21.2.4"
+    version: "21.2.5"
   term_glyph:
     dependency: transitive
     description:
@@ -521,10 +529,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_android
-      sha256: "22f8db4a72be26e9e3a4aa3f194b1f7afbc76d20ec141f84be1d787db2155cbd"
+      sha256: "1a5848f598acc5b7d8f7c18b8cb834ab667e59a13edc3c93e9d09cf38cc6bc87"
       url: "https://pub.dev"
     source: hosted
-    version: "6.0.31"
+    version: "6.0.34"
   url_launcher_ios:
     dependency: transitive
     description:

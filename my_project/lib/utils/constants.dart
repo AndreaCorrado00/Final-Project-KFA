@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:flutter_animate/flutter_animate.dart';
 // A class of constans that are used trought the code
 class Constants {
   // COLORS
@@ -52,6 +52,8 @@ class Constants {
                                   fontFamily: Constants.myfontFamily,
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold);
+
+  static final Fade_effect_options=const [FadeEffect(duration: Duration(milliseconds: 1000))];
 
   
 }

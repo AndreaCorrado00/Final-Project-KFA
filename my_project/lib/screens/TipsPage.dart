@@ -7,8 +7,8 @@ import 'package:my_project/screens/StatisticsPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_project/utils/constants.dart';
 import 'package:my_project/Database/Advice_Database.dart';
-import 'dart:math';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 // Using DateTime to read the date
 DateTime _today = DateTime.now();
@@ -35,12 +35,20 @@ class TipsPage extends StatefulWidget {
 }
 
 class TipsPageState extends State<TipsPage> {
-  //-------------- Index used trought the code to build widgets
+  //-------------- Index for the state
   int _selectedIndex = 1;
+  
+
+
+  // void _changeOpacity() {
+  //   setState(() => _opacityLevel = _opacityLevel == 0 ? 0.0 : 1.0);
+  // }
+  
 
   static const routename = 'TipsPage';
   @override
   Widget build(BuildContext context) {
+    
     // Future<List<int>> today_id=_todayIndex(today);
     // Future<int> cur_id = today_id[];
 
@@ -52,10 +60,12 @@ class TipsPageState extends State<TipsPage> {
         automaticallyImplyLeading: false,
       ),
       backgroundColor: Constants.primaryLightColor,
-      body: ListView(
+      body:  ListView(
         padding: EdgeInsets.all(30),
         children: [
-          ClipRRect(
+          Animate(
+            effects: Constants.Fade_effect_options,
+            child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Container(
                 height:  double.parse(Curiosities[cur_id]['big_cont_h']),
@@ -101,9 +111,11 @@ class TipsPageState extends State<TipsPage> {
                               launchUrl(cur_url);},
                             child: Text('Learn more',
                               style: Constants.Url_Button_style,))),]))
-          ),
+          ),),
           SizedBox(height: 25),
-          ClipRRect(
+          Animate(
+            effects: Constants.Fade_effect_options,
+            child:ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Container(
                 height: 200,
@@ -146,9 +158,11 @@ class TipsPageState extends State<TipsPage> {
                               launchUrl(rep_url);},
                             child: Text('Let\'s cook',
                               style: Constants.Url_Button_style,))),]))
-          ),
+          ),),
           SizedBox(height: 25),
-          ClipRRect(
+          Animate(
+            effects: Constants.Fade_effect_options,
+            child:ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Container(
                 height: 200,
@@ -194,9 +208,11 @@ class TipsPageState extends State<TipsPage> {
                               launchUrl(adv_url);},
                             child: Text('Tell me more',
                               style: Constants.Url_Button_style,))),]))
-          ),
+          ),),
           SizedBox(height: 25),
-          ClipRRect(
+          Animate(
+            effects: Constants.Fade_effect_options,
+            child:ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Container(
                 height: 200,
@@ -242,7 +258,7 @@ class TipsPageState extends State<TipsPage> {
                               launchUrl(sta_url);},
                             child: Text('More about',
                               style: Constants.Url_Button_style,))),]))
-          ),
+          ),),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -288,9 +304,12 @@ class TipsPageState extends State<TipsPage> {
               break;
           }
 
+          //_changeOpacity();
+
           setState(
             () {
               _selectedIndex = index;
+             
             },
           );
         },

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_project/screens/HomePage.dart';
 import 'package:my_project/screens/StatisticsPage.dart';
+// ignore: unused_import
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_project/utils/constants.dart';
 import 'package:my_project/Database/Advice_Database.dart';
@@ -286,7 +287,7 @@ class TipsPageState extends State<TipsPage> {
             case 0:
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => const HomePageState()));
-            //break;
+            break;
             case 1:
               if (index != 1) {
                 Navigator.of(context).pushReplacement(
@@ -295,7 +296,7 @@ class TipsPageState extends State<TipsPage> {
                 print('still in the Statistics page ');
               }
 
-            //break;
+            break;
             case 2:
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => const StatisticsPage()));

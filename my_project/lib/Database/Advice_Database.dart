@@ -84,8 +84,8 @@ Map<String, String> Cur13={
 Map<String, String> Cur14={
   'text': 'Healthy oceans and seas are essential to human existence and life on Earth. They cover 70 per cent of the planet and provide food, energy and water.',
   'url':'https://www.un.org/sustainabledevelopment/oceans/',
-  'big_cont_h':'200',
-  'child_cont_h':'105',};
+  'big_cont_h':'230',
+  'child_cont_h':'135',};
 
 Map<String, String> Cur15={
   'text': ' Healthy ecosystems and the biological diversity they support are a source of food, water, medicine, shelter and other material goods.',

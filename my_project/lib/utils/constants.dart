@@ -6,7 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 // A class of constans that are used trought the code
 class Constants {
   // COLORS
-  static const primaryColor = Color.fromARGB(255, 3, 204, 0);
+  static const primaryColor = Color.fromARGB(255, 35, 161, 36);
   static const primaryLightColor = Color.fromARGB(255, 235, 235, 235);
   static const secondaryColor = Color.fromARGB(255, 0, 130, 106);
   static const secondarylightColor = Color.fromARGB(255, 238, 255, 0);
@@ -53,7 +53,7 @@ class Constants {
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold);
 
-  static final Fade_effect_options=const [FadeEffect(duration: Duration(milliseconds: 1000))];
+  static final Fade_effect_options=const [FadeEffect(duration: Duration(milliseconds: 700))];
 
   
 }

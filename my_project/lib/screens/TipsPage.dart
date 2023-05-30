@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_project/screens/HomePage.dart';
 import 'package:my_project/screens/StatisticsPage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_project/utils/constants.dart';
 import 'package:my_project/Database/Advice_Database.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,12 +20,8 @@ int rep_id = today % Rep_ln;
 int adv_id = today % Adv_ln;
 int sta_id = today % Sta_ln;
 
-// A possible idea:
-// Using a random number generator, choosing averyday a new number (the generation is made if the day is changed). A shered preferences variable is created ad hoc to remeber the day
-// Then, what we advice for the day is choosen into a database created similary to the Advice_Database. Once you have the random number, you can scale it with the
-// number of elements of the database (possibly, this coud be a variable into the DB) and select the random element for today.
-// Probably, using a map will be the best solution to implement the DB.
-// I image something like 30 possibilities of choosing for each element advised
+
+
 
 class TipsPage extends StatefulWidget {
   const TipsPage({super.key});

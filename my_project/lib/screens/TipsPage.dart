@@ -282,7 +282,7 @@ class TipsPageState extends State<TipsPage> {
             case 0:
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => const HomePageState()));
-            //break;
+            break;
             case 1:
               if (index != 1) {
                 Navigator.of(context).pushReplacement(
@@ -291,7 +291,7 @@ class TipsPageState extends State<TipsPage> {
                 print('still in the Statistics page ');
               }
 
-            //break;
+            break;
             case 2:
               Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => const StatisticsPage()));

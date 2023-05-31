@@ -8,18 +8,20 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 
 class StatisticsPage extends StatefulWidget {
-  const StatisticsPage({super.key});
+ const StatisticsPage ({super.key});
 
   @override
   StatisticsPageState createState() => StatisticsPageState();
 }
 
 class StatisticsPageState extends State<StatisticsPage> {
-  //-------------- Index used trought the code to build widgets
+ //-------------- Index used trought the code to build widgets
   int _selectedIndex = 2;
-  static const routename = 'StatisticsPage';
 
   List<double> dailySteps = [5600, 4000, 10000, 7000, 3000, 1000, 12000];
+
+
+static const routename = 'StatisticsPage';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,6 +29,7 @@ class StatisticsPageState extends State<StatisticsPage> {
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Constants.primaryColor,
+
           title: Text('Statistics'),
         ),
        
@@ -143,6 +146,7 @@ class StatisticsPageState extends State<StatisticsPage> {
           ],
         ),
     ),
+
     );
   }
 }

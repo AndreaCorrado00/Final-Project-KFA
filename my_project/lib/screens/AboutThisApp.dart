@@ -105,7 +105,10 @@ class AboutThisApp extends State<AboutThisAppState>{
       //body: TO BE IMPLEMENTED
       floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.home),
-          onPressed: () {Navigator.push(context,MaterialPageRoute(builder: (context) => HomePage()));},
+
+          
+          onPressed: () {Navigator.push(context,MaterialPageRoute(builder: (context) => HomeScreen()));},
+
           backgroundColor: Constants.secondaryColor,
           elevation: 0.0,
           splashColor: Constants.primaryLightColor,
@@ -119,7 +122,9 @@ class AboutThisApp extends State<AboutThisAppState>{
       child: Text("Cancel"),
       onPressed: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
+
+            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+
       },
       style: Constants.TextButtonStyle_Alert,
     );

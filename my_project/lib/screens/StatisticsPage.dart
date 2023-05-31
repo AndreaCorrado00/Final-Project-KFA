@@ -54,7 +54,7 @@ class StatisticsPageState extends State<StatisticsPage> {
             switch (index) {
               case 0:
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const HomePageState()));
+                    builder: (context) => const HomeScreen()));
                 break;
               case 1:
                 Navigator.of(context).pushReplacement(

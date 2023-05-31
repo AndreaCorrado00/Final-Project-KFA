@@ -1,10 +1,12 @@
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:flutter_animate/flutter_animate.dart';
 // A class of constans that are used trought the code
 class Constants {
   // COLORS
-  static const primaryColor = Color.fromARGB(255, 3, 204, 0);
+  static const primaryColor = Color.fromARGB(255, 35, 161, 36);
   static const primaryLightColor = Color.fromARGB(255, 235, 235, 235);
   static const secondaryColor = Color.fromARGB(255, 0, 130, 106);
   static const secondarylightColor = Color.fromARGB(255, 238, 255, 0);
@@ -36,6 +38,22 @@ class Constants {
       ));
 
   static final double defaultPadding = 16.0;
+
+  // Tips Page Constants
+  static const containerColor=Color.fromARGB(255, 253, 253, 253);
+  static final Tips_Title_style =TextStyle(
+                          color: Constants.secondaryColor,
+                          fontSize: 20,
+                          fontFamily: Constants.myfontFamily,
+                          fontWeight: FontWeight.bold);
+
+  static final Url_Button_style=TextStyle(
+                                  color: Color.fromARGB(255, 0, 174, 255),
+                                  fontFamily: Constants.myfontFamily,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold);
+
+  static final Fade_effect_options=const [FadeEffect(duration: Duration(milliseconds: 700))];
 
   
 }

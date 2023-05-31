@@ -4,8 +4,7 @@ import 'SensPage.dart';
 import 'StatisticsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:my_project/screens/StatisticsPage.dart';
-import 'package:my_project/screens/TipsPage.dart';
+
 
 class HomeScreen extends StatefulWidget {
   //const HomeScreen({super.key});

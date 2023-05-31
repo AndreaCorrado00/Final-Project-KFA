@@ -300,7 +300,7 @@ static const routename = 'ProfileScreen';
         ),
           floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.home),
-          onPressed: () {Navigator.push(context,MaterialPageRoute(builder: (context) => HomePageState()));},
+          onPressed: () {Navigator.push(context,MaterialPageRoute(builder: (context) => HomeScreen()));},
           backgroundColor: Constants.secondaryColor,
           elevation: 0.0,
           splashColor: Constants.primaryLightColor,
@@ -314,7 +314,7 @@ void _OnLogoutTapConfirm(BuildContext context) {
   // set up the buttons
   Widget cancelButton = TextButton(
     child: Text("Cancel"),
-    onPressed:  () { Navigator.push(context,MaterialPageRoute(builder: (context) => HomePageState()));},
+    onPressed:  () { Navigator.push(context,MaterialPageRoute(builder: (context) => HomeScreen()));},
     style: Constants.TextButtonStyle_Alert ,
 
   );

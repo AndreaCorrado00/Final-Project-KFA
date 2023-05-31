@@ -51,6 +51,10 @@ dependencies:
   curved_navigation_bar: ^1.0.3
   animated_text_kit: ^4.2.1
   percent_indicator: ^4.2.3
+  html: ^0.15.0
+  step_progress_indicator: ^1.0.2
+  fl_chart: ^0.60.0
+  flutter_animate: ^4.1.1+1
 
 
   

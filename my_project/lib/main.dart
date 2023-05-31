@@ -1,27 +1,10 @@
-// import 'package:flutter/material.dart';
-// import 'package:my_project/screens/LoginPage.dart';
-// void main() {
-//   runApp(
-//     MyApp());}
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home:  LoginPage(),
-//     );
-//   }
-// }
-
-
 import 'package:my_project/screens/LoginPage.dart';
 import 'package:my_project/screens/SignUp.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
 void main() {
-  runApp(new MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -104,10 +87,10 @@ class _loginState extends State<login> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
                   );
                 },
-                color: Color.fromARGB(255, 226, 203, 70),
+                color: const Color.fromARGB(255, 226, 203, 70),
                 shape: RoundedRectangleBorder(
                     side: const BorderSide(
                       color: Color.fromARGB(255, 255, 251, 251),
@@ -130,7 +113,7 @@ class _loginState extends State<login> {
                     MaterialPageRoute(builder: (context) => SignupPage()),
                   );
                 },
-                color: Color.fromARGB(255, 39, 97, 24),
+                color: const Color.fromARGB(255, 39, 97, 24),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(40)),
                 child: const Text(

@@ -1,3 +1,4 @@
+
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
@@ -22,7 +23,6 @@ int cur_id = today % Cur_ln;
 int rep_id = today % Rep_ln;
 int adv_id = today % Adv_ln;
 int sta_id = today % Sta_ln;
-
 
 
 
@@ -62,6 +62,7 @@ class TipsPageState extends State<TipsPage> {
       body:  ListView(
         padding: EdgeInsets.all(30),
         children: [
+
           Animate(
             effects: Constants.Fade_effect_options,
             child: ClipRRect(
@@ -314,6 +315,7 @@ class TipsPageState extends State<TipsPage> {
       //     );
       //   },
       // ),
+
     );
   }
 

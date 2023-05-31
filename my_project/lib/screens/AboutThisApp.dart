@@ -6,14 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_project/screens/LoginPage.dart';
 
 class AboutThisAppState extends StatefulWidget {
-  const AboutThisAppState ({super.key});
+  const AboutThisAppState({super.key});
 
   @override
-  State<AboutThisAppState > createState() => AboutThisApp();
+  State<AboutThisAppState> createState() => AboutThisApp();
 }
 
-class AboutThisApp extends State<AboutThisAppState>{
-
+class AboutThisApp extends State<AboutThisAppState> {
   static const routename = 'AboutThisApp';
 
   @override
@@ -26,7 +25,7 @@ class AboutThisApp extends State<AboutThisAppState>{
         automaticallyImplyLeading: false,
       ),
 
-            drawer: Drawer(
+      drawer: Drawer(
         backgroundColor: Constants.secondaryColor,
         child: Column(
           children: [
@@ -104,18 +103,20 @@ class AboutThisApp extends State<AboutThisAppState>{
       backgroundColor: Constants.primaryLightColor,
       //body: TO BE IMPLEMENTED
       floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.home),
 
-          
-          onPressed: () {Navigator.push(context,MaterialPageRoute(builder: (context) => HomeScreen()));},
-
-          backgroundColor: Constants.secondaryColor,
-          elevation: 0.0,
-          splashColor: Constants.primaryLightColor,
-          ),
-    floatingActionButtonLocation:FloatingActionButtonLocation.endFloat,
-      );
+        child: const Icon(Icons.home),
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        },
+        backgroundColor: Constants.secondaryColor,
+        elevation: 0.0,
+        splashColor: Constants.primaryLightColor,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    )
   } //build
+
   void _OnLogoutTapConfirm(BuildContext context) {
     // set up the buttons
     Widget cancelButton = TextButton(
@@ -124,7 +125,6 @@ class AboutThisApp extends State<AboutThisAppState>{
         Navigator.push(
 
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
-
       },
       style: Constants.TextButtonStyle_Alert,
     );

@@ -144,6 +144,7 @@ static const routename = 'StatisticsPage';
               ),
             ),
           ],
+
         ),
     ),
 

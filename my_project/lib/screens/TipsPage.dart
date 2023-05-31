@@ -257,59 +257,59 @@ class TipsPageState extends State<TipsPage> {
           ),),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.tips_and_updates),
-            label: 'Advice and Tips',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.insights),
-            label: 'Statistics',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        backgroundColor: Constants.primaryColor,
-        selectedItemColor: Constants.secondarylightColor,
-        selectedFontSize: 14.0,
-        type: BottomNavigationBarType.fixed,
-        onTap: (int index) {
-          switch (index) {
-            case 0:
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => const HomePageState()));
-            break;
-            case 1:
-              if (index != 1) {
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => const TipsPage()));
-              } else {
-                print('still in the Statistics page ');
-              }
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: const <BottomNavigationBarItem>[
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //       label: 'Home',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.tips_and_updates),
+      //       label: 'Advice and Tips',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.insights),
+      //       label: 'Statistics',
+      //     ),
+      //   ],
+      //   currentIndex: _selectedIndex,
+      //   backgroundColor: Constants.primaryColor,
+      //   selectedItemColor: Constants.secondarylightColor,
+      //   selectedFontSize: 14.0,
+      //   type: BottomNavigationBarType.fixed,
+      //   onTap: (int index) {
+      //     switch (index) {
+      //       case 0:
+      //         Navigator.of(context).pushReplacement(MaterialPageRoute(
+      //             builder: (context) => const HomeScreen()));
+      //       break;
+      //       case 1:
+      //         if (index != 1) {
+      //           Navigator.of(context).pushReplacement(
+      //               MaterialPageRoute(builder: (context) => const TipsPage()));
+      //         } else {
+      //           print('still in the Statistics page ');
+      //         }
 
-            break;
-            case 2:
-              Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => const StatisticsPage()));
+      //       break;
+      //       case 2:
+      //         Navigator.of(context).pushReplacement(MaterialPageRoute(
+      //             builder: (context) => const StatisticsPage()));
 
-              // Probably in this case you have to put an if: if the index is not pointing the home and you are in the case of the home, return to home
-              break;
-          }
+      //         // Probably in this case you have to put an if: if the index is not pointing the home and you are in the case of the home, return to home
+      //         break;
+      //     }
 
-          //_changeOpacity();
+      //     //_changeOpacity();
 
-          setState(
-            () {
-              _selectedIndex = index;
+      //     setState(
+      //       () {
+      //         _selectedIndex = index;
              
-            },
-          );
-        },
-      ),
+      //       },
+      //     );
+      //   },
+      // ),
     );
   }
 

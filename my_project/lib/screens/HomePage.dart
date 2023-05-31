@@ -485,6 +485,7 @@
 import 'package:my_project/screens/ProfilePage.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:my_project/screens/StatisticsPage.dart';
 import 'package:my_project/screens/TipsPage.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -499,7 +500,7 @@ class HomeScreenstate extends State<HomeScreen> {
   int page = 0;
 
   final page1 = const HomePage();
-  get page2 => TipsPage();
+  get page2 => StatisticsPage();
 
   @override
   void initState() {

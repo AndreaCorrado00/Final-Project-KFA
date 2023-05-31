@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_project/screens/HomePage.dart';
 import 'package:my_project/screens/StatisticsPage.dart';
+
+
 //import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:my_project/utils/constants.dart';
 import 'package:my_project/Database/Advice_Database.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -290,6 +293,7 @@ class TipsPageState extends State<TipsPage> {
       //         } else {
       //           print('still in the Statistics page ');
       //         }
+
 
       //       break;
       //       case 2:

@@ -114,7 +114,7 @@ class AboutThisApp extends State<AboutThisAppState> {
         splashColor: Constants.primaryLightColor,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-    )
+    );
   } //build
 
   void _OnLogoutTapConfirm(BuildContext context) {

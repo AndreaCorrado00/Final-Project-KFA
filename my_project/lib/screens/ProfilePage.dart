@@ -411,14 +411,7 @@ class ProfilePageState extends State<ProfilePage> {
   }
 
 
-void _OnLogoutTapConfirm(BuildContext context) {
-  // set up the buttons
-  Widget cancelButton = TextButton(
-    child: Text("Cancel"),
 
-    onPressed:  () { Navigator.push(context,MaterialPageRoute(builder: (context) => HomeScreen()));},
-
-    style: Constants.TextButtonStyle_Alert ,
 
 
 // ignore: non_constant_identifier_names
@@ -429,7 +422,7 @@ void _OnLogoutTapConfirm(BuildContext context) {
       child: Text("Cancel"),
       onPressed: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            context, MaterialPageRoute(builder: (context) =>  LoginPage()));
       },
       style: Constants.TextButtonStyle_Alert,
     );

@@ -1,24 +1,135 @@
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
-//import 'package:percent_indicator/percent_indicator.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' as parser;
-import 'package:html/dom.dart' as dom;
-import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:my_project/utils/impact.dart';
+import 'package:my_project/models/steps.dart';
+
+Future<int?> _authorize() async {
+  //Create the request
+  final url = Impact.baseUrl + Impact.tokenEndpoint;
+  final body = {'username': Impact.username, 'password': Impact.password};
+
+  //Get the response
+  print('Calling: $url');
+  final response = await http.post(Uri.parse(url), body: body);
+
+  //If 200, set the token
+  if (response.statusCode == 200) {
+    final decodedResponse = jsonDecode(response.body);
+    final sp = await SharedPreferences.getInstance();
+    sp.setString('access', decodedResponse['access']);
+    sp.setString('refresh', decodedResponse['refresh']);
+  } //if
+
+  //Just return the status code
+  return response.statusCode;
+} //_authorize
+
+//This method allows to obtain the JWT token pair from IMPACT and store it in SharedPreferences
+Future<List<Steps>?> _requestData() async {
+  //Initialize the result
+  List<Steps>? result;
+
+  //Get the stored access token (Note that this code does not work if the tokens are null)
+  final sp = await SharedPreferences.getInstance();
+  var access = sp.getString('access');
+
+  //If access token is expired, refresh it
+  if (JwtDecoder.isExpired(access!)) {
+    await _refreshTokens();
+    access = sp.getString('access');
+  } //if
+
+  //Create the (representative) request
+  final day = '2023-04-04';
+  final url = Impact.baseUrl +
+      Impact.stepsEndpoint +
+      Impact.patientUsername +
+      '/day/$day/';
+  final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'};
+
+  //Get the response
+  print('Calling: $url');
+  final response = await http.get(Uri.parse(url), headers: headers);
+
+  //if OK parse the response, otherwise return null
+  if (response.statusCode == 200) {
+    final decodedResponse = jsonDecode(response.body);
+    result = [];
+    for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
+      result.add(Steps.fromJson(
+          decodedResponse['data']['date'], decodedResponse['data']['data'][i]));
+    } //for
+  } //if
+  else {
+    result = null;
+  } //else
+
+  //Return the result
+  return result;
+} //_requestData
+
+//This method allows to obtain the JWT token pair from IMPACT and store it in SharedPreferences
+Future<int> _refreshTokens() async {
+  //Create the request
+  final url = Impact.baseUrl + Impact.refreshEndpoint;
+  final sp = await SharedPreferences.getInstance();
+  final refresh = sp.getString('refresh');
+  final body = {'refresh': refresh};
+
+  //Get the respone
+  print('Calling: $url');
+  final response = await http.post(Uri.parse(url), body: body);
+
+  //If 200 set the tokens
+  if (response.statusCode == 200) {
+    final decodedResponse = jsonDecode(response.body);
+    final sp = await SharedPreferences.getInstance();
+    sp.setString('access', decodedResponse['access']);
+    sp.setString('refresh', decodedResponse['refresh']);
+  } //if
+
+  //Return just the status code
+  return response.statusCode;
+}
 
 class SensPage extends StatefulWidget {
-  const SensPage({super.key});
+  SensPage({super.key});
 
   @override
   State<StatefulWidget> createState() => Sens_page();
 }
 
-// ignore: camel_case_types
 class Sens_page extends State<SensPage> {
+//verification de l'authenticitè
+  bool _isAuthorized = false;
+  String steps = '';
+  // attention! need to refresh the token
+
+  @override
+  void initState() {
+    super.initState();
+    _authorize().then((result) async {
+      if (result == 200) {
+        setState(() {
+          _isAuthorized = true;
+        });
+
+        final stepsdata = await _requestData();
+        setState(() {
+          steps = stepsdata.toString();
+        });
+      }
+    });
+  }
+
   void _showQuestionnaire() {
     int? question1Value = 3;
-    // ignore: no_leading_underscores_for_local_identifiers
     int? _question2Value = 3;
     int? _question3Value = 3;
 
@@ -112,7 +223,7 @@ class Sens_page extends State<SensPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const SensPage(
+                      builder: (context) => SensPage(
                           // question1: question1Value,
                           //question2: _question2Value,
                           //question3: _question3Value,
@@ -215,9 +326,6 @@ class Sens_page extends State<SensPage> {
                 ],
               ),
             ),
-
-            //mainAxisAlignment: MainAxisAlignment.center,
-            //crossAxisAlignment: CrossAxisAlignment.center,
             Container(
               margin: EdgeInsets.only(top: 10),
               child:
@@ -232,13 +340,13 @@ class Sens_page extends State<SensPage> {
                   lineWidth: 12.0,
                   animation: true,
                   percent: 0.7,
-                  center: new Text(
-                    "6000",
-                    style: new TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 15.0),
+                  center: Text(
+                    '$steps',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
                   ),
                   footer: new Text(
-                    "Steps",
+                    '',
                     style: new TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 17.0),
                   ),
@@ -250,14 +358,14 @@ class Sens_page extends State<SensPage> {
             ),
             SizedBox(
               height: 200,
-              child: new LinearPercentIndicator(
+              child: LinearPercentIndicator(
                 width: 300.0,
                 alignment: MainAxisAlignment.center,
                 lineHeight: 20.0,
                 percent: 0.5,
-                center: Text(
+                center: const Text(
                   "50",
-                  style: new TextStyle(fontSize: 12.0),
+                  style: TextStyle(fontSize: 12.0),
                 ),
                 trailing: Icon(Icons.nature),
                 linearStrokeCap: LinearStrokeCap.roundAll,

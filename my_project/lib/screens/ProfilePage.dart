@@ -405,10 +405,21 @@ class ProfilePageState extends State<ProfilePage> {
             )
           ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
       ),
     );
   }
+
+
+void _OnLogoutTapConfirm(BuildContext context) {
+  // set up the buttons
+  Widget cancelButton = TextButton(
+    child: Text("Cancel"),
+
+    onPressed:  () { Navigator.push(context,MaterialPageRoute(builder: (context) => HomeScreen()));},
+
+    style: Constants.TextButtonStyle_Alert ,
+
 
 // ignore: non_constant_identifier_names
   void _OnLogoutTapConfirm(BuildContext context) {

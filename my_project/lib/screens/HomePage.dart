@@ -4,6 +4,7 @@ import 'SensPage.dart';
 import 'StatisticsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:my_project/screens/TipsPage.dart';
 
 class HomeScreen extends StatefulWidget {
   //const HomeScreen({super.key});
@@ -15,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenstate extends State<HomeScreen> {
   int page = 0;
+
 
   final page1 = SensPage();
   get page2 => StatisticsPage();
@@ -40,7 +42,6 @@ class HomeScreenstate extends State<HomeScreen> {
         return const Text("Invalid page");
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

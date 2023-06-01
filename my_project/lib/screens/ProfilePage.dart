@@ -399,7 +399,7 @@ class ProfilePageState extends State<ProfilePage> {
       child: Text("Cancel"),
       onPressed: ()  {
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const ProfilePage()));},
+            MaterialPageRoute(builder: (context) => const ProfilePage()));},// Must be changed to point at the current page 
       style: Constants.TextButtonStyle_Alert,
     );
     Widget continueButton = TextButton(
@@ -408,7 +408,7 @@ class ProfilePageState extends State<ProfilePage> {
         final user_preferences = await SharedPreferences.getInstance();
          await user_preferences.setBool('Rememeber_login', false);
         Navigator.push(context, MaterialPageRoute(builder: (context) =>  LoginPage()));
-         // Must be changed to point at the current page 
+         
       },
       style: Constants.TextButtonStyle_Alert,
     );

@@ -1,9 +1,9 @@
 //run
 import 'package:flutter/material.dart';
 import 'package:my_project/screens/AboutThisApp.dart';
-import 'package:my_project/screens/HomePage.dart';
 import 'package:my_project/screens/LoginPage.dart';
 import 'package:my_project/utils/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -21,7 +21,7 @@ class ProfilePageState extends State<ProfilePage> {
       title: 'Profile ',
       home: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromARGB(255, 153, 216, 152),
+          backgroundColor: Constants.primaryColor,
           title: Text('Profile'),
           //actions: [IconButton(onPressed: () {}, icon: Icon(Icons.settings))],
           //automaticallyImplyLeading: true,
@@ -32,29 +32,6 @@ class ProfilePageState extends State<ProfilePage> {
             children: [
               SizedBox(
                 height: 100,
-              ),
-              Row(
-                children: [
-                  TextButton(
-                    style: Constants.TextButtonStyle_Drawer,
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProfilePage()));
-                    },
-                    child: const Text('Profile'),
-                  ),
-                  Icon(
-                    IconData(0xe491, fontFamily: 'MaterialIcons'),
-                    color: Constants.secondarylightColor,
-                    size: 24.0,
-                  ),
-                ],
-              ),
-              SizedBox(
-                width: 300,
-                height: 1,
               ),
               Row(
                 children: [
@@ -415,22 +392,23 @@ class ProfilePageState extends State<ProfilePage> {
 
 
 // ignore: non_constant_identifier_names
-  void _OnLogoutTapConfirm(BuildContext context) {
+  void _OnLogoutTapConfirm(BuildContext context)  {
     // set up the buttons
 
     Widget cancelButton = TextButton(
       child: Text("Cancel"),
-      onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) =>  LoginPage()));
-      },
+      onPressed: ()  {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const ProfilePage()));},
       style: Constants.TextButtonStyle_Alert,
     );
     Widget continueButton = TextButton(
       child: Text("Continue"),
-      onPressed: () {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const LoginPage()));
+      onPressed: () async {
+        final user_preferences = await SharedPreferences.getInstance();
+         await user_preferences.setBool('Rememeber_login', false);
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>  LoginPage()));
+         // Must be changed to point at the current page 
       },
       style: Constants.TextButtonStyle_Alert,
     );

@@ -63,7 +63,7 @@ class TipsPageState extends State<TipsPage> {
           backgroundColor: Constants.secondaryColor,
           child: Column(
             children: [
-              SizedBox(
+              SizedBox( 
                 height: 100,
               ),
               Row(

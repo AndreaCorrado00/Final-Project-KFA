@@ -7,7 +7,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:my_project/utils/impact.dart';
-import 'package:my_project/models/steps.dart';
+import 'package:my_project/models/Steps.dart';
 
 Future<int?> _authorize() async {
   //Create the request

@@ -48,7 +48,7 @@ Future<List<Steps>?> _requestData() async {
   //Create the (representative) request
   final day = '2023-04-04';
   final url = Impact.baseUrl +
-      Impact.stepsEndpoint +
+      Impact.stepEndpoint +
       Impact.patientUsername +
       '/day/$day/';
   final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'};

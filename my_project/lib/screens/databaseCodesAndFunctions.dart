@@ -1,5 +1,10 @@
 // A temp page into which you'll find all the functions and examples to use the database. 
 
+import 'package:flutter/material.dart';
+import 'package:my_project/screens/HomePage.dart';
+import 'package:my_project/screens/StatisticsPage.dart';
+import 'package:my_project/utils/constants.dart';
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -13,6 +18,37 @@ import 'package:my_project/Models/Distance.dart';
 import 'package:my_project/Models/Activity.dart';
 
 import 'package:my_project/utils/impact.dart';
+
+
+class databaseTestPage extends StatefulWidget {
+ const databaseTestPage ({super.key});
+
+  @override
+  databaseTestPageState createState() => databaseTestPageState();
+}
+
+class databaseTestPageState extends State<databaseTestPage> {
+
+static const routename = 'StatisticsPage';
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Database functions test page',
+      home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Constants.primaryColor,
+
+          title: Text('Database functions test page'),
+        ),
+       
+      backgroundColor:Constants.primaryLightColor,
+      //body: ListView(
+      floatingActionButton:
+     FloatingActionButton(
+      onPressed: (){Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen()));},
+      child: Icon(Icons.home_filled))
+      ));}}
+
 
 // Some functions ready made for you with much love 
 Future<bool> _pingImpact() async{

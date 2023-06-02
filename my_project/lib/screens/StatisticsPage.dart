@@ -1,26 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+
 import 'package:my_project/screens/Barplot/bar_graph.dart';
-import 'package:my_project/screens/HomePage.dart';
+import 'package:my_project/screens/databaseCodesAndFunctions.dart';
 import 'package:my_project/utils/constants.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-
-
-import 'package:provider/provider.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:my_project/Models/Steps.dart';
-import 'package:my_project/Models/Distance.dart';
-import 'package:my_project/Models/Activity.dart';
-
-import 'package:my_project/utils/impact.dart';
 
 
 class StatisticsPage extends StatefulWidget {
@@ -165,15 +151,15 @@ static const routename = 'StatisticsPage';
 
     floatingActionButton:
      FloatingActionButton(
-      onPressed: _toTestDB(context),
+      onPressed: (){Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const databaseTestPage()));},
+      child: Icon(Icons.data_array)
       
       ),
      ),
 
     );
   }
+
 }
 
-void Function()?  _toTestDB(BuildContext context) {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen()));
-  } //_toTestDB
+

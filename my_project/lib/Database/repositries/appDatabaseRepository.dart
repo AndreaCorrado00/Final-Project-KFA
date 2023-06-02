@@ -16,18 +16,18 @@ DatabaseRepository({required this.database});
 // ACHIEVEMENTS METODS
 // dataRangeLoS
 Future<List<int>> dateRangeLoS(int id, String date, String startDate, String endDate) async {
-  final resoult = await database.achievementsDao.dateRangeLoS(id, date, startDate, endDate);
-  return resoult;
+  final result = await database.achievementsDao.dateRangeLoS(id, date, startDate, endDate);
+  return result;
 }
 // totalTrees
 Future<int?> totalTrees(int id, String date) async {
-  final resoult = await database.achievementsDao.totalTrees(id, date);
-  return resoult;
+  final result = await database.achievementsDao.totalTrees(id, date);
+  return result;
 }
 // totalLoS
 Future<int?> totalLoS(int id, String date) async {
-  final resoult = await database.achievementsDao.totalLoS(id, date);
-  return resoult;
+  final result = await database.achievementsDao.totalLoS(id, date);
+  return result;
 }
 // insert 
 Future<void> insertAchievements(Achievements achievements) async {
@@ -40,16 +40,16 @@ Future<void> updateAchievements(Achievements achievements) async {
   notifyListeners();
 }
 // delete 
-Future<void> deleteQuestions(Achievements achievements) async {
-  await database.achievementsDao.deleteQuestions(achievements);
+Future<void> deleteAchievements(Achievements achievements) async {
+  await database.achievementsDao.deleteAchievements(achievements);
   notifyListeners();
 }
 
 // QUESTIONNAIRE METODS
 //dailyTotal
 Future<int?> dailyTotal(int id, String date)async{
-  int? resoult = await database.questionnaireDao.dailyTotal(id, date);
-  return resoult;
+  int? result = await database.questionnaireDao.dailyTotal(id, date);
+  return result;
 }
 //insertAnswers
 Future<void> insertAnswers(Questionnaire answers) async {
@@ -61,42 +61,46 @@ Future<void> updateAnswers(Questionnaire answers) async {
   await database.questionnaireDao.updateAnswers(answers);
   notifyListeners();
 }
-//updateAnswers
-// Future<void> deleteQuestions(Questionnaire answersGiven) async {
-//   await database.questionnaireDao.deleteQuestions(answersGiven);
-//   notifyListeners();
-// }
+//deleteQuestions
+Future<void> deleteQuestions(Questionnaire answersGiven) async {
+  await database.questionnaireDao.deleteQuestions(answersGiven);
+  notifyListeners();
+}
+
+// STATISTICS DATA METODS
+//dateRangeSteps
+Future<List<int>>dateRangeSteps(int id, String date, String startDate, String endDate) async {
+  List<int> result = await database.statisticsDataDao.dateRangeSteps(id, date, startDate, endDate);
+  return result;
+}
+//dateRangeDistance
+Future<List<int>>dateRangeDistance(int id, String date, String startDate, String endDate) async {
+  List<int> result = await database.statisticsDataDao.dateRangeDistance(id, date, startDate, endDate);
+  return result;
+}
+//dateRangeActivityTime
+Future<List<int>>dateRangeActivityTime(int id, String date, String startDate, String endDate) async {
+  List<int> result = await database.statisticsDataDao.dateRangeActivityTime(id, date, startDate, endDate);
+  return result;
+}
+//insert
+Future<void> insertData(StatisticsData data) async {
+  await database.statisticsDataDao.insertData(data);
+  notifyListeners();
+}
+//udate
+Future<void> updateData(StatisticsData data) async {
+  await database.statisticsDataDao.updateData(data);
+  notifyListeners();
+}
+//delete
+Future<void> deleteRecord(StatisticsData data) async {
+  await database.statisticsDataDao.deleteRecord(data);
+  notifyListeners();
+}
 
 
 }
 
-
-  //The state of the database is just the AppDatabase
-  
-
-//   //Default constructor
-//   DatabaseRepository({required this.database});
-
-//   //This method wraps the findAllTodos() method of the DAO
-//   Future<List<Todo>> findAllTodos() async{
-//     final results = await database.todoDao.findAllTodos();
-//     return results;
-//   }//findAllTodos
-
-//   //This method wraps the insertTodo() method of the DAO. 
-//   //Then, it notifies the listeners that something changed.
-//   Future<void> insertTodo(Todo todo)async {
-//     await database.todoDao.insertTodo(todo);
-//     notifyListeners();
-//   }//insertTodo
-
-//   //This method wraps the deleteTodo() method of the DAO. 
-//   //Then, it notifies the listeners that something changed.
-//   Future<void> removeTodo(Todo todo) async{
-//     await database.todoDao.deleteTodo(todo);
-//     notifyListeners();
-//   }//removeTodo
-  
-// }//DatabaseRepository
 
  

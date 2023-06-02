@@ -214,8 +214,8 @@ class _$AchievementsDao extends AchievementsDao {
   }
 
   @override
-  Future<void> deleteQuestions(Achievements answersGiven) async {
-    await _achievementsDeletionAdapter.delete(answersGiven);
+  Future<void> deleteAchievements(Achievements achievement) async {
+    await _achievementsDeletionAdapter.delete(achievement);
   }
 }
 
@@ -401,7 +401,7 @@ class _$StatisticsDao extends StatisticsDao {
   }
 
   @override
-  Future<void> deleteQuestions(StatisticsData data) async {
+  Future<void> deleteRecord(StatisticsData data) async {
     await _statisticsDataDeletionAdapter.delete(data);
   }
 }

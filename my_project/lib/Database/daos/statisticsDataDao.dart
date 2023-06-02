@@ -24,6 +24,6 @@ abstract class StatisticsDao {
   Future<List<int>>dateRangeActivityTime(int id, String date, String startDate, String endDate);
 
   @delete
-  Future<void> deleteQuestions(StatisticsData data); // You will pass to the "metod" an object of class StatisticsData
+  Future<void> deleteRecord(StatisticsData data); // You will pass to the "metod" an object of class StatisticsData
 
 }//StatisticsDao

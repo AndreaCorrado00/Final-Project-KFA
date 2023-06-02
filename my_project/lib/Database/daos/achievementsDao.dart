@@ -23,6 +23,6 @@ abstract class AchievementsDao {
   Future<int?> totalLoS(int id, String date);
 
   @delete
-  Future<void> deleteQuestions(Achievements answersGiven); // You will pass to the "metod" an object of class Achievements
+  Future<void> deleteAchievements(Achievements achievement); // You will pass to the "metod" an object of class Achievements
 
 }//AchievementsDao

@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:my_project/screens/Barplot/bar_graph.dart';
+import 'package:my_project/screens/HomePage.dart';
 import 'package:my_project/utils/constants.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -161,201 +162,18 @@ static const routename = 'StatisticsPage';
           ],
 
         ),
-    ),
+
+    floatingActionButton:
+     FloatingActionButton(
+      onPressed: _toTestDB(context),
+      
+      ),
+     ),
 
     );
   }
 }
 
-Future<bool> _pingImpact() async{
-    final url=Impact.baseUrl + Impact.pingEndpoint;
-    // finally the call
-    final response =await http.get(Uri.parse(url)); // is an async function
-    return response.statusCode==200;
-  }
-
-
-
-   Future<int> _getAndStoreTokens() async {
-    //Create the request
-    final url = Impact.baseUrl + Impact.tokenEndpoint;
-    final body = {'username': Impact.username, 'password': Impact.password};
-    //Get the response
-    print('Calling: $url');
-    final response = await http.post(Uri.parse(url), body: body);
-    //If response is OK, decode it and store the tokens. Otherwise do nothing.
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      final sp = await SharedPreferences.getInstance();
-      await sp.setString('access', decodedResponse['access']);
-      await sp.setString('refresh', decodedResponse['refresh']);
-    } //if
-    //Just return the status code
-    return response.statusCode;
-  } //_getAndStoreTokens
-
-  //This method allows to refrsh the stored JWT in SharedPreferences
-  Future<int> _refreshTokens() async {
-    //Create the request 
-    final url = Impact.baseUrl + Impact.refreshEndpoint;
-    final sp = await SharedPreferences.getInstance();
-    final refresh = sp.getString('refresh');
-    final body = {'refresh': refresh};
-    //Get the response
-    print('Calling: $url');
-    final response = await http.post(Uri.parse(url), body: body);
-    //If the response is OK, set the tokens in SharedPreferences to the new values
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      final sp = await SharedPreferences.getInstance();
-      await sp.setString('access', decodedResponse['access']);
-      await sp.setString('refresh', decodedResponse['refresh']);
-    } //if
-    //Just return the status code
-    return response.statusCode;
-  }
-  
-
-
-  Future _getStep(today)async{
-    // Returns the sum of the steps made into a certain day 
-
-    // preliminary settings
-    final sp=await SharedPreferences.getInstance();
-    var access=sp.getString('access');
-    if (access == null){
-      return null;
-    }
-    else{
-      if(JwtDecoder.isExpired(access)){
-        await _refreshTokens();
-        access = sp.getString('access');
-      }
-      //request
-      final url=Impact.baseUrl+Impact.stepEndpoint + '/patients/Jpefaq6m58'+'/day/$today/';
-      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
-      final response = await http.get(Uri.parse(url), headers: headers);
-
-    // Creatione of the response
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      //List result = [];
-      List steps_data=[];
-      final total_steps=0;
-      for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
-        //result.add(Steps.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]));
-        steps_data.add(Steps.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]).getValue());
-      }//for
-      int out=steps_data.reduce((a, b) => a + b);
-      return out;
-    } //if
-    else{
-      void result = null;
-    }//else
-    
-    }
-    
-
-  }//getStep
-
-  Future _getDistance(today)async{
-    final sp=await SharedPreferences.getInstance();
-    var access=sp.getString('access');
-    if (access == null){
-      return null;
-    }
-    else{
-      if(JwtDecoder.isExpired(access)){
-        await _refreshTokens();
-        access = sp.getString('access');
-      }
-      
-      final url=Impact.baseUrl+Impact.distanceEndpoint + '/patients/Jpefaq6m58'+'/day/$today/';
-      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction
-      final response = await http.get(Uri.parse(url), headers: headers);
-
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      List distance_data=[];
-      for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
-        distance_data.add(Distance.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]).getValue());
-      }//for
-      int out=distance_data.reduce((a, b) => a + b);
-      return out; // unit of measure???
-    } //if
-    else{
-      void result = null;
-    }//else
-    } 
-  }//getDistance
-
-  Future _getActivity_time(today)async{
-    final sp=await SharedPreferences.getInstance();
-    var access=sp.getString('access');
-    if (access == null){
-      return null;
-    }
-    else{
-      if(JwtDecoder.isExpired(access)){
-        await _refreshTokens();
-        access = sp.getString('access');
-      }
-      final url=Impact.baseUrl+Impact.activityEndpoint + '/patients/Jpefaq6m58'+'/day/$today/';
-      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
-      final response = await http.get(Uri.parse(url), headers: headers);
-
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      List activity_time_data=[];
-      for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
-        activity_time_data.add(Activity.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]).getValue());
-      }//for
-      double out=activity_time_data.reduce((a, b) => a + b);
-      return out.toInt(); // unit of measure???
-    } //if
-    else{
-      void result = null;
-    }//else
-    
-    }
-    
-
-  }//getDistance
-
-
-
-
-
-  Future _changePassword(String oldpsw, String newpsw )async{
-    final sp=await SharedPreferences.getInstance();
-    var access=sp.getString('access');
-    if (access == null){
-      return null;
-    }
-    else{
-      if(JwtDecoder.isExpired(access)){
-        await _refreshTokens();
-        access = sp.getString('access');
-      }
-      final url=Impact.baseUrl+'/gate/v1/change_password/';
-      final body ={"old_password": '$oldpsw' , "new_password": '$newpsw'};
-      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
-      final response = await http.put(Uri.parse(url),body:body);
-      return response;
-    // if (response.statusCode == 200) {
-    //   final decodedResponse = jsonDecode(response.body);
-    //   List activity_time_data=[];
-    //   for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
-    //     activity_time_data.add(Activity.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]).getValue());
-    //   }//for
-    //   double out=activity_time_data.reduce((a, b) => a + b);
-    //   return out.toInt(); // unit of measure???
-    // } //if
-    // else{
-    //   void result = null;
-    // }//else
-    
-    }
-    
-
-  }//getDistance
+void Function()?  _toTestDB(BuildContext context) {
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen()));
+  } //_toTestDB

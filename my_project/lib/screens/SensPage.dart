@@ -14,50 +14,8 @@ class SensPage extends StatefulWidget {
   State<StatefulWidget> createState() => Sens_page();
 }
 
+// ignore: camel_case_types
 class Sens_page extends State<SensPage> {
-  // ignore: non_constant_identifier_names
-  void _OnLogoutTapConfirm(BuildContext context) {
-    // set up the buttons
-
-    Widget cancelButton = TextButton(
-      child: Text("Cancel"),
-      onPressed: () {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const ProfilePage()));
-      },
-      style: Constants.TextButtonStyle_Alert,
-    );
-    Widget continueButton = TextButton(
-      child: Text("Continue"),
-      onPressed: () async {
-        final user_preferences = await SharedPreferences.getInstance();
-        await user_preferences.setBool('Rememeber_login', false);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
-        // Must be changed to point at the current page
-      },
-      style: Constants.TextButtonStyle_Alert,
-    );
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: const Text("Logout"),
-      content: const Text("Are you sure you want to logout?"),
-      actions: [
-        cancelButton,
-        continueButton,
-      ],
-      backgroundColor: Constants.primaryLightColor,
-    );
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
-  //@override
   void _showQuestionnaire() {
     int? question1Value = 3;
     int? _question2Value = 3;
@@ -168,6 +126,48 @@ class Sens_page extends State<SensPage> {
     );
   }
 
+  // ignore: non_constant_identifier_names
+  void _OnLogoutTapConfirm(BuildContext context) {
+    // set up the buttons
+
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const ProfilePage()));
+      },
+      style: Constants.TextButtonStyle_Alert,
+    );
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed: () async {
+        final user_preferences = await SharedPreferences.getInstance();
+        await user_preferences.setBool('Rememeber_login', false);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
+        // Must be changed to point at the current page
+      },
+      style: Constants.TextButtonStyle_Alert,
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text("Logout"),
+      content: const Text("Are you sure you want to logout?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+      backgroundColor: Constants.primaryLightColor,
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -244,29 +244,6 @@ class Sens_page extends State<SensPage> {
           const SizedBox(height: 30),
           Row(
             children: [
-              SizedBox(
-                width: 200,
-                height: 200,
-                child: CircularPercentIndicator(
-                  radius: 80.0,
-                  lineWidth: 12.0,
-                  animation: true,
-                  percent: 0.7,
-                  center: const Text(
-                    "70.0%",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-                  ),
-                  footer: const Text(
-                    "LoS",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),
-                  ),
-                  circularStrokeCap: CircularStrokeCap.round,
-                  progressColor: Color.fromARGB(255, 19, 184, 24),
-                ),
-              ),
-              const SizedBox(width: 10),
               GestureDetector(
                 onTap: () {
                   _showQuestionnaire();
@@ -274,21 +251,44 @@ class Sens_page extends State<SensPage> {
                 child: SizedBox(
                   width: 200,
                   height: 200,
-                  child: Center(
-                    child: DefaultTextStyle(
-                      style: const TextStyle(
-                        color: Color.fromARGB(255, 82, 153, 1),
-                        fontSize: 25,
-                      ),
-                      child: AnimatedTextKit(
-                        repeatForever: true,
-                        isRepeatingAnimation: true,
-                        animatedTexts: [
-                          TyperAnimatedText('Tap here'),
-                          TyperAnimatedText('To update'),
-                          TyperAnimatedText('Your Sustainability Level.'),
-                        ],
-                      ),
+                  child: CircularPercentIndicator(
+                    radius: 80.0,
+                    lineWidth: 12.0,
+                    animation: true,
+                    percent: 0.7,
+                    center: const Text(
+                      "70.0%",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
+                    footer: const Text(
+                      "LoS",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 17.0),
+                    ),
+                    circularStrokeCap: CircularStrokeCap.round,
+                    progressColor: Color.fromARGB(255, 19, 184, 24),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 200,
+                height: 200,
+                child: Center(
+                  child: DefaultTextStyle(
+                    style: const TextStyle(
+                      color: Color.fromARGB(255, 82, 153, 1),
+                      fontSize: 25,
+                    ),
+                    child: AnimatedTextKit(
+                      repeatForever: true,
+                      isRepeatingAnimation: true,
+                      animatedTexts: [
+                        TyperAnimatedText('Tap on LoS'),
+                        TyperAnimatedText('To update'),
+                        TyperAnimatedText('Your Sustainability Level.'),
+                      ],
                     ),
                   ),
                 ),
@@ -308,7 +308,7 @@ class Sens_page extends State<SensPage> {
                       width: 185,
                       height: 50,
                       child: Text(
-                        'help the world to improve air quality by planting more trees',
+                        'help the world to improve air quality by planting more trees!',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 15.0),

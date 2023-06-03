@@ -86,15 +86,6 @@ class ProfilePageState extends State<ProfilePage> {
             Container(
               height: 250,
               decoration: const BoxDecoration(
-                // gradient: LinearGradient(
-                //   colors: [
-                //     Color.fromARGB(255, 137, 214, 164),
-                //     Color.fromARGB(255, 82, 133, 81)
-                //   ],
-                //   begin: Alignment.bottomCenter,
-                //   end: Alignment.topCenter,
-                //   stops: [0.2, 0.9],
-                //  borderRadius: BorderRadius.circular(200),
                 image: DecorationImage(
                   image: NetworkImage(
                       'https://img.freepik.com/free-vector/green-trees-leaves-flat-icons-set-oak-aspen-linden-maple-chestnut-clover-plants-isolated-vector-illustration_1284-3022.jpg?w=740&t=st=1684410201~exp=1684410801~hmac=f2643f557b94232a485bd203a769a09ad29aab8c4cb127f98c4fd6bb9fc54341'),
@@ -109,14 +100,6 @@ class ProfilePageState extends State<ProfilePage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      //const CircleAvatar(
-                      //backgroundColor: secondarylightColor,
-                      //minRadius: 35.0,
-                      //child: Icon(
-                      //Icons.call,
-                      //size: 30.0
-                      //),
-                      //),
                       CircleAvatar(
                         backgroundColor: Colors.white70,
                         minRadius: 60.0,
@@ -125,14 +108,6 @@ class ProfilePageState extends State<ProfilePage> {
                           //backgroundImage: TO BE IMPLEMENTED
                         ),
                       ),
-                      //CircleAvatar(
-                      //backgroundColor: Colors.red.shade300,
-                      //minRadius: 35.0,
-                      //child: Icon(
-                      //Icons.message,
-                      //size: 30.0
-                      //),
-                      //),
                     ],
                   ),
                   SizedBox(
@@ -149,65 +124,6 @@ class ProfilePageState extends State<ProfilePage> {
                 ],
               ),
             ),
-            // Row(
-            // children: <Widget>[
-            // Expanded(
-            //   child: Container(
-            //     width: 100,
-            //     height: 100,
-            //     decoration: BoxDecoration(
-            //       shape: BoxShape.circle,
-            //       color: Color.fromARGB(255, 220, 211, 51),
-            //     ),
-            //     child: Column(
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //       children: const [
-            //         Text(
-            //           '100',
-            //           textAlign: TextAlign.center,
-            //           style: TextStyle(
-            //             fontWeight: FontWeight.bold,
-            //             fontSize: 35,
-            //             color: Colors.white,
-            //           ),
-            //         ),
-            //         Text(
-            //           'Trees',
-            //           textAlign: TextAlign.center,
-            //           style: TextStyle(
-            //             fontSize: 15,
-            //             color: Colors.white70,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            // Expanded(
-            //   child: Container(
-            //     color: Constants.secondaryColor,
-            //     child: const ListTile(
-            //       title: Text(
-            //         '500',
-            //         textAlign: TextAlign.center,
-            //         style: TextStyle(
-            //           fontWeight: FontWeight.bold,
-            //           fontSize: 30,
-            //           color: Colors.white,
-            //         ),
-            //       ),
-            //       subtitle: Text(
-            //         'LoS',
-            //         textAlign: TextAlign.center,
-            //         style: TextStyle(
-            //           fontSize: 20,
-            //           color: Colors.white70,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-
             Row(
               children: <Widget>[
                 Expanded(
@@ -314,7 +230,6 @@ class ProfilePageState extends State<ProfilePage> {
                 ),
               ],
             ),
-
             Container(
               child: const Column(
                 children: <Widget>[
@@ -382,33 +297,30 @@ class ProfilePageState extends State<ProfilePage> {
             )
           ],
         ),
-
       ),
     );
   }
 
-
-
-
-
 // ignore: non_constant_identifier_names
-  void _OnLogoutTapConfirm(BuildContext context)  {
+  void _OnLogoutTapConfirm(BuildContext context) {
     // set up the buttons
 
     Widget cancelButton = TextButton(
       child: Text("Cancel"),
-      onPressed: ()  {
+      onPressed: () {
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const ProfilePage()));},
+            MaterialPageRoute(builder: (context) => const ProfilePage()));
+      },
       style: Constants.TextButtonStyle_Alert,
     );
     Widget continueButton = TextButton(
       child: Text("Continue"),
       onPressed: () async {
         final user_preferences = await SharedPreferences.getInstance();
-         await user_preferences.setBool('Rememeber_login', false);
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>  LoginPage()));
-         // Must be changed to point at the current page 
+        await user_preferences.setBool('Rememeber_login', false);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
+        // Must be changed to point at the current page
       },
       style: Constants.TextButtonStyle_Alert,
     );

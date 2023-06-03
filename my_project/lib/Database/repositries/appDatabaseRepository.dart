@@ -47,8 +47,8 @@ Future<void> deleteAchievements(Achievements achievements) async {
 
 // QUESTIONNAIRE METODS
 //dailyTotal
-Future<int?> dailyTotal(int id, String date)async{
-  int? result = await database.questionnaireDao.dailyTotal(id, date);
+Future<List<Questionnaire>> dailyTotal(int id, String date)async{
+  final result = await database.questionnaireDao.dailyTotal(id, date);
   return result;
 }
 //insertAnswers

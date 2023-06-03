@@ -82,44 +82,49 @@ final today='2023-05-17';
 
       },),
 
+      // Ok, i dati li scrive. Mi chiedo a questo punto se io non possa fare una cosa un attimo più furba:
+      // selezionare l'intero record e mostrare solo l'attributo della classe che mi serve, come viene fatto nella classe todo: tu non vai
+      // a selezionare un particolare attributo ma bensì tutti i dati! In questo modo ti eviti i problemi con gli int e liste...chissà!
+
+
+
+
       //Here i build the page
-      // body: Consumer<DatabaseRepository>(
-      //       builder: (context, dbr, child) {
-      //     return FutureBuilder(
-      //       initialData: null,
-      //       future: dbr.totalLoS(01,today),
-      //       builder: (context, snapshot) {
-      //         if (snapshot.hasData) {
-      //           List<int> data = snapshot.data as List<int>;  
-      //           List<int> dailySteps=data;
-      //           return 
-      //            ListView.builder(
-      //               itemCount: data.length,
-      //               itemBuilder: (context, todoIndex) {
-      //                 final todo = data[todoIndex];
-      //                 return Column(
-      //                   children: [
-      //                     SizedBox(height: 20),
+      body: Consumer<DatabaseRepository>(
+            builder: (context, dbr, child) {
+          return FutureBuilder(
+            initialData: null,
+            future: dbr.dailyTotal(01,today),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final data = snapshot.data as List<Questionnaire>;  
+                //List<int> dailySteps=data;
+                return 
+                 ListView.builder(
+                    itemCount: data.length,
+                    itemBuilder: (context, todoIndex) {
+                      final answers = data[todoIndex];
+                      return Column(
+                        children: [
+                          SizedBox(height: 20),
 
-      //                     // Example of BarGraph
-      //                     BarGraph(dailySteps: dailySteps),
-
-      //                     SizedBox(height: 20),
-      //                   ],
+                          // Example of BarGraph
+                          Text('total level of sustainability: ${answers.total}')
+                        ],
                           
                           
                           
                         
-      //                 );
-      //               });
-      //               } 
-      //           else {
-      //           //CircularProgressIndicator is shown while the list of Todo is loading.
-      //           return CircularProgressIndicator();
-      //         } //else
-      //       },//builder of FutureBuilder
-      //     );
-      //   }),
+                      );
+                    });
+                    } 
+                else {
+                //CircularProgressIndicator is shown while the list of Todo is loading.
+                return CircularProgressIndicator();
+              } //else
+            },//builder of FutureBuilder
+          );
+        }),
        ),
       );}}
 

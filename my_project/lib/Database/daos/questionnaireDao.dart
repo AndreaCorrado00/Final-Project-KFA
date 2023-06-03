@@ -11,8 +11,8 @@ abstract class QuestionnaireDao {
   Future<void> updateAnswers(Questionnaire answers);
 
   //Query 
-  @Query('SELECT total FROM Questionnaire WHERE id = :id AND date = :date')
-  Future<int?> dailyTotal(int id, String date); 
+  @Query('SELECT * FROM Questionnaire WHERE id = :id AND date = :date')
+  Future<List<Questionnaire>> dailyTotal(int id, String date); 
 
   @delete
   Future<void> deleteQuestions(Questionnaire answersGiven); // You will pass to the "metod" an object of class Questionnaire

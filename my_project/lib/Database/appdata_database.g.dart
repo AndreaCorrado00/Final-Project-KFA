@@ -273,13 +273,19 @@ class _$QuestionnaireDao extends QuestionnaireDao {
   final DeletionAdapter<Questionnaire> _questionnaireDeletionAdapter;
 
   @override
-  Future<int?> dailyTotal(
+  Future<List<Questionnaire>> dailyTotal(
     int id,
     String date,
   ) async {
-    return _queryAdapter.query(
-        'SELECT total FROM Questionnaire WHERE id = ?1 AND date = ?2',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
+    return _queryAdapter.queryList(
+        'SELECT * FROM Questionnaire WHERE id = ?1 AND date = ?2',
+        mapper: (Map<String, Object?> row) => Questionnaire(
+            row['id'] as int,
+            row['date'] as String,
+            row['question1'] as int,
+            row['question2'] as int,
+            row['question3'] as int,
+            row['total'] as int),
         arguments: [id, date]);
   }
 

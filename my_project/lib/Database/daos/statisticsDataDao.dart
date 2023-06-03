@@ -12,15 +12,15 @@ abstract class StatisticsDao {
   Future<void> updateData(StatisticsData data);
 
   //Query: daily steps between two dates
-  @Query('SELECT dailySteps FROM statisticsData WHERE id = :id AND date = :date BETWEEN start = :startDate AND end = :endDate' )
+  @Query('SELECT dailySteps FROM StatisticsData WHERE id = :id AND date = :date BETWEEN start = :startDate AND end = :endDate' )
   Future<List<int>>dateRangeSteps(int id, String date, String startDate, String endDate); 
 
   //Query: Distance steps between two dates
-  @Query('SELECT dailyDistance FROM statisticsData WHERE id = :id AND date = :date BETWEEN start = :startDate AND end = :endDate' )
+  @Query('SELECT dailyDistance FROM StatisticsData WHERE id = :id AND date = :date BETWEEN start = :startDate AND end = :endDate' )
   Future<List<int>>dateRangeDistance(int id, String date, String startDate, String endDate);
 
   //Query: ActivityTime steps between two dates
-  @Query('SELECT dailyActivityTime FROM statisticsData WHERE id = :id AND date = :date BETWEEN start = :startDate AND end = :endDate' )
+  @Query('SELECT dailyActivityTime FROM StatisticsData WHERE id = :id AND date = :date BETWEEN start = :startDate AND end = :endDate' )
   Future<List<int>>dateRangeActivityTime(int id, String date, String startDate, String endDate);
 
   @delete

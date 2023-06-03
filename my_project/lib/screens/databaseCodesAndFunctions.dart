@@ -1,7 +1,7 @@
 // A temp page into which you'll find all the functions and examples to use the database. 
 
 import 'package:flutter/material.dart';
-import 'package:my_project/screens/HomePage.dart';
+import 'package:my_project/Database/repositries/appDatabaseRepository.dart';
 import 'package:my_project/screens/StatisticsPage.dart';
 import 'package:my_project/utils/constants.dart';
 
@@ -19,6 +19,11 @@ import 'package:my_project/Models/Activity.dart';
 
 import 'package:my_project/utils/impact.dart';
 
+import 'package:my_project/Database/entities/achievements.dart';
+import 'package:my_project/Database/entities/questionnaire.dart';
+import 'package:my_project/Database/entities/statisticsData.dart';
+
+import 'package:my_project/screens/Barplot/bar_graph.dart';
 
 class databaseTestPage extends StatefulWidget {
  const databaseTestPage ({super.key});
@@ -30,6 +35,8 @@ class databaseTestPage extends StatefulWidget {
 class databaseTestPageState extends State<databaseTestPage> {
 
 static const routename = 'StatisticsPage';
+//final today='2023-05-16';
+final today='2023-05-17';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -39,15 +46,82 @@ static const routename = 'StatisticsPage';
           backgroundColor: Constants.primaryColor,
 
           title: Text('Database functions test page'),
+          automaticallyImplyLeading: false,
         ),
        
       backgroundColor:Constants.primaryLightColor,
       //body: ListView(
-      floatingActionButton:
-     FloatingActionButton(
-      onPressed: (){Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreen()));},
-      child: Icon(Icons.home_filled))
-      ));}}
+      floatingActionButton: FloatingActionButton(
+      child: Icon(Icons.punch_clock_sharp),
+      onPressed: () async {
+        await _pingImpact();        // connect to impact
+        await  _getAndStoreTokens();// storing tokens. 
+        // Now we are ready to read data from impact
+
+        // Data for the statistics page
+        int steps= await _getStep(today); 
+        int distance= await _getDistance(today);
+        int activity_time= await _getActivity_time(today);
+
+        // data for the questionnaire
+        int question1=1;
+        int question2=2;
+        int question3=3;
+        int total = _computeTotalQuestionnaire([question1,question2,question3]); // total of the answers
+
+        // data for the achievements
+        int today_LoS=_computeLoS(total, steps, distance, activity_time);
+        int today_trees=today_LoS ~/ 1000; // integer division: returns only the integer part of the resoult before the common 
+
+        // Here we write on the database:
+        await Provider.of<DatabaseRepository>(context, listen: false).insertData(StatisticsData(1, today, steps,distance,activity_time));
+        await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, today, question1, question2, question3, total));
+        await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, today,today_LoS, today_trees));
+
+        // From now on the data are stored into the database. I hope that you'll find pretty clear how to pass properly the data!
+
+      },),
+
+      //Here i build the page
+      // body: Consumer<DatabaseRepository>(
+      //       builder: (context, dbr, child) {
+      //     return FutureBuilder(
+      //       initialData: null,
+      //       future: dbr.totalLoS(01,today),
+      //       builder: (context, snapshot) {
+      //         if (snapshot.hasData) {
+      //           List<int> data = snapshot.data as List<int>;  
+      //           List<int> dailySteps=data;
+      //           return 
+      //            ListView.builder(
+      //               itemCount: data.length,
+      //               itemBuilder: (context, todoIndex) {
+      //                 final todo = data[todoIndex];
+      //                 return Column(
+      //                   children: [
+      //                     SizedBox(height: 20),
+
+      //                     // Example of BarGraph
+      //                     BarGraph(dailySteps: dailySteps),
+
+      //                     SizedBox(height: 20),
+      //                   ],
+                          
+                          
+                          
+                        
+      //                 );
+      //               });
+      //               } 
+      //           else {
+      //           //CircularProgressIndicator is shown while the list of Todo is loading.
+      //           return CircularProgressIndicator();
+      //         } //else
+      //       },//builder of FutureBuilder
+      //     );
+      //   }),
+       ),
+      );}}
 
 
 // Some functions ready made for you with much love 
@@ -162,8 +236,8 @@ Future<bool> _pingImpact() async{
       for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
         distance_data.add(Distance.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]).getValue());
       }//for
-      int out=distance_data.reduce((a, b) => a + b)/100;//udm: [m]
-      return out; 
+      double out=distance_data.reduce((a, b) => a + b)/100;//udm: [m]
+      return out.toInt(); 
     } //if
     else{
       void result = null;

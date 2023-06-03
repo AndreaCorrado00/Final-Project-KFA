@@ -11,15 +11,15 @@ abstract class AchievementsDao {
   Future<void> updateAchievements(Achievements answers);
 
   //Query: daily level of sustainability between two dates
-  @Query('SELECT levelOfSustainability FROM achievements WHERE id = :id AND date = :date BETWEEN start = :startDate AND end = :endDate')
+  @Query('SELECT levelOfSustainability FROM Achievements WHERE id = :id AND date = :date BETWEEN start = :startDate AND end = :endDate')
   Future<List<int>> dateRangeLoS(int id, String date, String startDate, String endDate);  
 
   //Query: total trees planted to this day
-  @Query('SELECT trees FROM achievements WHERE id = :id AND date = :date')
+  @Query('SELECT trees FROM Achievements WHERE id = :id AND date = :date')
   Future<int?> totalTrees(int id, String date);
 
   //Query: sum of the LoS achieved up to now
-  @Query('SELECT SUM (levelOfSustainability) FROM achievements WHERE id = :id AND date = :date ')
+  @Query('SELECT SUM (levelOfSustainability) FROM Achievements WHERE id = :id AND date = :date ')
   Future<int?> totalLoS(int id, String date);
 
   @delete

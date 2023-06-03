@@ -175,7 +175,7 @@ class _$AchievementsDao extends AchievementsDao {
     String endDate,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT levelOfSustainability FROM achievements WHERE id = ?1 AND date = ?2 BETWEEN start = ?3 AND end = ?4',
+        'SELECT levelOfSustainability FROM Achievements WHERE id = ?1 AND date = ?2 BETWEEN start = ?3 AND end = ?4',
         mapper: (Map<String, Object?> row) => row.values.first as int,
         arguments: [id, date, startDate, endDate]);
   }
@@ -186,7 +186,7 @@ class _$AchievementsDao extends AchievementsDao {
     String date,
   ) async {
     return _queryAdapter.query(
-        'SELECT trees FROM achievements WHERE id = ?1 AND date = ?2',
+        'SELECT trees FROM Achievements WHERE id = ?1 AND date = ?2',
         mapper: (Map<String, Object?> row) => row.values.first as int,
         arguments: [id, date]);
   }
@@ -197,7 +197,7 @@ class _$AchievementsDao extends AchievementsDao {
     String date,
   ) async {
     return _queryAdapter.query(
-        'SELECT SUM (levelOfSustainability) FROM achievements WHERE id = ?1 AND date = ?2',
+        'SELECT SUM (levelOfSustainability) FROM Achievements WHERE id = ?1 AND date = ?2',
         mapper: (Map<String, Object?> row) => row.values.first as int,
         arguments: [id, date]);
   }
@@ -278,7 +278,7 @@ class _$QuestionnaireDao extends QuestionnaireDao {
     String date,
   ) async {
     return _queryAdapter.query(
-        'SELECT total FROM questionnaire WHERE id = ?1 AND date = ?2',
+        'SELECT total FROM Questionnaire WHERE id = ?1 AND date = ?2',
         mapper: (Map<String, Object?> row) => row.values.first as int,
         arguments: [id, date]);
   }
@@ -358,7 +358,7 @@ class _$StatisticsDao extends StatisticsDao {
     String endDate,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT dailySteps FROM statisticsData WHERE id = ?1 AND date = ?2 BETWEEN start = ?3 AND end = ?4',
+        'SELECT dailySteps FROM StatisticsData WHERE id = ?1 AND date = ?2 BETWEEN start = ?3 AND end = ?4',
         mapper: (Map<String, Object?> row) => row.values.first as int,
         arguments: [id, date, startDate, endDate]);
   }
@@ -371,7 +371,7 @@ class _$StatisticsDao extends StatisticsDao {
     String endDate,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT dailyDistance FROM statisticsData WHERE id = ?1 AND date = ?2 BETWEEN start = ?3 AND end = ?4',
+        'SELECT dailyDistance FROM StatisticsData WHERE id = ?1 AND date = ?2 BETWEEN start = ?3 AND end = ?4',
         mapper: (Map<String, Object?> row) => row.values.first as int,
         arguments: [id, date, startDate, endDate]);
   }
@@ -384,7 +384,7 @@ class _$StatisticsDao extends StatisticsDao {
     String endDate,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT dailyActivityTime FROM statisticsData WHERE id = ?1 AND date = ?2 BETWEEN start = ?3 AND end = ?4',
+        'SELECT dailyActivityTime FROM StatisticsData WHERE id = ?1 AND date = ?2 BETWEEN start = ?3 AND end = ?4',
         mapper: (Map<String, Object?> row) => row.values.first as int,
         arguments: [id, date, startDate, endDate]);
   }

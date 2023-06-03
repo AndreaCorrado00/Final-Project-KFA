@@ -11,7 +11,7 @@ abstract class QuestionnaireDao {
   Future<void> updateAnswers(Questionnaire answers);
 
   //Query 
-  @Query('SELECT total FROM questionnaire WHERE id = :id AND date = :date')
+  @Query('SELECT total FROM Questionnaire WHERE id = :id AND date = :date')
   Future<int?> dailyTotal(int id, String date); 
 
   @delete

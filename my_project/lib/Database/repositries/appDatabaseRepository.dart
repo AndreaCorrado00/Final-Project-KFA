@@ -15,18 +15,18 @@ DatabaseRepository({required this.database});
 
 // ACHIEVEMENTS METODS
 // dataRangeLoS
-Future<List<int>> dateRangeLoS(int id, String date, String startDate, String endDate) async {
+Future<List<Achievements>> dateRangeLoS(int id, String date, String startDate, String endDate) async {
   final result = await database.achievementsDao.dateRangeLoS(id, date, startDate, endDate);
   return result;
 }
-// totalTrees
-Future<int?> totalTrees(int id, String date) async {
-  final result = await database.achievementsDao.totalTrees(id, date);
+// dailyAchievement
+Future<List<Achievements>> dailyAchievement(int id, String date) async {
+  final result = await database.achievementsDao.dailyAchievement(id, date);
   return result;
 }
-// totalLoS
-Future<int?> totalLoS(int id, String date) async {
-  final result = await database.achievementsDao.totalLoS(id, date);
+//  rangeAchievements
+Future<List<Achievements>> rangeAchievements(int id, String date) async {
+  final result = await database.achievementsDao.rangeAchievements(id, date);
   return result;
 }
 // insert 

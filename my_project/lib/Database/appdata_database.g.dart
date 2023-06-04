@@ -168,37 +168,45 @@ class _$AchievementsDao extends AchievementsDao {
   final DeletionAdapter<Achievements> _achievementsDeletionAdapter;
 
   @override
-  Future<List<int>> dateRangeLoS(
+  Future<List<Achievements>> dateRangeLoS(
     int id,
     String date,
     String startDate,
     String endDate,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT levelOfSustainability FROM Achievements WHERE id = ?1 AND date = ?2 BETWEEN start = ?3 AND end = ?4',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
+        'SELECT * FROM Achievements WHERE id = ?1 AND date = ?2 BETWEEN start = ?3 AND end = ?4',
+        mapper: (Map<String, Object?> row) => Achievements(row['id'] as int, row['date'] as String, row['levelOfSustainability'] as int, row['trees'] as int),
         arguments: [id, date, startDate, endDate]);
   }
 
   @override
-  Future<int?> totalTrees(
+  Future<List<Achievements>> dailyAchievement(
     int id,
     String date,
   ) async {
-    return _queryAdapter.query(
-        'SELECT trees FROM Achievements WHERE id = ?1 AND date = ?2',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
+    return _queryAdapter.queryList(
+        'SELECT  *  FROM Achievements WHERE id = ?1 AND date = ?2',
+        mapper: (Map<String, Object?> row) => Achievements(
+            row['id'] as int,
+            row['date'] as String,
+            row['levelOfSustainability'] as int,
+            row['trees'] as int),
         arguments: [id, date]);
   }
 
   @override
-  Future<int?> totalLoS(
+  Future<List<Achievements>> rangeAchievements(
     int id,
     String date,
   ) async {
-    return _queryAdapter.query(
-        'SELECT SUM (levelOfSustainability) FROM Achievements WHERE id = ?1 AND date = ?2',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
+    return _queryAdapter.queryList(
+        'SELECT * FROM Achievements WHERE id = ?1 AND date = ?2',
+        mapper: (Map<String, Object?> row) => Achievements(
+            row['id'] as int,
+            row['date'] as String,
+            row['levelOfSustainability'] as int,
+            row['trees'] as int),
         arguments: [id, date]);
   }
 

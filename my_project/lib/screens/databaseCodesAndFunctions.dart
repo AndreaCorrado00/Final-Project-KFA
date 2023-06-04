@@ -37,6 +37,9 @@ class databaseTestPageState extends State<databaseTestPage> {
 static const routename = 'StatisticsPage';
 //final today='2023-05-16';
 final today='2023-05-17';
+final tomorrow='2023-05-18';
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -54,6 +57,8 @@ final today='2023-05-17';
       floatingActionButton: FloatingActionButton(
       child: Icon(Icons.punch_clock_sharp),
       onPressed: () async {
+        
+
         await _pingImpact();        // connect to impact
         await  _getAndStoreTokens();// storing tokens. 
         // Now we are ready to read data from impact
@@ -73,13 +78,31 @@ final today='2023-05-17';
         int today_LoS=_computeLoS(total, steps, distance, activity_time);
         int today_trees=today_LoS ~/ 1000; // integer division: returns only the integer part of the resoult before the common 
 
-        // Here we write on the database:
+        // Here we write on the database: (2 days)
+        // First: check if there are new data available (= the date is different)
+        bool newDataReady=await _newDataReady(today);
+        if(newDataReady==true){
+
+      // to use this page, two consecutive dates are uploaded into the db
         await Provider.of<DatabaseRepository>(context, listen: false).insertData(StatisticsData(1, today, steps,distance,activity_time));
         await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, today, question1, question2, question3, total));
         await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, today,today_LoS, today_trees));
 
-        // From now on the data are stored into the database. I hope that you'll find pretty clear how to pass properly the data!
+        await Provider.of<DatabaseRepository>(context, listen: false).insertData(StatisticsData(1, tomorrow, steps,distance,activity_time));
+        await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, tomorrow, question1, question2, question3, total));
+        await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, tomorrow,today_LoS, today_trees));
+        print('stored new data');}
 
+        else{
+      // otherwise, the data are just update to the new vale (nb: can work with differences into the hours!)
+        await Provider.of<DatabaseRepository>(context, listen: false).updateData(StatisticsData(1, today, steps,distance,activity_time));
+        await Provider.of<DatabaseRepository>(context, listen: false).updateAnswers(Questionnaire(1, today, question1, question2, question3, total));
+        await Provider.of<DatabaseRepository>(context, listen: false).updateAchievements(Achievements(1, today,today_LoS, today_trees));
+        print('update the data');
+        }
+        
+
+        // From now on the data are stored into the database. I hope that you'll find pretty clear how to pass properly the data!
       },),
 
       // Ok, i dati li scrive. Mi chiedo a questo punto se io non possa fare una cosa un attimo più furba:
@@ -87,52 +110,112 @@ final today='2023-05-17';
       // a selezionare un particolare attributo ma bensì tutti i dati! In questo modo ti eviti i problemi con gli int e liste...chissà!
 
 
-
-
-      //Here i build the page
-      body: Consumer<DatabaseRepository>(
-            builder: (context, dbr, child) {
+    body: Consumer<DatabaseRepository>(
+          builder: (context, dbr, child) {
           return FutureBuilder(
-            initialData: null,
-            future: dbr.dailyTotal(01,today),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final data = snapshot.data as List<Questionnaire>;  
-                //List<int> dailySteps=data;
-                return 
-                 ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (context, todoIndex) {
-                      final answers = data[todoIndex];
-                      return Column(
-                        children: [
-                          SizedBox(height: 20),
-
-                          // Example of BarGraph
-                          Text('total level of sustainability: ${answers.total}')
-                        ],
-                          
-                          
-                          
-                        
-                      );
-                    });
-                    } 
-                else {
-                //CircularProgressIndicator is shown while the list of Todo is loading.
+            future: dbr.dailyAchievement(1,today),
+            builder: (context,snapshot){
+              if(snapshot.hasData){
+                final data = snapshot.data as List<Achievements>;
+                final entity_row=data[0];
+                return Container(
+                  height: 50,
+                  width: 200,
+                  child: Text(
+                    'today LoS: ${entity_row.levelOfSustainability}',
+                    style: Constants.TextButtonStyle_HomePage,
+                  ),
+                  color: Constants.primaryLightColor,
+                );
+                
+              }
+              else{
                 return CircularProgressIndicator();
-              } //else
-            },//builder of FutureBuilder
-          );
-        }),
-       ),
-      );}}
+              }
+            }
+          );}
+    )
+      )
+    );
+  }}
+
+      //Here i build the page: has so many logical errors, be patient with me please
+
+//       body: Consumer<DatabaseRepository>(
+//             builder: (context, dbr, child) {
+//           return FutureBuilder(
+            
+//             initialData: null,
+//             future: 
+//                    //dbr.dailyTotal(01,today), //1
+//                    dbr.dailyAchievement(1, today), //2
+//                   //dbr.dateRangeLoS(1, today, today, today), // 3 
+//                   // this query doesn't work well. Why? BOOOO
+
+//                   // Possibile strategia alternativa: usare solo query di selezione e usare delle funzioni con cicli per il conteggio/creazione delle liste...
+
+//             builder: (context, snapshot) {
+//               if (snapshot.hasData) {
+// // Up to now, you can only change the instruction given to the builder... I don't know how to create, for example, a list of FutureBuilder...
+
+// // DOMANDE DA FARE DOMANI: 
+// // 1. Come inserire un future builder dentro un container? 
+// // 2. Cosa vuol dire l'errore sul between? Forse non legge correttamente la stringa?
+
+
+//                 //final data = snapshot.data as List<Questionnaire>;  //1
+//                 // final data = snapshot.data as List<Achievements>;  //2 
+//                 final data = snapshot.data as List<Achievements>; 
+//                 //int intoRangeLos = _intoRangeLos(data);
+
+//                 //int intoRangeLos = _intoRangeLos(data,today);
+//                 return 
+//                  ListView.builder(
+//                     //shrinkWrap:true,
+//                     itemCount: data.length,
+//                     itemBuilder: (context, index) {
+
+//                       final entity_row = data[index];
+                      
+//                       return Column(
+//                         children: [
+//                           SizedBox(height: 20),
+
+                          
+                                                    
+//                           //Text('total level from answers: ${entity_row.total}'), //1
+
+//                           // Text('total trees: ${entity_row.trees}'), //2
+//                           // SizedBox(height: 20),
+//                            Text('today LoS: ${entity_row.levelOfSustainability}'), //2
+//                           //Text('comulative LoS: $intoRangeLos') // 3
+
+//                         ],
+//                       );
+//                     });
+//                     } 
+//                 else {
+//                 //CircularProgressIndicator is shown while the list of Todo is loading.
+//                 return CircularProgressIndicator();
+//               } //else
+//             },//builder of FutureBuilder
+//           );
+//         }),
+
+
+      //  ),
+      // );
+      
+      // }
+      
+      // }
 
 
 // Some functions ready made for you with much love 
+
 Future<bool> _pingImpact() async{
     final url=Impact.baseUrl + Impact.pingEndpoint;
-    // finally the call
+    // call
     final response =await http.get(Uri.parse(url)); // is an async function
     return response.statusCode==200;
   }
@@ -153,11 +236,11 @@ Future<bool> _pingImpact() async{
       await sp.setString('access', decodedResponse['access']);
       await sp.setString('refresh', decodedResponse['refresh']);
     } //if
-    //Just return the status code
+    // return the status code
     return response.statusCode;
   } //_getAndStoreTokens
 
-  //This method allows to refrsh the stored JWT in SharedPreferences
+  //This method allows to refresh the stored JWT in SharedPreferences
   Future<int> _refreshTokens() async {
     //Create the request 
     final url = Impact.baseUrl + Impact.refreshEndpoint;
@@ -177,10 +260,23 @@ Future<bool> _pingImpact() async{
     //Just return the status code
     return response.statusCode;
   }
+
+  Future<bool> _newDataReady(String today) async{
+    final sp=await SharedPreferences.getInstance();
+    print('into newDataReady');
+    if(sp.getString('today')!=today || sp.getString('today')==null ){
+      print('the day is changed');
+      sp.setString('today', today);
+      return true;
+    }
+    else {
+      print('date is not changed');
+      return false;}
+  }
   
+
   Future _getStep(today)async{
     // Returns the sum of the steps made into a certain day 
-
     // preliminary settings
     final sp=await SharedPreferences.getInstance();
     var access=sp.getString('access');
@@ -207,7 +303,7 @@ Future<bool> _pingImpact() async{
         //result.add(Steps.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]));
         steps_data.add(Steps.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]).getValue());
       }//for
-      int out=steps_data.reduce((a, b) => a + b);
+      int out=steps_data.reduce((a, b) => a + b); // here we compute the sum
       return out;
     } //if
     else{
@@ -241,7 +337,7 @@ Future<bool> _pingImpact() async{
       for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
         distance_data.add(Distance.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]).getValue());
       }//for
-      double out=distance_data.reduce((a, b) => a + b)/100;//udm: [m]
+      double out=distance_data.reduce((a, b) => a + b)/100;//udm: [m] 
       return out.toInt(); 
     } //if
     else{
@@ -282,6 +378,7 @@ Future<bool> _pingImpact() async{
   
   }//getActivity_time
 
+
  int _computeTotalQuestionnaire(List points)  {
     int out=points.reduce((a, b) => a + b);
     return out;
@@ -309,7 +406,32 @@ Future<bool> _pingImpact() async{
     
   }
 
+  // int _intoRangeLos( List<Achievements> data){
+  //   int out=0;
+  //   int stop = data.length;
 
+  //   for(int i=0; i<=stop; i++  ){
+  //     out+=data[i].levelOfSustainability;
+  //   }
+  //   return out;
+  // }
+  int _intoRangeLos( List<Achievements> data, String startDate){
+    // ad esempio questa funzione ti potrebbe semplificare non poco la vita...
+    int out=0;
+    int stop = data.length;
+    
+    for (int j=0; j<=stop; j++){
+      if(data[j].date==startDate){
+        int startIndex=j;
+        for(int i=startIndex; i<=stop; i++  ){
+          out+=data[i].levelOfSustainability;
+    }
+      }
+    }
+
+    
+    return out;
+  }
   
 
 

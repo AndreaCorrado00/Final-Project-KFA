@@ -15,8 +15,8 @@ DatabaseRepository({required this.database});
 
 // ACHIEVEMENTS METODS
 // dataRangeLoS
-Future<List<Achievements>> dateRangeLoS(int id, String date, String startDate, String endDate) async {
-  final result = await database.achievementsDao.dateRangeLoS(id, date, startDate, endDate);
+Future<List<Achievements>> userAllSingleAchievemnts(int id) async {
+  final result = await database.achievementsDao.userAllSingleAchievemnts(id);
   return result;
 }
 // dailyAchievement
@@ -24,11 +24,7 @@ Future<List<Achievements>> dailyAchievement(int id, String date) async {
   final result = await database.achievementsDao.dailyAchievement(id, date);
   return result;
 }
-//  rangeAchievements
-Future<List<Achievements>> rangeAchievements(int id, String date) async {
-  final result = await database.achievementsDao.rangeAchievements(id, date);
-  return result;
-}
+
 // insert 
 Future<void> insertAchievements(Achievements achievements) async {
   await database.achievementsDao.insertAchievements(achievements);
@@ -47,8 +43,8 @@ Future<void> deleteAchievements(Achievements achievements) async {
 
 // QUESTIONNAIRE METODS
 //dailyTotal
-Future<List<Questionnaire>> dailyTotal(int id, String date)async{
-  final result = await database.questionnaireDao.dailyTotal(id, date);
+Future<List<Questionnaire>> dailyQuestionaire(int id, String date)async{
+  final result = await database.questionnaireDao.dailyQuestionaire(id, date);
   return result;
 }
 //insertAnswers
@@ -69,20 +65,11 @@ Future<void> deleteQuestions(Questionnaire answersGiven) async {
 
 // STATISTICS DATA METODS
 //dateRangeSteps
-Future<List<int>>dateRangeSteps(int id, String date, String startDate, String endDate) async {
-  List<int> result = await database.statisticsDataDao.dateRangeSteps(id, date, startDate, endDate);
+Future<List<StatisticsData>>userAllSingleStatisticsData(int id) async {
+  List<StatisticsData> result = await database.statisticsDataDao.userAllSingleStatisticsData(id);
   return result;
 }
-//dateRangeDistance
-Future<List<int>>dateRangeDistance(int id, String date, String startDate, String endDate) async {
-  List<int> result = await database.statisticsDataDao.dateRangeDistance(id, date, startDate, endDate);
-  return result;
-}
-//dateRangeActivityTime
-Future<List<int>>dateRangeActivityTime(int id, String date, String startDate, String endDate) async {
-  List<int> result = await database.statisticsDataDao.dateRangeActivityTime(id, date, startDate, endDate);
-  return result;
-}
+
 //insert
 Future<void> insertData(StatisticsData data) async {
   await database.statisticsDataDao.insertData(data);

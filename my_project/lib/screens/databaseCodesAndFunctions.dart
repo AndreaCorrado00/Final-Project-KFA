@@ -76,6 +76,8 @@ final tomorrow='2023-05-18';
 
         // data for the achievements
         int today_LoS=_computeLoS(total, steps, distance, activity_time);
+
+        //PROBABILMENTE NON SERVE PIU'
         int today_trees=today_LoS ~/ 1000; // integer division: returns only the integer part of the resoult before the common 
 
         // Here we write on the database: (2 days)
@@ -109,8 +111,13 @@ final tomorrow='2023-05-18';
       // selezionare l'intero record e mostrare solo l'attributo della classe che mi serve, come viene fatto nella classe todo: tu non vai
       // a selezionare un particolare attributo ma bensì tutti i dati! In questo modo ti eviti i problemi con gli int e liste...chissà!
 
+// EXAMPLE OF BODY WITH THE FUTURE BUILDER WICH WRAPS A CONTAINER
+    body: Column(
+      children: [
+        Text('achievements entity queries'),
+        SizedBox(height: 10,),
 
-    body: Consumer<DatabaseRepository>(
+        Consumer<DatabaseRepository>(
           builder: (context, dbr, child) {
           return FutureBuilder(
             future: dbr.dailyAchievement(1,today),
@@ -119,22 +126,109 @@ final tomorrow='2023-05-18';
                 final data = snapshot.data as List<Achievements>;
                 final entity_row=data[0];
                 return Container(
-                  height: 50,
-                  width: 200,
+                  height: 20,
+                  width: 500,
                   child: Text(
                     'today LoS: ${entity_row.levelOfSustainability}',
-                    style: Constants.TextButtonStyle_HomePage,
+
                   ),
-                  color: Constants.primaryLightColor,
+                  color: Constants.containerColor,
                 );
-                
               }
               else{
                 return CircularProgressIndicator();
               }
             }
           );}
+    ),
+    SizedBox(height: 10,),
+
+        Consumer<DatabaseRepository>(
+          builder: (context, dbr, child) {
+          return FutureBuilder(
+            future: dbr.userAllSingleAchievemnts(1),
+            builder: (context,snapshot){
+              if(snapshot.hasData){
+                
+                final data = snapshot.data as List<Achievements>;
+                int LoS=_reachedLoS(data);
+                int trees = LoS~/ 1000;
+                return Container(
+                  height: 20,
+                  width: 500,
+                  child: Text(
+                    'Comulative LoS: ${LoS} and total trees: ${trees}',
+                  ),
+                  color: Constants.containerColor,
+                );
+              }
+              else{
+                return CircularProgressIndicator();
+              }
+            }
+          );}
+    ),
+    SizedBox(height: 10,),
+    Text('statistics data entity queries'),
+    SizedBox(height: 10,),
+
+        Consumer<DatabaseRepository>(
+          builder: (context, dbr, child) {
+          return FutureBuilder(
+            future: dbr.userAllSingleStatisticsData(1),
+            builder: (context,snapshot){
+              if(snapshot.hasData){
+                final data = snapshot.data as List<StatisticsData>;
+                List<int> week_steps= _createStepsDataForGraph(data);
+                
+                return Container(
+                  height: 20,
+                  width: 500,
+                  child: Text(
+                    'steps for the graph: ${week_steps}',
+
+                  ),
+                  color: Constants.containerColor,
+                );
+              }
+              else{
+                return CircularProgressIndicator();
+              }
+            }
+          );}
+    ),
+    SizedBox(height: 10,),
+    Text('questionnaire entity queries'),
+    SizedBox(height: 10,),
+
+        Consumer<DatabaseRepository>(
+          builder: (context, dbr, child) {
+          return FutureBuilder(
+            future: dbr.dailyQuestionaire(1,today),
+            builder: (context,snapshot){
+              if(snapshot.hasData){
+                final data = snapshot.data as List<Questionnaire>;
+                final entity_row=data[0];
+                return Container(
+                  height: 20,
+                  width: 500,
+                  child: Text(
+                    'today from questionnaire: ${entity_row.total}',
+
+                  ),
+                  color: Constants.containerColor,
+                );
+              }
+              else{
+                return CircularProgressIndicator();
+              }
+            }
+          );}
+    ),
+      ],
     )
+    
+    
       )
     );
   }}
@@ -203,12 +297,12 @@ final tomorrow='2023-05-18';
 //         }),
 
 
-      //  ),
-      // );
+//        ),
+//       );
       
-      // }
+//       }
       
-      // }
+//       }
 
 
 // Some functions ready made for you with much love 
@@ -384,6 +478,7 @@ Future<bool> _pingImpact() async{
     return out;
   }
 
+
   int _computeLoS(int point_answers , int daily_steps,int daily_distance,int daily_activityTime) {
     //For now, it's just a sum
 
@@ -406,30 +501,94 @@ Future<bool> _pingImpact() async{
     
   }
 
-  // int _intoRangeLos( List<Achievements> data){
-  //   int out=0;
-  //   int stop = data.length;
 
-  //   for(int i=0; i<=stop; i++  ){
-  //     out+=data[i].levelOfSustainability;
-  //   }
-  //   return out;
-  // }
-  int _intoRangeLos( List<Achievements> data, String startDate){
-    // ad esempio questa funzione ti potrebbe semplificare non poco la vita...
+
+  List<int> _createStepsDataForGraph( List<StatisticsData> data) {
+    // require to pass to the function an item of userAllSingleStatisticsData query
+
+    List<int> out=[0,0,0,0,0,0,0]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
+    int lnList=data.length; // the length of the list of items
+    // if data are collected for less than one week, the elements are associated one-to-one with the days
+    if(lnList<out.length){
+    for(int i=0; i<=lnList-1; i++){
+      out[i]=data[i].dailySteps;
+
+    }}
+    // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+    else {
+      for(int i=0; i<=out.length-1; i++){
+      out[i]=data[lnList-6+i].dailySteps;
+    }
+    }
+    return out;
+  }
+
+  List<int> _createSDistanceDataForGraph( List<StatisticsData> data) {
+    // require to pass to the function an item of userAllSingleStatisticsData query
+
+    List<int> out=[0,0,0,0,0,0,0]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
+    int lnList=data.length; // the length of the list of items
+    // if data are collected for less than one week, the elements are associated one-to-one with the days
+    if(lnList<out.length){
+    for(int i=0; i<=lnList-1; i++){
+      out[i]=data[i].dailyDistance;
+
+    }}
+    // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+    else {
+      for(int i=0; i<=out.length-1; i++){
+      out[i]=data[lnList-6+i].dailyDistance;
+    }
+    }
+    return out;
+  }
+
+  List<int> _createActivityTimeDataForGraph( List<StatisticsData> data) {
+    // require to pass to the function an item of userAllSingleStatisticsData query
+
+    List<int> out=[0,0,0,0,0,0,0]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
+    int lnList=data.length; // the length of the list of items
+    // if data are collected for less than one week, the elements are associated one-to-one with the days
+    if(lnList<out.length){
+    for(int i=0; i<=lnList-1; i++){
+      out[i]=data[i].dailyActivityTime;
+
+    }}
+    // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+    else {
+      for(int i=0; i<=out.length-1; i++){
+      out[i]=data[lnList-6+i].dailyActivityTime;
+    }
+    }
+    return out;
+  }
+
+  List<int> _createLoSDataForGraph( List<Achievements> data) {
+    // require to pass to the function an item of userAllSingleAchievemnts query 
+
+    List<int> out=[0,0,0,0,0,0,0]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
+    int lnList=data.length; // the length of the list of items
+    // if data are collected for less than one week, the elements are associated one-to-one with the days
+    if(lnList<out.length){
+    for(int i=0; i<=out.length-1; i++){
+      out[i]=data[i].levelOfSustainability;
+
+    }}
+    // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+    else {
+      for(int i=0; i<=out.length-1; i++){
+      out[i]=data[lnList-6+i].levelOfSustainability;
+    }
+    }
+    return out;
+  }
+
+  int _reachedLoS(List<Achievements> data){
     int out=0;
-    int stop = data.length;
-    
-    for (int j=0; j<=stop; j++){
-      if(data[j].date==startDate){
-        int startIndex=j;
-        for(int i=startIndex; i<=stop; i++  ){
-          out+=data[i].levelOfSustainability;
-    }
-      }
-    }
+    for (int i=0; i<=data.length-1; i++){
+      out=out+data[i].levelOfSustainability;
 
-    
+    }
     return out;
   }
   

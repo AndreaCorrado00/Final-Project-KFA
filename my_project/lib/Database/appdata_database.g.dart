@@ -168,16 +168,14 @@ class _$AchievementsDao extends AchievementsDao {
   final DeletionAdapter<Achievements> _achievementsDeletionAdapter;
 
   @override
-  Future<List<Achievements>> dateRangeLoS(
-    int id,
-    String date,
-    String startDate,
-    String endDate,
-  ) async {
-    return _queryAdapter.queryList(
-        'SELECT * FROM Achievements WHERE id = ?1 AND date = ?2 BETWEEN start = ?3 AND end = ?4',
-        mapper: (Map<String, Object?> row) => Achievements(row['id'] as int, row['date'] as String, row['levelOfSustainability'] as int, row['trees'] as int),
-        arguments: [id, date, startDate, endDate]);
+  Future<List<Achievements>> userAllSingleAchievemnts(int id) async {
+    return _queryAdapter.queryList('SELECT * FROM Achievements WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Achievements(
+            row['id'] as int,
+            row['date'] as String,
+            row['levelOfSustainability'] as int,
+            row['trees'] as int),
+        arguments: [id]);
   }
 
   @override
@@ -187,21 +185,6 @@ class _$AchievementsDao extends AchievementsDao {
   ) async {
     return _queryAdapter.queryList(
         'SELECT  *  FROM Achievements WHERE id = ?1 AND date = ?2',
-        mapper: (Map<String, Object?> row) => Achievements(
-            row['id'] as int,
-            row['date'] as String,
-            row['levelOfSustainability'] as int,
-            row['trees'] as int),
-        arguments: [id, date]);
-  }
-
-  @override
-  Future<List<Achievements>> rangeAchievements(
-    int id,
-    String date,
-  ) async {
-    return _queryAdapter.queryList(
-        'SELECT * FROM Achievements WHERE id = ?1 AND date = ?2',
         mapper: (Map<String, Object?> row) => Achievements(
             row['id'] as int,
             row['date'] as String,
@@ -281,7 +264,7 @@ class _$QuestionnaireDao extends QuestionnaireDao {
   final DeletionAdapter<Questionnaire> _questionnaireDeletionAdapter;
 
   @override
-  Future<List<Questionnaire>> dailyTotal(
+  Future<List<Questionnaire>> dailyQuestionaire(
     int id,
     String date,
   ) async {
@@ -365,42 +348,15 @@ class _$StatisticsDao extends StatisticsDao {
   final DeletionAdapter<StatisticsData> _statisticsDataDeletionAdapter;
 
   @override
-  Future<List<int>> dateRangeSteps(
-    int id,
-    String date,
-    String startDate,
-    String endDate,
-  ) async {
-    return _queryAdapter.queryList(
-        'SELECT dailySteps FROM StatisticsData WHERE id = ?1 AND date = ?2 BETWEEN start = ?3 AND end = ?4',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
-        arguments: [id, date, startDate, endDate]);
-  }
-
-  @override
-  Future<List<int>> dateRangeDistance(
-    int id,
-    String date,
-    String startDate,
-    String endDate,
-  ) async {
-    return _queryAdapter.queryList(
-        'SELECT dailyDistance FROM StatisticsData WHERE id = ?1 AND date = ?2 BETWEEN start = ?3 AND end = ?4',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
-        arguments: [id, date, startDate, endDate]);
-  }
-
-  @override
-  Future<List<int>> dateRangeActivityTime(
-    int id,
-    String date,
-    String startDate,
-    String endDate,
-  ) async {
-    return _queryAdapter.queryList(
-        'SELECT dailyActivityTime FROM StatisticsData WHERE id = ?1 AND date = ?2 BETWEEN start = ?3 AND end = ?4',
-        mapper: (Map<String, Object?> row) => row.values.first as int,
-        arguments: [id, date, startDate, endDate]);
+  Future<List<StatisticsData>> userAllSingleStatisticsData(int id) async {
+    return _queryAdapter.queryList('SELECT * FROM StatisticsData WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => StatisticsData(
+            row['id'] as int,
+            row['date'] as String,
+            row['dailySteps'] as int,
+            row['dailyDistance'] as int,
+            row['dailyActivityTime'] as int),
+        arguments: [id]);
   }
 
   @override

@@ -11,7 +11,7 @@ abstract class StatisticsDao {
   @update
   Future<void> updateData(StatisticsData data);
 
-  //Query: daily steps between two dates
+  //Query: select all the records of a certain user. The date will be managed into a function
   @Query('SELECT * FROM StatisticsData WHERE id = :id' )
   Future<List<StatisticsData>>userAllSingleStatisticsData(int id); 
 

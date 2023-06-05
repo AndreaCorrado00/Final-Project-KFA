@@ -10,7 +10,7 @@ abstract class QuestionnaireDao {
   @update
   Future<void> updateAnswers(Questionnaire answers);
 
-  //Query 
+  //Query  select a certain set of answers for a certain user in a certain date
   @Query('SELECT * FROM Questionnaire WHERE id = :id AND date = :date')
   Future<List<Questionnaire>> dailyQuestionaire(int id, String date); 
 

@@ -1,29 +1,28 @@
 // A temp page into which you'll find all the functions and examples to use the database. 
 
 import 'package:flutter/material.dart';
-import 'package:my_project/Database/repositries/appDatabaseRepository.dart';
-import 'package:my_project/screens/StatisticsPage.dart';
 import 'package:my_project/utils/constants.dart';
 
+// to receive datacfrom impact
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:provider/provider.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:my_project/utils/impact.dart';
+// to save data from impact into a proper way
 import 'package:my_project/Models/Steps.dart';
 import 'package:my_project/Models/Distance.dart';
 import 'package:my_project/Models/Activity.dart';
 
-import 'package:my_project/utils/impact.dart';
-
+// to use the db
+import 'package:provider/provider.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:my_project/Database/repositries/appDatabaseRepository.dart';
+// entities into write the data
 import 'package:my_project/Database/entities/achievements.dart';
 import 'package:my_project/Database/entities/questionnaire.dart';
 import 'package:my_project/Database/entities/statisticsData.dart';
 
-import 'package:my_project/screens/Barplot/bar_graph.dart';
 
 class databaseTestPage extends StatefulWidget {
  const databaseTestPage ({super.key});
@@ -35,7 +34,6 @@ class databaseTestPage extends StatefulWidget {
 class databaseTestPageState extends State<databaseTestPage> {
 
 static const routename = 'StatisticsPage';
-//final today='2023-05-16';
 final today='2023-05-17';
 final tomorrow='2023-05-18';
 
@@ -48,14 +46,13 @@ final tomorrow='2023-05-18';
         appBar: AppBar(
           backgroundColor: Constants.primaryColor,
 
-          title: Text('Database functions test page'),
-          automaticallyImplyLeading: false,
+          title: const Text('Database functions test page'),
+          automaticallyImplyLeading: true,
         ),
        
       backgroundColor:Constants.primaryLightColor,
-      //body: ListView(
       floatingActionButton: FloatingActionButton(
-      child: Icon(Icons.punch_clock_sharp),
+      child: const Icon(Icons.punch_clock_sharp),
       onPressed: () async {
         
 
@@ -64,9 +61,10 @@ final tomorrow='2023-05-18';
         // Now we are ready to read data from impact
 
         // Data for the statistics page
+        // NB: here the data are collected just for one day. 
         int steps= await _getStep(today); 
         int distance= await _getDistance(today);
-        int activity_time= await _getActivity_time(today);
+        int activity_time= await _getActivity_time(today); 
 
         // data for the questionnaire
         int question1=1;
@@ -77,9 +75,7 @@ final tomorrow='2023-05-18';
         // data for the achievements
         int today_LoS=_computeLoS(total, steps, distance, activity_time);
 
-        //PROBABILMENTE NON SERVE PIU'
-        int today_trees=today_LoS ~/ 1000; // integer division: returns only the integer part of the resoult before the common 
-
+        
         // Here we write on the database: (2 days)
         // First: check if there are new data available (= the date is different)
         bool newDataReady=await _newDataReady(today);
@@ -88,18 +84,18 @@ final tomorrow='2023-05-18';
       // to use this page, two consecutive dates are uploaded into the db
         await Provider.of<DatabaseRepository>(context, listen: false).insertData(StatisticsData(1, today, steps,distance,activity_time));
         await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, today, question1, question2, question3, total));
-        await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, today,today_LoS, today_trees));
+        await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, today,today_LoS));
 
         await Provider.of<DatabaseRepository>(context, listen: false).insertData(StatisticsData(1, tomorrow, steps,distance,activity_time));
         await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, tomorrow, question1, question2, question3, total));
-        await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, tomorrow,today_LoS, today_trees));
+        await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, tomorrow,today_LoS));
         print('stored new data');}
 
         else{
       // otherwise, the data are just update to the new vale (nb: can work with differences into the hours!)
         await Provider.of<DatabaseRepository>(context, listen: false).updateData(StatisticsData(1, today, steps,distance,activity_time));
         await Provider.of<DatabaseRepository>(context, listen: false).updateAnswers(Questionnaire(1, today, question1, question2, question3, total));
-        await Provider.of<DatabaseRepository>(context, listen: false).updateAchievements(Achievements(1, today,today_LoS, today_trees));
+        await Provider.of<DatabaseRepository>(context, listen: false).updateAchievements(Achievements(1, today,today_LoS));
         print('update the data');
         }
         
@@ -119,11 +115,21 @@ final tomorrow='2023-05-18';
 
         Consumer<DatabaseRepository>(
           builder: (context, dbr, child) {
+            List<Achievements> initialData=  [Achievements(0,'0000',0)];
           return FutureBuilder(
+            initialData: initialData,
             future: dbr.dailyAchievement(1,today),
             builder: (context,snapshot){
               if(snapshot.hasData){
+                
                 final data = snapshot.data as List<Achievements>;
+                if(data.length==0){
+                  return const Text('there are not data available yet',
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 255, 0, 0)
+                    ));
+                }
+                else{
                 final entity_row=data[0];
                 return Container(
                   height: 20,
@@ -134,7 +140,7 @@ final tomorrow='2023-05-18';
                   ),
                   color: Constants.containerColor,
                 );
-              }
+              }}
               else{
                 return CircularProgressIndicator();
               }
@@ -145,12 +151,21 @@ final tomorrow='2023-05-18';
 
         Consumer<DatabaseRepository>(
           builder: (context, dbr, child) {
+            List<Achievements> initialData=  [Achievements(0,'0000',0)];
           return FutureBuilder(
+            
+            initialData: initialData,
             future: dbr.userAllSingleAchievemnts(1),
             builder: (context,snapshot){
               if(snapshot.hasData){
-                
                 final data = snapshot.data as List<Achievements>;
+                if(data.length==0){
+                  return const Text('there are not data available yet',
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 255, 0, 0)
+                    ));
+                }
+                else{
                 int LoS=_reachedLoS(data);
                 int trees = LoS~/ 1000;
                 return Container(
@@ -161,7 +176,7 @@ final tomorrow='2023-05-18';
                   ),
                   color: Constants.containerColor,
                 );
-              }
+              }}
               else{
                 return CircularProgressIndicator();
               }
@@ -174,23 +189,29 @@ final tomorrow='2023-05-18';
 
         Consumer<DatabaseRepository>(
           builder: (context, dbr, child) {
+            List<StatisticsData> initialData=[StatisticsData(0, '0000', 0, 0, 0)];
           return FutureBuilder(
+            initialData: initialData,
             future: dbr.userAllSingleStatisticsData(1),
             builder: (context,snapshot){
               if(snapshot.hasData){
                 final data = snapshot.data as List<StatisticsData>;
+                if(data.length==0){
+                  return const Text('there are not data available yet',
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 255, 0, 0)
+                    ));
+                }
+                else{
                 List<int> week_steps= _createStepsDataForGraph(data);
                 
                 return Container(
                   height: 20,
                   width: 500,
-                  child: Text(
-                    'steps for the graph: ${week_steps}',
-
-                  ),
+                  child: Text('Data for graph: ${week_steps}'),
                   color: Constants.containerColor,
                 );
-              }
+              }}
               else{
                 return CircularProgressIndicator();
               }
@@ -203,22 +224,32 @@ final tomorrow='2023-05-18';
 
         Consumer<DatabaseRepository>(
           builder: (context, dbr, child) {
+            List<Questionnaire> initialData= [Questionnaire(0, '0000', 0, 0, 0, 0)];
           return FutureBuilder(
+            initialData: initialData,
             future: dbr.dailyQuestionaire(1,today),
             builder: (context,snapshot){
               if(snapshot.hasData){
                 final data = snapshot.data as List<Questionnaire>;
+                if(data.length==0){
+                  return const Text('there are not data available yet',
+                  style: TextStyle(
+                      color: Color.fromARGB(255, 255, 0, 0)
+                    ));
+                }
+                else{
                 final entity_row=data[0];
                 return Container(
                   height: 20,
                   width: 500,
                   child: Text(
                     'today from questionnaire: ${entity_row.total}',
+                    
 
                   ),
                   color: Constants.containerColor,
                 );
-              }
+              }}
               else{
                 return CircularProgressIndicator();
               }

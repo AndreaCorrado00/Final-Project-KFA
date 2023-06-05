@@ -89,7 +89,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `achievements` (`id` INTEGER NOT NULL, `date` TEXT NOT NULL, `levelOfSustainability` INTEGER NOT NULL, `trees` INTEGER NOT NULL, PRIMARY KEY (`id`, `date`))');
+            'CREATE TABLE IF NOT EXISTS `achievements` (`id` INTEGER NOT NULL, `date` TEXT NOT NULL, `levelOfSustainability` INTEGER NOT NULL, PRIMARY KEY (`id`, `date`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `questionnaire` (`id` INTEGER NOT NULL, `date` TEXT NOT NULL, `question1` INTEGER NOT NULL, `question2` INTEGER NOT NULL, `question3` INTEGER NOT NULL, `total` INTEGER NOT NULL, PRIMARY KEY (`id`, `date`))');
         await database.execute(
@@ -131,8 +131,7 @@ class _$AchievementsDao extends AchievementsDao {
             (Achievements item) => <String, Object?>{
                   'id': item.id,
                   'date': item.date,
-                  'levelOfSustainability': item.levelOfSustainability,
-                  'trees': item.trees
+                  'levelOfSustainability': item.levelOfSustainability
                 }),
         _achievementsUpdateAdapter = UpdateAdapter(
             database,
@@ -141,8 +140,7 @@ class _$AchievementsDao extends AchievementsDao {
             (Achievements item) => <String, Object?>{
                   'id': item.id,
                   'date': item.date,
-                  'levelOfSustainability': item.levelOfSustainability,
-                  'trees': item.trees
+                  'levelOfSustainability': item.levelOfSustainability
                 }),
         _achievementsDeletionAdapter = DeletionAdapter(
             database,
@@ -151,8 +149,7 @@ class _$AchievementsDao extends AchievementsDao {
             (Achievements item) => <String, Object?>{
                   'id': item.id,
                   'date': item.date,
-                  'levelOfSustainability': item.levelOfSustainability,
-                  'trees': item.trees
+                  'levelOfSustainability': item.levelOfSustainability
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -170,11 +167,8 @@ class _$AchievementsDao extends AchievementsDao {
   @override
   Future<List<Achievements>> userAllSingleAchievemnts(int id) async {
     return _queryAdapter.queryList('SELECT * FROM Achievements WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Achievements(
-            row['id'] as int,
-            row['date'] as String,
-            row['levelOfSustainability'] as int,
-            row['trees'] as int),
+        mapper: (Map<String, Object?> row) => Achievements(row['id'] as int,
+            row['date'] as String, row['levelOfSustainability'] as int),
         arguments: [id]);
   }
 
@@ -185,11 +179,8 @@ class _$AchievementsDao extends AchievementsDao {
   ) async {
     return _queryAdapter.queryList(
         'SELECT  *  FROM Achievements WHERE id = ?1 AND date = ?2',
-        mapper: (Map<String, Object?> row) => Achievements(
-            row['id'] as int,
-            row['date'] as String,
-            row['levelOfSustainability'] as int,
-            row['trees'] as int),
+        mapper: (Map<String, Object?> row) => Achievements(row['id'] as int,
+            row['date'] as String, row['levelOfSustainability'] as int),
         arguments: [id, date]);
   }
 

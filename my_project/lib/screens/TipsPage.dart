@@ -4,13 +4,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_project/screens/AboutThisApp.dart';
-import 'package:my_project/screens/HomePage.dart';
 import 'package:my_project/screens/LoginPage.dart';
-import 'package:my_project/screens/StatisticsPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
-//import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:my_project/utils/constants.dart';
 import 'package:my_project/Database/Advice_Database.dart';
@@ -63,7 +58,7 @@ class TipsPageState extends State<TipsPage> {
           backgroundColor: Constants.secondaryColor,
           child: Column(
             children: [
-              SizedBox(
+              SizedBox( 
                 height: 100,
               ),
               Row(

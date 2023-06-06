@@ -34,9 +34,9 @@ class databaseTestPage extends StatefulWidget {
 class databaseTestPageState extends State<databaseTestPage> {
 
 static const routename = 'StatisticsPage';
-final today='2023-05-17';
-final tomorrow='2023-05-18';
-
+final today='2023-05-16';
+final tomorrow='2023-05-17';
+final oneWeekLater='2023-05-22';
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +53,12 @@ final tomorrow='2023-05-18';
       backgroundColor:Constants.primaryLightColor,
       floatingActionButton: FloatingActionButton(
       child: const Icon(Icons.punch_clock_sharp),
+      
       onPressed: () async {
-        
+        // Here we write on the database: (2 days)
+        // First: check if there are new data available (= the date is different)
+        bool newDataReady=await _newDataReady(today);
+        bool weekData=true;
 
         await _pingImpact();        // connect to impact
         await  _getAndStoreTokens();// storing tokens. 
@@ -76,11 +80,11 @@ final tomorrow='2023-05-18';
         int today_LoS=_computeLoS(total, steps, distance, activity_time);
 
         
-        // Here we write on the database: (2 days)
-        // First: check if there are new data available (= the date is different)
-        bool newDataReady=await _newDataReady(today);
-        if(newDataReady==true){
-
+        
+        // up to now the code works like a real-situation application. I think that we need to load one week of data for our demo. 
+         
+        if(newDataReady==true && weekData==false){
+        
       // to use this page, two consecutive dates are uploaded into the db
         await Provider.of<DatabaseRepository>(context, listen: false).insertData(StatisticsData(1, today, steps,distance,activity_time));
         await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, today, question1, question2, question3, total));
@@ -91,6 +95,34 @@ final tomorrow='2023-05-18';
         await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, tomorrow,today_LoS));
         print('stored new data');}
 
+        else if ( weekData==true){
+          Map weekSteps=await _getWeekSteps(today, oneWeekLater);
+          List days=await weekSteps.keys.toList();
+          List steps=await weekSteps.values.toList();
+          
+          Map weekDist=await _getWeekDistance(today, oneWeekLater);
+          List distance=await weekDist.values.toList();
+
+          Map weekTime=await _getWeekActivityTime(today, oneWeekLater);  
+          List activity_time=await weekTime.values.toList();
+
+          for(int i=0;i<7;i++){
+
+            int today_LoS=_computeLoS(total, steps[i],distance[i],activity_time[i]);
+            // simulation of a weekly db (this is not the correct position of this but ok, probably, esage of a map would suit better)
+            // idea:
+            // la key della mappa è il today
+            // il valore della mappa è il valore associato alla key
+            // questo per ogni statistics data.
+
+            // per quanto riguarda il questionario, dovremmo simulare 7 risposte diverse date al singolo questionario, oppure semplicamente quel
+            // giorno si mostra che, aggiungendo dati al questionario, le cose migliorano.
+
+            await Provider.of<DatabaseRepository>(context, listen: false).insertData(StatisticsData(1, days[i], steps[i],distance[i],activity_time[i]));
+            await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, days[i], question1, question2, question3, total));
+            await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, days[i],today_LoS));
+          }
+        }
         else{
       // otherwise, the data are just update to the new vale (nb: can work with differences into the hours!)
         await Provider.of<DatabaseRepository>(context, listen: false).updateData(StatisticsData(1, today, steps,distance,activity_time));
@@ -103,39 +135,36 @@ final tomorrow='2023-05-18';
         // From now on the data are stored into the database. I hope that you'll find pretty clear how to pass properly the data!
       },),
 
-      // Ok, i dati li scrive. Mi chiedo a questo punto se io non possa fare una cosa un attimo più furba:
-      // selezionare l'intero record e mostrare solo l'attributo della classe che mi serve, come viene fatto nella classe todo: tu non vai
-      // a selezionare un particolare attributo ma bensì tutti i dati! In questo modo ti eviti i problemi con gli int e liste...chissà!
-
-// EXAMPLE OF BODY WITH THE FUTURE BUILDER WICH WRAPS A CONTAINER
+// Her you'll find a simple body with elementary operations on the db.
     body: Column(
       children: [
+// -----------------------------------------------------------------------------------
         Text('achievements entity queries'),
         SizedBox(height: 10,),
 
-        Consumer<DatabaseRepository>(
-          builder: (context, dbr, child) {
-            List<Achievements> initialData=  [Achievements(0,'0000',0)];
-          return FutureBuilder(
-            initialData: initialData,
-            future: dbr.dailyAchievement(1,today),
+        Consumer<DatabaseRepository>( // calling the consumer
+          builder: (context, dbr, child) { // building 
+            List<Achievements> initialData=  [Achievements(0,'0000',0)]; // data used to start (but can be null too, this is just an example)
+          return FutureBuilder(// let's build a future (sounds pretty good, but it's a nightmare!)
+            initialData: initialData, 
+            future: dbr.dailyAchievement(1,today), //the query used
             builder: (context,snapshot){
               if(snapshot.hasData){
                 
                 final data = snapshot.data as List<Achievements>;
-                if(data.length==0){
+                if(data.length==0){// a simple way to manage the possbility of an empty db
                   return const Text('there are not data available yet',
                   style: TextStyle(
                       color: Color.fromARGB(255, 255, 0, 0)
                     ));
                 }
                 else{
-                final entity_row=data[0];
+                final entity_row=data[0]; // here we work
                 return Container(
                   height: 20,
                   width: 500,
                   child: Text(
-                    'today LoS: ${entity_row.levelOfSustainability}',
+                    'today LoS: ${entity_row.levelOfSustainability}', // showing the resoult 
 
                   ),
                   color: Constants.containerColor,
@@ -166,8 +195,8 @@ final tomorrow='2023-05-18';
                     ));
                 }
                 else{
-                int LoS=_reachedLoS(data);
-                int trees = LoS~/ 1000;
+                int LoS=_reachedLoS(data); //it's the sum of ALLLL level of sustainability recorded up to now
+                int trees = LoS~/ 1000; // stupid but effective way
                 return Container(
                   height: 20,
                   width: 500,
@@ -184,6 +213,8 @@ final tomorrow='2023-05-18';
           );}
     ),
     SizedBox(height: 10,),
+
+    // -----------------------------------------------------------------------------------
     Text('statistics data entity queries'),
     SizedBox(height: 10,),
 
@@ -203,7 +234,7 @@ final tomorrow='2023-05-18';
                     ));
                 }
                 else{
-                List<int> week_steps= _createStepsDataForGraph(data);
+                List<int> week_steps= _createStepsDataForGraph(data); // so just a list created with a function
                 
                 return Container(
                   height: 20,
@@ -219,6 +250,7 @@ final tomorrow='2023-05-18';
           );}
     ),
     SizedBox(height: 10,),
+// -----------------------------------------------------------------------------------
     Text('questionnaire entity queries'),
     SizedBox(height: 10,),
 
@@ -227,7 +259,7 @@ final tomorrow='2023-05-18';
             List<Questionnaire> initialData= [Questionnaire(0, '0000', 0, 0, 0, 0)];
           return FutureBuilder(
             initialData: initialData,
-            future: dbr.dailyQuestionaire(1,today),
+            future: dbr.dailyQuestionaire(1,today), 
             builder: (context,snapshot){
               if(snapshot.hasData){
                 final data = snapshot.data as List<Questionnaire>;
@@ -264,80 +296,13 @@ final tomorrow='2023-05-18';
     );
   }}
 
-      //Here i build the page: has so many logical errors, be patient with me please
-
-//       body: Consumer<DatabaseRepository>(
-//             builder: (context, dbr, child) {
-//           return FutureBuilder(
-            
-//             initialData: null,
-//             future: 
-//                    //dbr.dailyTotal(01,today), //1
-//                    dbr.dailyAchievement(1, today), //2
-//                   //dbr.dateRangeLoS(1, today, today, today), // 3 
-//                   // this query doesn't work well. Why? BOOOO
-
-//                   // Possibile strategia alternativa: usare solo query di selezione e usare delle funzioni con cicli per il conteggio/creazione delle liste...
-
-//             builder: (context, snapshot) {
-//               if (snapshot.hasData) {
-// // Up to now, you can only change the instruction given to the builder... I don't know how to create, for example, a list of FutureBuilder...
-
-// // DOMANDE DA FARE DOMANI: 
-// // 1. Come inserire un future builder dentro un container? 
-// // 2. Cosa vuol dire l'errore sul between? Forse non legge correttamente la stringa?
 
 
-//                 //final data = snapshot.data as List<Questionnaire>;  //1
-//                 // final data = snapshot.data as List<Achievements>;  //2 
-//                 final data = snapshot.data as List<Achievements>; 
-//                 //int intoRangeLos = _intoRangeLos(data);
 
-//                 //int intoRangeLos = _intoRangeLos(data,today);
-//                 return 
-//                  ListView.builder(
-//                     //shrinkWrap:true,
-//                     itemCount: data.length,
-//                     itemBuilder: (context, index) {
-
-//                       final entity_row = data[index];
-                      
-//                       return Column(
-//                         children: [
-//                           SizedBox(height: 20),
-
-                          
-                                                    
-//                           //Text('total level from answers: ${entity_row.total}'), //1
-
-//                           // Text('total trees: ${entity_row.trees}'), //2
-//                           // SizedBox(height: 20),
-//                            Text('today LoS: ${entity_row.levelOfSustainability}'), //2
-//                           //Text('comulative LoS: $intoRangeLos') // 3
-
-//                         ],
-//                       );
-//                     });
-//                     } 
-//                 else {
-//                 //CircularProgressIndicator is shown while the list of Todo is loading.
-//                 return CircularProgressIndicator();
-//               } //else
-//             },//builder of FutureBuilder
-//           );
-//         }),
-
-
-//        ),
-//       );
-      
-//       }
-      
-//       }
 
 
 // Some functions ready made for you with much love 
-
+// --------------------------------- IMPACT --------------------------------------------------
 Future<bool> _pingImpact() async{
     final url=Impact.baseUrl + Impact.pingEndpoint;
     // call
@@ -399,7 +364,7 @@ Future<bool> _pingImpact() async{
       return false;}
   }
   
-
+// --------------------------------- IMPACT AND MODELS --------------------------------------------------
   Future _getStep(today)async{
     // Returns the sum of the steps made into a certain day 
     // preliminary settings
@@ -503,7 +468,150 @@ Future<bool> _pingImpact() async{
   
   }//getActivity_time
 
+//--------------------------------- WEEK DATA FOR THE DEMO -------------------------
+  
+  // getWeekSteps
+    Future _getWeekSteps( String startDate, String endDate )async{
+    // Returns the sum of the steps made into a certain day 
 
+    // preliminary settings
+    final sp=await SharedPreferences.getInstance();
+    var access=sp.getString('access');
+    if (access == null){
+      return null;
+    }
+    else{
+      if(JwtDecoder.isExpired(access)){
+        await _refreshTokens();
+        access = sp.getString('access');
+      }
+      //request
+      final url=Impact.baseUrl+Impact.stepEndpoint + '/patients/Jpefaq6m58'+'/daterange/start_date/$startDate/end_date/$endDate/';
+      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
+      final response = await http.get(Uri.parse(url), headers: headers);
+
+    // Creatione of the response
+    if (response.statusCode == 200) {
+      final decodedResponse = jsonDecode(response.body);
+      
+      Map stepsWeekdata={};
+      //List stepsWeekdata=[];
+      for(var i=0; i<decodedResponse['data'].length;i++){
+        List dailySteps=[];
+        for(var j=0;j<decodedResponse['data'][i]['data'].length;j++){
+          dailySteps.add(Steps.fromJson(decodedResponse['data'][i]['date'],decodedResponse['data'][i]['data'][j]).getValue());
+        }
+        int daySteps=dailySteps.reduce((a, b) => a + b);
+        stepsWeekdata[decodedResponse['data'][i]['date']]=daySteps; 
+        //stepsWeekdata.add(daySteps);
+      }
+      return stepsWeekdata;
+    } //if
+
+    else{
+      void result = null;
+      return result;
+    }//else
+    
+    }
+  }
+
+  // getWeekSteps
+    Future _getWeekDistance( String startDate, String endDate )async{
+    // Returns the sum of the steps made into a certain day 
+
+    // preliminary settings
+    final sp=await SharedPreferences.getInstance();
+    var access=sp.getString('access');
+    if (access == null){
+      return null;
+    }
+    else{
+      if(JwtDecoder.isExpired(access)){
+        await _refreshTokens();
+        access = sp.getString('access');
+      }
+      //request
+      final url=Impact.baseUrl+Impact.distanceEndpoint + '/patients/Jpefaq6m58'+'/daterange/start_date/$startDate/end_date/$endDate/';
+      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
+      final response = await http.get(Uri.parse(url), headers: headers);
+
+    // Creatione of the response
+    if (response.statusCode == 200) {
+      final decodedResponse = jsonDecode(response.body);
+      Map stepsDistancedata={};
+      //List stepsDistancedata=[];
+      for(var i=0; i<decodedResponse['data'].length;i++){
+        List dailyDistance=[];
+        for(var j=0;j<decodedResponse['data'][i]['data'].length;j++){
+          dailyDistance.add(Distance.fromJson(decodedResponse['data'][i]['date'],decodedResponse['data'][i]['data'][j]).getValue());
+        }
+        double dayDist=dailyDistance.reduce((a, b) => a + b)/100.toInt();//udm: [m]
+        stepsDistancedata[decodedResponse['data'][i]['date']]=dayDist.toInt();
+        //stepsDistancedata.add(dayDist);
+      }
+      return stepsDistancedata;
+    } //if
+
+    else{
+      void result = null;
+      return result;
+    }//else
+    
+    }
+  }
+
+  // getWeekSteps
+    Future _getWeekActivityTime( String startDate, String endDate )async{
+    // Returns the sum of the steps made into a certain day 
+
+    // preliminary settings
+    final sp=await SharedPreferences.getInstance();
+    var access=sp.getString('access');
+    if (access == null){
+      return null;
+    }
+    else{
+      if(JwtDecoder.isExpired(access)){
+        await _refreshTokens();
+        access = sp.getString('access');
+      }
+      //request
+      final url=Impact.baseUrl+Impact.activityEndpoint + '/patients/Jpefaq6m58'+'/daterange/start_date/$startDate/end_date/$endDate/';
+      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
+      final response = await http.get(Uri.parse(url), headers: headers);
+
+    // Creatione of the response
+    if (response.statusCode == 200) {
+      final decodedResponse = jsonDecode(response.body);
+     
+      Map ActivityTimeWeekdata={};
+      //List ActivityTimeWeekdata=[];
+      for(var i=0; i<decodedResponse['data'].length;i++){
+        List dailySteps=[];
+        for(var j=0;j<decodedResponse['data'][i]['data'].length;j++){
+          dailySteps.add(Activity.fromJson(decodedResponse['data'][i]['date'],decodedResponse['data'][i]['data'][j]).getValue());
+        }
+        if (dailySteps.length==0){
+          ActivityTimeWeekdata[decodedResponse['data'][i]['date']]=0;
+        }
+        else{
+        double dayTime=dailySteps.reduce((a, b) => a + b)/60000;  //udm [min]
+        ActivityTimeWeekdata[decodedResponse['data'][i]['date']]=dayTime.toInt();}
+        //ActivityTimeWeekdata.add(dayTime);
+      }
+      return ActivityTimeWeekdata;
+    } //if
+
+    else{
+      void result = null;
+      return result;
+    }//else
+    
+    }
+  }
+
+// --------------------------------- DATABASE ATTRIBUTES COMPUTATION --------------------------------------------------
  int _computeTotalQuestionnaire(List points)  {
     int out=points.reduce((a, b) => a + b);
     return out;
@@ -511,7 +619,7 @@ Future<bool> _pingImpact() async{
 
 
   int _computeLoS(int point_answers , int daily_steps,int daily_distance,int daily_activityTime) {
-    //For now, it's just a sum
+    //For now, it's just a sum. In the future will be a weighted sum
 
     // Defining of weights
     int ans_w=1;
@@ -521,7 +629,7 @@ Future<bool> _pingImpact() async{
 
     int malus=-50; //for example
 
-    // as a sum of int, round is not necessary (for now)
+    // as a sum of int, round is not necessary (for now BUT in the future...)
     num weightedSum= point_answers*ans_w+daily_steps*steps_w+daily_distance*dist_w+daily_activityTime*time_w;
     int result=weightedSum.toInt();
 
@@ -531,6 +639,9 @@ Future<bool> _pingImpact() async{
     else{return result;}
     
   }
+
+
+
 
 
 
@@ -548,7 +659,8 @@ Future<bool> _pingImpact() async{
     // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
     else {
       for(int i=0; i<=out.length-1; i++){
-      out[i]=data[lnList-6+i].dailySteps;
+      out[i]=data[lnList-7+i].dailySteps;
+      print(data[lnList-7+i].dailySteps);
     }
     }
     return out;
@@ -615,6 +727,7 @@ Future<bool> _pingImpact() async{
   }
 
   int _reachedLoS(List<Achievements> data){
+    // basically the sum of allll the LoS recorded by the user
     int out=0;
     for (int i=0; i<=data.length-1; i++){
       out=out+data[i].levelOfSustainability;

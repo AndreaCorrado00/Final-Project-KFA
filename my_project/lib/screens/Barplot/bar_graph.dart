@@ -21,7 +21,7 @@ class BarGraph extends StatelessWidget{
 
     return BarChart(
       BarChartData(
-        maxY: 20000,
+        maxY: 20000, // dovrebbe essere il massimo dei passi del giorno, è possibile?
         minY: 0,
         gridData: FlGridData(show: false),
         borderData: FlBorderData(show: false),
@@ -60,9 +60,9 @@ Widget getBottomTitles (double value, TitleMeta meta){
      fontSize: 14
      );
      Widget text;
-     switch(value.toInt()){
+     switch(value.toInt()){ // in realtà non abbiamo memoria di giorno ma solo di date...forse sarebbe meglio mettere un altro simbolo...
       case 1:
-        text = const Text('M',style: style);
+        text = const Text('°',style: style);
         break;
       case 2:
         text = const Text('T',style: style);

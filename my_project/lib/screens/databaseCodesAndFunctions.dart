@@ -31,7 +31,20 @@ class databaseTestPage extends StatefulWidget {
   databaseTestPageState createState() => databaseTestPageState();
 }
 
+// What will you find here:
+// this code hase inside same examples of what can we do with out database. First, decide if you want to simulate
+// an entire week or a real-life situation where you use the database to retrive only the daily data. 
+
+// then some function are used to compute the values that must be inserted into the database and other to load data in the correct way
+
+// finally, into the body, you'll find same other function which create the correct visualization of the resource inside the database. 
+
+// Note that i've made same important assumpionts that i hope simplyfies a lot the workload and the code For example, all values are int.
+
+
+
 class databaseTestPageState extends State<databaseTestPage> {
+
 
 static const routename = 'StatisticsPage';
 final today='2023-05-16';
@@ -54,11 +67,13 @@ final oneWeekLater='2023-05-22';
       floatingActionButton: FloatingActionButton(
       child: const Icon(Icons.punch_clock_sharp),
       
+
+      // this button load the data or, if is the case, udate them. 
       onPressed: () async {
-        // Here we write on the database: (2 days)
+
         // First: check if there are new data available (= the date is different)
         bool newDataReady=await _newDataReady(today);
-        bool weekData=true;
+        bool weekData=true; // if we want to simulate an entire week of loadings.
 
         await _pingImpact();        // connect to impact
         await  _getAndStoreTokens();// storing tokens. 
@@ -85,7 +100,7 @@ final oneWeekLater='2023-05-22';
          
         if(newDataReady==true && weekData==false){
         
-      // to use this page, two consecutive dates are uploaded into the db
+      // to use this page, two consecutive dates are uploaded into the db in order to test the functions
         await Provider.of<DatabaseRepository>(context, listen: false).insertData(StatisticsData(1, today, steps,distance,activity_time));
         await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, today, question1, question2, question3, total));
         await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, today,today_LoS));
@@ -95,7 +110,7 @@ final oneWeekLater='2023-05-22';
         await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, tomorrow,today_LoS));
         print('stored new data');}
 
-        else if ( weekData==true){
+        else if ( weekData==true){ // simulation of a week 
           Map weekSteps=await _getWeekSteps(today, oneWeekLater);
           List days=await weekSteps.keys.toList();
           List steps=await weekSteps.values.toList();
@@ -109,14 +124,6 @@ final oneWeekLater='2023-05-22';
           for(int i=0;i<7;i++){
 
             int today_LoS=_computeLoS(total, steps[i],distance[i],activity_time[i]);
-            // simulation of a weekly db (this is not the correct position of this but ok, probably, esage of a map would suit better)
-            // idea:
-            // la key della mappa è il today
-            // il valore della mappa è il valore associato alla key
-            // questo per ogni statistics data.
-
-            // per quanto riguarda il questionario, dovremmo simulare 7 risposte diverse date al singolo questionario, oppure semplicamente quel
-            // giorno si mostra che, aggiungendo dati al questionario, le cose migliorano.
 
             await Provider.of<DatabaseRepository>(context, listen: false).insertData(StatisticsData(1, days[i], steps[i],distance[i],activity_time[i]));
             await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, days[i], question1, question2, question3, total));
@@ -124,7 +131,7 @@ final oneWeekLater='2023-05-22';
           }
         }
         else{
-      // otherwise, the data are just update to the new vale (nb: can work with differences into the hours!)
+      //if the date has not changed, the data are just update with the new value (nb: can work with differences into the hours!)
         await Provider.of<DatabaseRepository>(context, listen: false).updateData(StatisticsData(1, today, steps,distance,activity_time));
         await Provider.of<DatabaseRepository>(context, listen: false).updateAnswers(Questionnaire(1, today, question1, question2, question3, total));
         await Provider.of<DatabaseRepository>(context, listen: false).updateAchievements(Achievements(1, today,today_LoS));
@@ -136,6 +143,7 @@ final oneWeekLater='2023-05-22';
       },),
 
 // Her you'll find a simple body with elementary operations on the db.
+// NB!! IF THERE ARE NOT REFERENCED FUNCTION, THEY ARE HAVE NOT BEEN TESTED! BUT THEIR BODY SHOULD BE THE SAME OF THE OTHERS. BE CAREFULL!
     body: Column(
       children: [
 // -----------------------------------------------------------------------------------
@@ -152,7 +160,7 @@ final oneWeekLater='2023-05-22';
               if(snapshot.hasData){
                 
                 final data = snapshot.data as List<Achievements>;
-                if(data.length==0){// a simple way to manage the possbility of an empty db
+                if(data.length==0){// a simple way to manage the possibility of an empty db
                   return const Text('there are not data available yet',
                   style: TextStyle(
                       color: Color.fromARGB(255, 255, 0, 0)
@@ -164,7 +172,7 @@ final oneWeekLater='2023-05-22';
                   height: 20,
                   width: 500,
                   child: Text(
-                    'today LoS: ${entity_row.levelOfSustainability}', // showing the resoult 
+                    'today LoS: ${entity_row.levelOfSustainability}', // showing the result 
 
                   ),
                   color: Constants.containerColor,
@@ -196,7 +204,7 @@ final oneWeekLater='2023-05-22';
                 }
                 else{
                 int LoS=_reachedLoS(data); //it's the sum of ALLLL level of sustainability recorded up to now
-                int trees = LoS~/ 1000; // stupid but effective way
+                int trees = LoS~/ 1000; // stupid but effective way. Note that trees are not stored into the db
                 return Container(
                   height: 20,
                   width: 500,
@@ -642,7 +650,7 @@ Future<bool> _pingImpact() async{
 
 
 
-
+// ------------------------------------- PLOTS FUNCTIONS ------------------------------
 
 
   List<int> _createStepsDataForGraph( List<StatisticsData> data) {
@@ -660,7 +668,6 @@ Future<bool> _pingImpact() async{
     else {
       for(int i=0; i<=out.length-1; i++){
       out[i]=data[lnList-7+i].dailySteps;
-      print(data[lnList-7+i].dailySteps);
     }
     }
     return out;
@@ -680,7 +687,7 @@ Future<bool> _pingImpact() async{
     // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
     else {
       for(int i=0; i<=out.length-1; i++){
-      out[i]=data[lnList-6+i].dailyDistance;
+      out[i]=data[lnList-7+i].dailyDistance;
     }
     }
     return out;
@@ -700,11 +707,14 @@ Future<bool> _pingImpact() async{
     // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
     else {
       for(int i=0; i<=out.length-1; i++){
-      out[i]=data[lnList-6+i].dailyActivityTime;
+      out[i]=data[lnList-7+i].dailyActivityTime;
     }
     }
     return out;
   }
+
+
+
 
   List<int> _createLoSDataForGraph( List<Achievements> data) {
     // require to pass to the function an item of userAllSingleAchievemnts query 
@@ -720,11 +730,13 @@ Future<bool> _pingImpact() async{
     // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
     else {
       for(int i=0; i<=out.length-1; i++){
-      out[i]=data[lnList-6+i].levelOfSustainability;
+      out[i]=data[lnList-7+i].levelOfSustainability;
     }
     }
     return out;
   }
+
+
 
   int _reachedLoS(List<Achievements> data){
     // basically the sum of allll the LoS recorded by the user

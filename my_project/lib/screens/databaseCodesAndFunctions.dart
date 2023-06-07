@@ -48,7 +48,7 @@ class databaseTestPageState extends State<databaseTestPage> {
 
 static const routename = 'StatisticsPage';
 final today='2023-05-16';
-final tomorrow='2023-05-17';
+  final tomorrow='2023-05-17';
 final oneWeekLater='2023-05-22';
 
   @override

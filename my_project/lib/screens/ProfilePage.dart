@@ -321,6 +321,7 @@ class ProfilePageState extends State<ProfilePage> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => LoginPage()));
         // Must be changed to point at the current page
+
       },
       style: Constants.TextButtonStyle_Alert,
     );

@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+
 import 'package:my_project/screens/Barplot/bar_graph.dart';
+import 'package:my_project/screens/databaseCodesAndFunctions.dart';
 import 'package:my_project/utils/constants.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -146,8 +148,18 @@ static const routename = 'StatisticsPage';
           ],
 
         ),
-    ),
+
+    floatingActionButton:
+     FloatingActionButton(
+      onPressed: (){Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const databaseTestPage()));},
+      child: Icon(Icons.data_array)
+      
+      ),
+     ),
 
     );
   }
+
 }
+
+

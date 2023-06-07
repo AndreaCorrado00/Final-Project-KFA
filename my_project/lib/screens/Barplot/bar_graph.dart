@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:my_project/screens/Barplot/bar_data.dart';
+import 'package:my_project/utils/constants.dart';
 
 class BarGraph extends StatelessWidget{
   final List dailySteps;
@@ -21,7 +22,7 @@ class BarGraph extends StatelessWidget{
 
     return BarChart(
       BarChartData(
-        maxY: 20000, // dovrebbe essere il massimo dei passi del giorno, è possibile?
+        maxY: 25000,// dovrebbe essere il massimo dei passi del giorno, è possibile?
         minY: 0,
         gridData: FlGridData(show: false),
         borderData: FlBorderData(show: false),
@@ -35,7 +36,7 @@ class BarGraph extends StatelessWidget{
           x: data.x,
           barRods: [BarChartRodData(
             toY: data.y,
-            color: Color.fromARGB(255, 1, 76, 4),
+            color: Constants.secondaryColor,
             width: 10,
             borderRadius: BorderRadius.circular(25),
             backDrawRodData: BackgroundBarChartRodData(
@@ -65,22 +66,22 @@ Widget getBottomTitles (double value, TitleMeta meta){
         text = const Text('°',style: style);
         break;
       case 2:
-        text = const Text('T',style: style);
+        text = const Text('°',style: style);
         break;
       case 3:
-        text = const Text('W',style: style);
+        text = const Text('°',style: style);
         break;
       case 4:
-        text = const Text('T',style: style);
+        text = const Text('°',style: style);
         break;
       case 5:
-        text = const Text('F',style: style);
+        text = const Text('°',style: style);
         break;
       case 6:
-        text = const Text('S',style: style);
+        text = const Text('°',style: style);
         break;
       case 7:
-        text = const Text('S',style: style);
+        text = const Text('°',style: style);
         break;
       default:
         text = const Text('',style: style);

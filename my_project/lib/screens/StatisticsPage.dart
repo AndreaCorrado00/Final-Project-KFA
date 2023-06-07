@@ -1,4 +1,6 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
+
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -42,10 +44,6 @@ class StatisticsPageState extends State<StatisticsPage> {
  //-------------- Index used trought the code to build widgets
 
   final today='2023-05-16';
-
-
-  List<double> dailySteps = [5600, 4000, 10000, 7000, 3000, 1000, 12000];
-
 
 static const routename = 'StatisticsPage';
   @override
@@ -123,7 +121,7 @@ static const routename = 'StatisticsPage';
       body: ListView(
           children: [
           
-          // Steps graph
+          // ----------------------------Steps graph OK 
           Consumer<DatabaseRepository>(
           builder: (context, dbr, child) {
             List<StatisticsData> initialData=[StatisticsData(0, '0000', 0, 0, 0)];
@@ -138,34 +136,7 @@ static const routename = 'StatisticsPage';
                 }
                 else{
                 List<double> week_steps= _createStepsDataForGraph(data); // so just a list created with a function
-                
-                return Padding(padding: const EdgeInsets.all(20),
-            child: Animate(
-              effects: Constants.Fade_effect_options,
-            child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              height: 280,
-                color: Constants.containerColor,
-                child:Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 10),
-                const Text('Steps', style: TextStyle(
-                  color: Color.fromARGB(255, 1, 76, 4), fontSize: 24, fontWeight: FontWeight.bold,
-                  ),
-                  ),
-                  SizedBox(height: 15),
-                SizedBox(
-                  height: 200,
-                    child: BarGraph(
-                    dailySteps: week_steps,
-                    ),
-                  ),
-                 ],
-                ),
-              ),
-            ),));
+               return _dataGraph(week_steps, 'Steps');
               }}
               else{
                 return CircularProgressIndicator();
@@ -173,126 +144,76 @@ static const routename = 'StatisticsPage';
             }
           );}
     ),
-            Padding(padding: const EdgeInsets.all(20),
-            child: Animate(
-              effects: Constants.Fade_effect_options,
-            child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              height: 280,
-                color: Constants.containerColor,
-                child:Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 10),
-                const Text('Steps', style: TextStyle(
-                  color: Color.fromARGB(255, 1, 76, 4), fontSize: 24, fontWeight: FontWeight.bold,
-                  ),
-                  ),
-                  SizedBox(height: 15),
-                SizedBox(
-                  height: 200,
-                  //child: Animate(
-                    //effects:
-                   // [FadeEffect(duration: 2000.ms), SlideEffect()],
-                    child: BarGraph(
-                    dailySteps: dailySteps,
-                    ),
-                  ),
-                 ],
-                ),
-              ),
-            ),)),
-            Padding(padding: const EdgeInsets.all(20),
-            child: Animate(
-              effects: Constants.Fade_effect_options,
-            child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              height: 280,
-                color: Constants.containerColor,
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 10),
-                const Text('Distance', style: TextStyle(
-                  color: Color.fromARGB(255, 1, 76, 4), fontSize: 24, fontWeight: FontWeight.bold,
-                  ),
-                  ),
-                SizedBox(height: 15),
-                SizedBox(
-                  height: 200,
-                  //child: Animate(
-                    //effects:
-                   // [FadeEffect(duration: 2000.ms), SlideEffect()],
-                    child: BarGraph(
-                    dailySteps: dailySteps,
-                    ),
-                  ),
-                 ],
-                ),
-              ),
-            ),)),
-            Padding(padding: const EdgeInsets.all(20),
-            child: Animate(
-              effects: Constants.Fade_effect_options,
-            child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              height: 280,
-                color: Constants.containerColor,
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 10),
-                const Text('Activity time', style: TextStyle(
-                  color: Color.fromARGB(255, 1, 76, 4), fontSize: 24, fontWeight: FontWeight.bold,
-                  ),
-                  ),
-                SizedBox(height: 15),
-                SizedBox(
-                  height: 200,
-                  //child: Animate(
-                    //effects:
-                   // [FadeEffect(duration: 2000.ms), SlideEffect()],
-                    child: BarGraph(
-                    dailySteps: dailySteps,
-                    ),
-                  ),
-                 ],
-                ),
-              ),
-            ),)),
-            Padding(padding: const EdgeInsets.all(20),
-            child: Animate(
-              effects: Constants.Fade_effect_options,
-            child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-              height: 280,
-                color: Constants.containerColor,
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 10),
-                const Text('Level of Sustainability', style: TextStyle(
-                  color: Color.fromARGB(255, 1, 76, 4), fontSize: 24, fontWeight: FontWeight.bold,
-                  ),
-                  ),
-                SizedBox(height: 15),
-                SizedBox(
-                  height: 200,
-                  //child: Animate(
-                    //effects:
-                   // [FadeEffect(duration: 2000.ms), SlideEffect()],
-                    child: BarGraph(
-                    dailySteps: dailySteps,
-                    ),
-                  ),
-                 ],
-                ),
-              ),
-            ),)),
+    // ------------------------------------------ distance graph UPDATE
+          Consumer<DatabaseRepository>(
+          builder: (context, dbr, child) {
+            List<StatisticsData> initialData=[StatisticsData(0, '0000', 0, 0, 0)];
+          return FutureBuilder(
+            initialData: initialData,
+            future: dbr.userAllSingleStatisticsData(1),
+            builder: (context,snapshot){
+              if(snapshot.hasData){
+                final data = snapshot.data as List<StatisticsData>;
+                if(data.length==0){
+                  return _noDataGraph();
+                }
+                else{
+                List<double> week_steps= _createStepsDataForGraph(data); // so just a list created with a function
+               return _dataGraph(week_steps, 'Distance');
+              }}
+              else{
+                return CircularProgressIndicator();
+              }
+            }
+          );}
+    ),
+    // ----------------------------------------------- activity time graph UPDATE
+          Consumer<DatabaseRepository>(
+          builder: (context, dbr, child) {
+            List<StatisticsData> initialData=[StatisticsData(0, '0000', 0, 0, 0)];
+          return FutureBuilder(
+            initialData: initialData,
+            future: dbr.userAllSingleStatisticsData(1),
+            builder: (context,snapshot){
+              if(snapshot.hasData){
+                final data = snapshot.data as List<StatisticsData>;
+                if(data.length==0){
+                  return _noDataGraph();
+                }
+                else{
+                List<double> week_steps= _createStepsDataForGraph(data); // so just a list created with a function
+               return _dataGraph(week_steps, 'Activity Time');
+              }}
+              else{
+                return CircularProgressIndicator();
+              }
+            }
+          );}
+    ),
+    // ---------------------------------------------------LoS graph UPDATE
+          Consumer<DatabaseRepository>(
+          builder: (context, dbr, child) {
+            List<StatisticsData> initialData=[StatisticsData(0, '0000', 0, 0, 0)];
+          return FutureBuilder(
+            initialData: initialData,
+            future: dbr.userAllSingleStatisticsData(1),
+            builder: (context,snapshot){
+              if(snapshot.hasData){
+                final data = snapshot.data as List<StatisticsData>;
+                if(data.length==0){
+                  return _noDataGraph();
+                }
+                else{
+                List<double> week_steps= _createStepsDataForGraph(data); // so just a list created with a function
+               return _dataGraph(week_steps, 'Level of Sustainability');
+              }}
+              else{
+                return CircularProgressIndicator();
+              }
+            }
+          );}
+    ),
+            
           ],
 
         ),
@@ -324,18 +245,44 @@ static const routename = 'StatisticsPage';
         if(newDataReady==true) { // writing new data becouse the day has changed
         await Provider.of<DatabaseRepository>(context, listen: false).insertData(StatisticsData(1, today, steps,distance,activity_time));
         // the date is changed, ones upon a day the questionnaire in inserted
-         await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, today, 0,0,0,0));
+        await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, today, 0,0,0,0));
         await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, today,today_LoS));
 
-        print('stored new data');}
+        print('stored new data');
+
+        // a simple snackBar to return the state of the data
+        final snackBar=SnackBar(content: Text('New data stored!',
+        style: TextStyle(color: Constants.primaryColor, fontWeight: FontWeight.bold,fontSize: 15),),
+        backgroundColor: Color.fromARGB(255, 206, 211, 206),
+        
+        action: SnackBarAction(
+              label: 'Got it!',
+              textColor: Color.fromARGB(255, 15, 89, 158) ,
+              disabledTextColor:Color.fromARGB(255, 15, 89, 158) ,
+              onPressed: () {},)
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);}
+
         else{ // update new data
         await Provider.of<DatabaseRepository>(context, listen: false).updateData(StatisticsData(1, today, steps,distance,activity_time));
         await Provider.of<DatabaseRepository>(context, listen: false).updateAchievements(Achievements(1, today,today_LoS));
-        print('update the data');}
+        print('update the data');
 
+        final snackBar=SnackBar(content: Text('Data updated!',
+        style: TextStyle(color: Constants.primaryColor, fontWeight: FontWeight.bold,fontSize: 15),),
+        backgroundColor: Color.fromARGB(255, 206, 211, 206),
+        
+        action: SnackBarAction(
+              label: 'Got it!',
+              textColor: Color.fromARGB(255, 15, 89, 158) ,
+              disabledTextColor:Color.fromARGB(255, 15, 89, 158) ,
+              onPressed: () {},)
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);}
+        
         },
-
-      child: Icon(Icons.add)
+      child: Icon(Icons.add),
+      backgroundColor: Constants.primaryColor,
       
       ),
      ),
@@ -655,6 +602,7 @@ int _computeLoS(int daily_steps,int daily_distance,int daily_activityTime, {int 
   }
 
 Widget _noDataGraph(){
+
  return  Padding(padding: const EdgeInsets.all(20),
             child: Animate(
               effects: Constants.Fade_effect_options,
@@ -676,6 +624,36 @@ Widget _noDataGraph(){
                   height: 200,
                     child: BarGraph(
                     dailySteps: [0.0,0.0,0.0,0.0,0.0,0.0,0.0],
+                    ),
+                  ),
+                 ],
+                ),
+              ),
+            ),));
+}
+
+Widget _dataGraph(List<double> data, String title){
+  return Padding(padding: const EdgeInsets.all(20),
+            child: Animate(
+              effects: Constants.Fade_effect_options,
+            child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              height: 280,
+                color: Constants.containerColor,
+                child:Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 10),
+                 Text('$title', style: TextStyle(
+                  color: Constants.secondaryColor, fontSize: 24, fontWeight: FontWeight.bold,
+                  ),
+                  ),
+                  SizedBox(height: 15),
+                SizedBox(
+                  height: 200,
+                    child: BarGraph(
+                    dailySteps: data,
                     ),
                   ),
                  ],

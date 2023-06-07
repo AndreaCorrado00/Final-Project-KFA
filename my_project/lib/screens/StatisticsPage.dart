@@ -158,8 +158,8 @@ static const routename = 'StatisticsPage';
                   return _noDataGraph();
                 }
                 else{
-                List<double> week_steps= _createStepsDataForGraph(data); // so just a list created with a function
-               return _dataGraph(week_steps, 'Distance');
+                List<double> weekDist= _createSDistanceDataForGraph(data); // so just a list created with a function
+               return _dataGraph(weekDist, 'Distance');
               }}
               else{
                 return CircularProgressIndicator();
@@ -181,8 +181,8 @@ static const routename = 'StatisticsPage';
                   return _noDataGraph();
                 }
                 else{
-                List<double> week_steps= _createStepsDataForGraph(data); // so just a list created with a function
-               return _dataGraph(week_steps, 'Activity Time');
+                List<double> weekActivity= _createActivityTimeDataForGraph(data); // so just a list created with a function
+               return _dataGraph(weekActivity, 'Activity Time');
               }}
               else{
                 return CircularProgressIndicator();
@@ -193,19 +193,19 @@ static const routename = 'StatisticsPage';
     // ---------------------------------------------------LoS graph UPDATE
           Consumer<DatabaseRepository>(
           builder: (context, dbr, child) {
-            List<StatisticsData> initialData=[StatisticsData(0, '0000', 0, 0, 0)];
+            List<Achievements> initialData=[Achievements(0, '0000',  0)];
           return FutureBuilder(
             initialData: initialData,
-            future: dbr.userAllSingleStatisticsData(1),
+            future: dbr.userAllSingleAchievemnts(1),
             builder: (context,snapshot){
               if(snapshot.hasData){
-                final data = snapshot.data as List<StatisticsData>;
+                final data = snapshot.data as List<Achievements>;
                 if(data.length==0){
                   return _noDataGraph();
                 }
                 else{
-                List<double> week_steps= _createStepsDataForGraph(data); // so just a list created with a function
-               return _dataGraph(week_steps, 'Level of Sustainability');
+                List<double> weekLoS= _createLoSDataForGraph(data); // so just a list created with a function
+               return _dataGraph(weekLoS, 'Level of Sustainability');
               }}
               else{
                 return CircularProgressIndicator();
@@ -503,10 +503,10 @@ int _computeLoS(int daily_steps,int daily_distance,int daily_activityTime, {int 
     //For now, it's just a sum. In the future will be a weighted sum
 
     // Defining of weights
-    int ans_w=1;
-    int steps_w=1;
-    int dist_w=1;
-    int time_w=1;
+    double ans_w=1;
+    double steps_w=0.1;
+    double dist_w=0.1;
+    double time_w=0.1;
 
     int malus=-50; //for example
 
@@ -588,7 +588,7 @@ int _computeLoS(int daily_steps,int daily_distance,int daily_activityTime, {int 
     int lnList=data.length; // the length of the list of items
     // if data are collected for less than one week, the elements are associated one-to-one with the days
     if(lnList<out.length){
-    for(int i=0; i<=out.length-1; i++){
+    for(int i=0; i<=lnList-1; i++){
       out[i]=data[i].levelOfSustainability+0.0;
 
     }}

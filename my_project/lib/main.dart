@@ -10,12 +10,14 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
 // Open database
-  final AppDatabase appdata_database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+  final AppDatabase appdata_database =
+      await $FloorAppDatabase.databaseBuilder('app_database.db').build();
 // Database repository creation
   final databaseRepository = DatabaseRepository(database: appdata_database);
 // runnig the app and provide the daabase repository above
-  runApp(ChangeNotifierProvider<DatabaseRepository>(create: (context)=>databaseRepository,
-    child: MyApp()));}  
+  runApp(ChangeNotifierProvider<DatabaseRepository>(
+      create: (context) => databaseRepository, child: MyApp()));
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

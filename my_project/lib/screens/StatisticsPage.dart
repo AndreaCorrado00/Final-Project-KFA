@@ -132,7 +132,7 @@ static const routename = 'StatisticsPage';
               if(snapshot.hasData){
                 final data = snapshot.data as List<StatisticsData>;
                 if(data.length==0){
-                  return _noDataGraph();
+                  return _noDataGraph('Steps');
                 }
                 else{
                 List<double> week_steps= _createStepsDataForGraph(data); // so just a list created with a function
@@ -155,7 +155,7 @@ static const routename = 'StatisticsPage';
               if(snapshot.hasData){
                 final data = snapshot.data as List<StatisticsData>;
                 if(data.length==0){
-                  return _noDataGraph();
+                  return _noDataGraph('Distance');
                 }
                 else{
                 List<double> weekDist= _createSDistanceDataForGraph(data); // so just a list created with a function
@@ -178,7 +178,7 @@ static const routename = 'StatisticsPage';
               if(snapshot.hasData){
                 final data = snapshot.data as List<StatisticsData>;
                 if(data.length==0){
-                  return _noDataGraph();
+                  return _noDataGraph('Activity Time');
                 }
                 else{
                 List<double> weekActivity= _createActivityTimeDataForGraph(data); // so just a list created with a function
@@ -201,7 +201,7 @@ static const routename = 'StatisticsPage';
               if(snapshot.hasData){
                 final data = snapshot.data as List<Achievements>;
                 if(data.length==0){
-                  return _noDataGraph();
+                  return _noDataGraph('Level of Sustainability');
                 }
                 else{
                 List<double> weekLoS= _createLoSDataForGraph(data); // so just a list created with a function
@@ -601,7 +601,7 @@ int _computeLoS(int daily_steps,int daily_distance,int daily_activityTime, {int 
     return out;
   }
 
-Widget _noDataGraph(){
+Widget _noDataGraph(String title){
 
  return  Padding(padding: const EdgeInsets.all(20),
             child: Animate(
@@ -613,9 +613,9 @@ Widget _noDataGraph(){
                 color: Constants.containerColor,
                 child:Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
+              children:  [
                 SizedBox(height: 10),
-                 Text('Steps', style: TextStyle(
+                 Text('$title', style: TextStyle(
                   color: Color.fromARGB(255, 1, 76, 4), fontSize: 24, fontWeight: FontWeight.bold,
                   ),
                   ),

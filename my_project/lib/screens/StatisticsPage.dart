@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:intl/intl.dart';
 import 'package:my_project/screens/AboutThisApp.dart';
 
 import 'package:my_project/screens/Barplot/bar_graph.dart';
@@ -32,6 +33,9 @@ import 'package:my_project/Database/entities/achievements.dart';
 import 'package:my_project/Database/entities/questionnaire.dart';
 import 'package:my_project/Database/entities/statisticsData.dart';
 
+final currentDate = DateTime.now(); // once assigned can be changed
+final today = DateFormat('yyyy-MM-dd').format(currentDate);
+
 
 class StatisticsPage extends StatefulWidget {
  const StatisticsPage ({super.key});
@@ -42,8 +46,6 @@ class StatisticsPage extends StatefulWidget {
 
 class StatisticsPageState extends State<StatisticsPage> {
  //-------------- Index used trought the code to build widgets
-
-  final today='2023-05-16';
 
 static const routename = 'StatisticsPage';
   @override

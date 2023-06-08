@@ -5,6 +5,7 @@ import 'package:my_project/utils/constants.dart';
 
 class BarGraph extends StatelessWidget{
   final List dailySteps;
+  
   const BarGraph({super.key, required this.dailySteps});
 
   @override
@@ -19,10 +20,12 @@ class BarGraph extends StatelessWidget{
       sundaySteps: dailySteps[6],
     );
     myBarData.initializeBarData();
-
+    final List dat=List.of(dailySteps); 
+    dat.sort();
     return BarChart(
+      
       BarChartData(
-        maxY: 25000,// dovrebbe essere il massimo dei passi del giorno, è possibile?
+        maxY: 30000, // dat[6], // dovrebbe essere il massimo dei passi/dati passati, è possibile?
         minY: 0,
         gridData: FlGridData(show: false),
         borderData: FlBorderData(show: false),
@@ -30,7 +33,8 @@ class BarGraph extends StatelessWidget{
           show: true,
           topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false,)),
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: getBottomTitles,),),
+          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 55)),
+          bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, getTitlesWidget: getBottomTitles),),
         ),
         barGroups: myBarData.barData.map((data) => BarChartGroupData(
           x: data.x,

@@ -199,7 +199,7 @@ class Sens_page extends State<SensPage> {
         final user_preferences = await SharedPreferences.getInstance();
         await user_preferences.setBool('Rememeber_login', false);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
+            context, MaterialPageRoute(builder: (context) => SensPage()));
         // Must be changed to point at the current page
       },
       style: Constants.TextButtonStyle_Alert,
@@ -228,9 +228,10 @@ class Sens_page extends State<SensPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Hello Hero!'),
+        backgroundColor: Constants.primaryColor,
       ),
       drawer: Drawer(
-        backgroundColor: Color.fromARGB(255, 19, 170, 79),
+        backgroundColor: Constants.secondaryColor,
         child: Column(
           children: [
             SizedBox(

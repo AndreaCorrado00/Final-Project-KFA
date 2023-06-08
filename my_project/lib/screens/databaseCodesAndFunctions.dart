@@ -114,7 +114,7 @@ class databaseTestPageState extends State<databaseTestPage> {
                 } else if (weekData == true) {
                   Map weekSteps = await _getWeekSteps(today, oneWeekLater);
                   List days = await weekSteps.keys.toList();
-                  List steps = await weekSteps.values.toList();
+                  List steps = await weekSteps.values.toList();}
 
         else if ( weekData==true){
           Map weekSteps=await _getWeekSteps(today, oneWeekLater);

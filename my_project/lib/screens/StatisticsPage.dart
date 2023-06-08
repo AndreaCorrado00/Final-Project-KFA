@@ -33,7 +33,7 @@ import 'package:my_project/Database/entities/achievements.dart';
 import 'package:my_project/Database/entities/questionnaire.dart';
 import 'package:my_project/Database/entities/statisticsData.dart';
 
-final currentDate = DateTime.now(); // once assigned can be changed
+final currentDate = DateTime.now().subtract(Duration(days: 1)); // once assigned can be changed
 final today = DateFormat('yyyy-MM-dd').format(currentDate);
 
 
@@ -45,6 +45,7 @@ class StatisticsPage extends StatefulWidget {
 }
 
 class StatisticsPageState extends State<StatisticsPage> {
+
  //-------------- Index used trought the code to build widgets
 
 static const routename = 'StatisticsPage';
@@ -484,6 +485,9 @@ void _OnLogoutTapConfirm(BuildContext context)  {
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
       List activity_time_data=[];
+      if (decodedResponse['data'].length==0){
+        return 0; 
+      }
       for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
         activity_time_data.add(Activity.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]).getValue());
       }//for

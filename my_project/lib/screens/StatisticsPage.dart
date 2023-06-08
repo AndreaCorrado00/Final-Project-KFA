@@ -59,8 +59,8 @@ static const routename = 'StatisticsPage';
 
           title: Text('Statistics'),
           actions: [IconButton(
-            icon: Icon(Icons.data_array),
-            onPressed: (){Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const databaseTestPage()));},
+            icon: Icon(Icons.downloading ),
+            onPressed: (){},
           )]
           ,
         ),
@@ -284,7 +284,7 @@ static const routename = 'StatisticsPage';
         ScaffoldMessenger.of(context).showSnackBar(snackBar);}
         
         },
-      child: Icon(Icons.add),
+      child: Icon(Icons.watch),
       backgroundColor: Constants.primaryColor,
       
       ),

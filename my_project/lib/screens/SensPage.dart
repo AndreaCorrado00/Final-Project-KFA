@@ -185,6 +185,7 @@ class Sens_page extends State<SensPage> {
   void _OnLogoutTapConfirm(BuildContext context) {
     // set up the buttons
 
+
     // Widget cancelButton = TextButton(
     //   child: Text("Cancel"),
     //   onPressed: () {
@@ -193,12 +194,15 @@ class Sens_page extends State<SensPage> {
     //   },
     //   style: Constants.TextButtonStyle_Alert,
     // );
+
     Widget continueButton = TextButton(
       child: Text("Continue"),
       onPressed: () async {
         final user_preferences = await SharedPreferences.getInstance();
         await user_preferences.setBool('Rememeber_login', false);
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>  LoginPage()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
+
         // Must be changed to point at the current page
       },
       style: Constants.TextButtonStyle_Alert,
@@ -208,7 +212,10 @@ class Sens_page extends State<SensPage> {
       title: const Text("Logout"),
       content: const Text("Are you sure you want to logout?"),
       actions: [
+
+        
         //cancelButton,
+
         continueButton,
       ],
       backgroundColor: Constants.primaryLightColor,
@@ -227,10 +234,12 @@ class Sens_page extends State<SensPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Hello Hero!'),
+
         backgroundColor: Constants.primaryColor,
       ),
       drawer: Drawer(
         backgroundColor: Constants.secondaryColor,
+
         child: Column(
           children: [
             SizedBox(
@@ -250,7 +259,9 @@ class Sens_page extends State<SensPage> {
                 ),
                 Icon(
                   Icons.help_outline,
+
                   color: Constants.secondarylightColor,
+
                   size: 24.0,
                 ),
               ],
@@ -270,7 +281,9 @@ class Sens_page extends State<SensPage> {
                 ),
                 const Icon(
                   IconData(0xe3b3, fontFamily: 'MaterialIcons'),
+
                   color: Constants.secondarylightColor,
+
                   size: 24.0,
                   semanticLabel: 'Text to announce in accessibility modes',
                 ),

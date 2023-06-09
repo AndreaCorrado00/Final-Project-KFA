@@ -1,4 +1,4 @@
-// A temp page into which you'll find all the functions and examples to use the database. 
+// A temp page into which you'll find all the functions and examples to use the database.
 
 import 'package:flutter/material.dart';
 import 'package:my_project/utils/constants.dart';
@@ -23,9 +23,8 @@ import 'package:my_project/Database/entities/achievements.dart';
 import 'package:my_project/Database/entities/questionnaire.dart';
 import 'package:my_project/Database/entities/statisticsData.dart';
 
-
 class databaseTestPage extends StatefulWidget {
- const databaseTestPage ({super.key});
+  const databaseTestPage({super.key});
 
   @override
   databaseTestPageState createState() => databaseTestPageState();
@@ -46,14 +45,17 @@ class databaseTestPage extends StatefulWidget {
 class databaseTestPageState extends State<databaseTestPage> {
 
 
+
 static const routename = 'StatisticsPage';
 final today='2023-05-16';
   final tomorrow='2023-05-17';
 final oneWeekLater='2023-05-22';
 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
       title: 'Database functions test page',
       home: Scaffold(
         appBar: AppBar(
@@ -139,8 +141,10 @@ final oneWeekLater='2023-05-22';
         }
         
 
-        // From now on the data are stored into the database. I hope that you'll find pretty clear how to pass properly the data!
-      },),
+
+                // From now on the data are stored into the database. I hope that you'll find pretty clear how to pass properly the data!
+              },
+            ),
 
 // Her you'll find a simple body with elementary operations on the db.
 // NB!! IF THERE ARE NOT REFERENCED FUNCTION, THEY ARE HAVE NOT BEEN TESTED! BUT THEIR BODY SHOULD BE THE SAME OF THE OTHERS. BE CAREFULL!
@@ -258,395 +262,425 @@ final oneWeekLater='2023-05-22';
           );}
     ),
     SizedBox(height: 10,),
+
 // -----------------------------------------------------------------------------------
-    Text('questionnaire entity queries'),
-    SizedBox(height: 10,),
+                Text('questionnaire entity queries'),
+                SizedBox(
+                  height: 10,
+                ),
 
-        Consumer<DatabaseRepository>(
-          builder: (context, dbr, child) {
-            List<Questionnaire> initialData= [Questionnaire(0, '0000', 0, 0, 0, 0)];
-          return FutureBuilder(
-            initialData: initialData,
-            future: dbr.dailyQuestionaire(1,today), 
-            builder: (context,snapshot){
-              if(snapshot.hasData){
-                final data = snapshot.data as List<Questionnaire>;
-                if(data.length==0){
-                  return const Text('there are not data available yet',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 255, 0, 0)
-                    ));
-                }
-                else{
-                final entity_row=data[0];
-                return Container(
-                  height: 20,
-                  width: 500,
-                  child: Text(
-                    'today from questionnaire: ${entity_row.total}',
-                    
+                Consumer<DatabaseRepository>(builder: (context, dbr, child) {
+                  List<Questionnaire> initialData = [
+                    Questionnaire(0, '0000', 0, 0, 0, 0)
+                  ];
+                  return FutureBuilder(
+                      initialData: initialData,
+                      future: dbr.dailyQuestionaire(1, today),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final data = snapshot.data as List<Questionnaire>;
+                          if (data.length == 0) {
+                            return const Text(
+                                'there are not data available yet',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 255, 0, 0)));
+                          } else {
+                            final entity_row = data[0];
+                            return Container(
+                              height: 20,
+                              width: 500,
+                              child: Text(
+                                'today from questionnaire: ${entity_row.total}',
+                              ),
+                              color: Constants.containerColor,
+                            );
+                          }
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      });
+                }),
+              ],
+            )));
+  }
+}
 
-                  ),
-                  color: Constants.containerColor,
-                );
-              }}
-              else{
-                return CircularProgressIndicator();
-              }
-            }
-          );}
-    ),
-      ],
-    )
-    
-    
-      )
-    );
-  }}
-
-
-
-
-
-
-// Some functions ready made for you with much love 
+// Some functions ready made for you with much love
 // --------------------------------- IMPACT --------------------------------------------------
-Future<bool> _pingImpact() async{
-    final url=Impact.baseUrl + Impact.pingEndpoint;
-    // call
-    final response =await http.get(Uri.parse(url)); // is an async function
-    return response.statusCode==200;
-  }
+Future<bool> _pingImpact() async {
+  final url = Impact.baseUrl + Impact.pingEndpoint;
+  // call
+  final response = await http.get(Uri.parse(url)); // is an async function
+  return response.statusCode == 200;
+}
 
-
-
-   Future<int> _getAndStoreTokens() async {
-    //Create the request
-    final url = Impact.baseUrl + Impact.tokenEndpoint;
-    final body = {'username': Impact.username, 'password': Impact.password};
-    //Get the response
-    print('Calling: $url');
-    final response = await http.post(Uri.parse(url), body: body);
-    //If response is OK, decode it and store the tokens. Otherwise do nothing.
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      final sp = await SharedPreferences.getInstance();
-      await sp.setString('access', decodedResponse['access']);
-      await sp.setString('refresh', decodedResponse['refresh']);
-    } //if
-    // return the status code
-    return response.statusCode;
-  } //_getAndStoreTokens
-
-  //This method allows to refresh the stored JWT in SharedPreferences
-  Future<int> _refreshTokens() async {
-    //Create the request 
-    final url = Impact.baseUrl + Impact.refreshEndpoint;
+Future<int> _getAndStoreTokens() async {
+  //Create the request
+  final url = Impact.baseUrl + Impact.tokenEndpoint;
+  final body = {'username': Impact.username, 'password': Impact.password};
+  //Get the response
+  print('Calling: $url');
+  final response = await http.post(Uri.parse(url), body: body);
+  //If response is OK, decode it and store the tokens. Otherwise do nothing.
+  if (response.statusCode == 200) {
+    final decodedResponse = jsonDecode(response.body);
     final sp = await SharedPreferences.getInstance();
-    final refresh = sp.getString('refresh');
-    final body = {'refresh': refresh};
-    //Get the response
-    print('Calling: $url');
-    final response = await http.post(Uri.parse(url), body: body);
-    //If the response is OK, set the tokens in SharedPreferences to the new values
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      final sp = await SharedPreferences.getInstance();
-      await sp.setString('access', decodedResponse['access']);
-      await sp.setString('refresh', decodedResponse['refresh']);
-    } //if
-    //Just return the status code
-    return response.statusCode;
-  }
+    await sp.setString('access', decodedResponse['access']);
+    await sp.setString('refresh', decodedResponse['refresh']);
+  } //if
+  // return the status code
+  return response.statusCode;
+} //_getAndStoreTokens
 
-  Future<bool> _newDataReady(String today) async{
-    final sp=await SharedPreferences.getInstance();
-    print('into newDataReady');
-    if(sp.getString('today')!=today || sp.getString('today')==null ){
-      print('the day is changed');
-      sp.setString('today', today);
-      return true;
-    }
-    else {
-      print('date is not changed');
-      return false;}
+//This method allows to refresh the stored JWT in SharedPreferences
+Future<int> _refreshTokens() async {
+  //Create the request
+  final url = Impact.baseUrl + Impact.refreshEndpoint;
+  final sp = await SharedPreferences.getInstance();
+  final refresh = sp.getString('refresh');
+  final body = {'refresh': refresh};
+  //Get the response
+  print('Calling: $url');
+  final response = await http.post(Uri.parse(url), body: body);
+  //If the response is OK, set the tokens in SharedPreferences to the new values
+  if (response.statusCode == 200) {
+    final decodedResponse = jsonDecode(response.body);
+    final sp = await SharedPreferences.getInstance();
+    await sp.setString('access', decodedResponse['access']);
+    await sp.setString('refresh', decodedResponse['refresh']);
+  } //if
+  //Just return the status code
+  return response.statusCode;
+}
+
+Future<bool> _newDataReady(String day) async {
+  final sp = await SharedPreferences.getInstance();
+  print('into newDataReady');
+  if (sp.getString('today') != day || sp.getString('today') == null) {
+    print('the day is changed');
+    sp.setString('today', day);
+    return true;
+  } else {
+    print('date is not changed');
+    return false;
   }
-  
+}
+
 // --------------------------------- IMPACT AND MODELS --------------------------------------------------
-  Future _getStep(today)async{
-    // Returns the sum of the steps made into a certain day 
-    // preliminary settings
-    final sp=await SharedPreferences.getInstance();
-    var access=sp.getString('access');
-    if (access == null){
-      return null;
+Future _getStep(today) async {
+  // Returns the sum of the steps made into a certain day
+  // preliminary settings
+  final sp = await SharedPreferences.getInstance();
+  var access = sp.getString('access');
+  if (access == null) {
+    return null;
+  } else {
+    if (JwtDecoder.isExpired(access)) {
+      await _refreshTokens();
+      access = sp.getString('access');
     }
-    else{
-      if(JwtDecoder.isExpired(access)){
-        await _refreshTokens();
-        access = sp.getString('access');
-      }
-      //request
-      final url=Impact.baseUrl+Impact.stepEndpoint + '/patients/Jpefaq6m58'+'/day/$today/';
-      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
-      final response = await http.get(Uri.parse(url), headers: headers);
+    //request
+    final url = Impact.baseUrl +
+        Impact.stepEndpoint +
+        '/patients/Jpefaq6m58' +
+        '/day/$today/';
+    final headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $access'
+    }; //fixed costruction!
+    final response = await http.get(Uri.parse(url), headers: headers);
 
     // Creatione of the response
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
       //List result = [];
-      List steps_data=[];
-      final total_steps=0;
+      List steps_data = [];
+      final total_steps = 0;
       for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
         //result.add(Steps.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]));
-        steps_data.add(Steps.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]).getValue());
-      }//for
-      int out=steps_data.reduce((a, b) => a + b); // here we compute the sum
+        steps_data.add(Steps.fromJson(decodedResponse['data']['date'],
+                decodedResponse['data']['data'][i])
+            .getValue());
+      } //for
+      int out = steps_data.reduce((a, b) => a + b); // here we compute the sum
       return out;
     } //if
-    else{
+    else {
       void result = null;
-    }//else
-    
-    }
-    
+    } //else
+  }
+} //getStep
 
-  }//getStep
-
-  Future _getDistance(today)async{
-    final sp=await SharedPreferences.getInstance();
-    var access=sp.getString('access');
-    if (access == null){
-      return null;
+Future _getDistance(today) async {
+  final sp = await SharedPreferences.getInstance();
+  var access = sp.getString('access');
+  if (access == null) {
+    return null;
+  } else {
+    if (JwtDecoder.isExpired(access)) {
+      await _refreshTokens();
+      access = sp.getString('access');
     }
-    else{
-      if(JwtDecoder.isExpired(access)){
-        await _refreshTokens();
-        access = sp.getString('access');
-      }
-      
-      final url=Impact.baseUrl+Impact.distanceEndpoint + '/patients/Jpefaq6m58'+'/day/$today/';
-      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction
-      final response = await http.get(Uri.parse(url), headers: headers);
+
+    final url = Impact.baseUrl +
+        Impact.distanceEndpoint +
+        '/patients/Jpefaq6m58' +
+        '/day/$today/';
+    final headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $access'
+    }; //fixed costruction
+    final response = await http.get(Uri.parse(url), headers: headers);
 
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
-      List distance_data=[];
+      List distance_data = [];
       for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
-        distance_data.add(Distance.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]).getValue());
-      }//for
-      double out=distance_data.reduce((a, b) => a + b)/100;//udm: [m] 
-      return out.toInt(); 
-    } //if
-    else{
-      void result = null;
-    }//else
-    } 
-  }//getDistance
-
-  Future _getActivity_time(today)async{
-    final sp=await SharedPreferences.getInstance();
-    var access=sp.getString('access');
-    if (access == null){
-      return null;
-    }
-    else{
-      if(JwtDecoder.isExpired(access)){
-        await _refreshTokens();
-        access = sp.getString('access');
-      }
-      final url=Impact.baseUrl+Impact.activityEndpoint + '/patients/Jpefaq6m58'+'/day/$today/';
-      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
-      final response = await http.get(Uri.parse(url), headers: headers);
-
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      List activity_time_data=[];
-      for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
-        activity_time_data.add(Activity.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]).getValue());
-      }//for
-      double out=(activity_time_data.reduce((a, b) => a + b))/60000; //udm [min]
+        distance_data.add(Distance.fromJson(decodedResponse['data']['date'],
+                decodedResponse['data']['data'][i])
+            .getValue());
+      } //for
+      double out = distance_data.reduce((a, b) => a + b) / 100; //udm: [m]
       return out.toInt();
     } //if
-    else{
+    else {
       void result = null;
-    }//else
-    
+    } //else
+  }
+} //getDistance
+
+Future _getActivity_time(today) async {
+  final sp = await SharedPreferences.getInstance();
+  var access = sp.getString('access');
+  if (access == null) {
+    return null;
+  } else {
+    if (JwtDecoder.isExpired(access)) {
+      await _refreshTokens();
+      access = sp.getString('access');
     }
-  
-  }//getActivity_time
+    final url = Impact.baseUrl +
+        Impact.activityEndpoint +
+        '/patients/Jpefaq6m58' +
+        '/day/$today/';
+    final headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $access'
+    }; //fixed costruction!
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final decodedResponse = jsonDecode(response.body);
+      List activity_time_data = [];
+      for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
+        activity_time_data.add(Activity.fromJson(
+                decodedResponse['data']['date'],
+                decodedResponse['data']['data'][i])
+            .getValue());
+      } //for
+      double out =
+          (activity_time_data.reduce((a, b) => a + b)) / 60000; //udm [min]
+      return out.toInt();
+    } //if
+    else {
+      void result = null;
+    } //else
+  }
+} //getActivity_time
 
 //--------------------------------- WEEK DATA FOR THE DEMO -------------------------
-  
-  // getWeekSteps
-    Future _getWeekSteps( String startDate, String endDate )async{
-    // Returns the sum of the steps made into a certain day 
 
-    // preliminary settings
-    final sp=await SharedPreferences.getInstance();
-    var access=sp.getString('access');
-    if (access == null){
-      return null;
+// getWeekSteps
+Future _getWeekSteps(String startDate, String endDate) async {
+  // Returns the sum of the steps made into a certain day
+
+  // preliminary settings
+  final sp = await SharedPreferences.getInstance();
+  var access = sp.getString('access');
+  if (access == null) {
+    return null;
+  } else {
+    if (JwtDecoder.isExpired(access)) {
+      await _refreshTokens();
+      access = sp.getString('access');
     }
-    else{
-      if(JwtDecoder.isExpired(access)){
-        await _refreshTokens();
-        access = sp.getString('access');
-      }
-      //request
-      final url=Impact.baseUrl+Impact.stepEndpoint + '/patients/Jpefaq6m58'+'/daterange/start_date/$startDate/end_date/$endDate/';
-      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
-      final response = await http.get(Uri.parse(url), headers: headers);
+    //request
+    final url = Impact.baseUrl +
+        Impact.stepEndpoint +
+        '/patients/Jpefaq6m58' +
+        '/daterange/start_date/$startDate/end_date/$endDate/';
+    final headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $access'
+    }; //fixed costruction!
+    final response = await http.get(Uri.parse(url), headers: headers);
 
     // Creatione of the response
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
-      
-      Map stepsWeekdata={};
+
+      Map stepsWeekdata = {};
       //List stepsWeekdata=[];
-      for(var i=0; i<decodedResponse['data'].length;i++){
-        List dailySteps=[];
-        for(var j=0;j<decodedResponse['data'][i]['data'].length;j++){
-          dailySteps.add(Steps.fromJson(decodedResponse['data'][i]['date'],decodedResponse['data'][i]['data'][j]).getValue());
+      for (var i = 0; i < decodedResponse['data'].length; i++) {
+        List dailySteps = [];
+        for (var j = 0; j < decodedResponse['data'][i]['data'].length; j++) {
+          dailySteps.add(Steps.fromJson(decodedResponse['data'][i]['date'],
+                  decodedResponse['data'][i]['data'][j])
+              .getValue());
         }
-        int daySteps=dailySteps.reduce((a, b) => a + b);
-        stepsWeekdata[decodedResponse['data'][i]['date']]=daySteps; 
+        int daySteps = dailySteps.reduce((a, b) => a + b);
+        stepsWeekdata[decodedResponse['data'][i]['date']] = daySteps;
         //stepsWeekdata.add(daySteps);
       }
       return stepsWeekdata;
     } //if
 
-    else{
+    else {
       void result = null;
       return result;
-    }//else
-    
-    }
+    } //else
   }
+}
 
-  // getWeekSteps
-    Future _getWeekDistance( String startDate, String endDate )async{
-    // Returns the sum of the steps made into a certain day 
+// getWeekSteps
+Future _getWeekDistance(String startDate, String endDate) async {
+  // Returns the sum of the steps made into a certain day
 
-    // preliminary settings
-    final sp=await SharedPreferences.getInstance();
-    var access=sp.getString('access');
-    if (access == null){
-      return null;
+  // preliminary settings
+  final sp = await SharedPreferences.getInstance();
+  var access = sp.getString('access');
+  if (access == null) {
+    return null;
+  } else {
+    if (JwtDecoder.isExpired(access)) {
+      await _refreshTokens();
+      access = sp.getString('access');
     }
-    else{
-      if(JwtDecoder.isExpired(access)){
-        await _refreshTokens();
-        access = sp.getString('access');
-      }
-      //request
-      final url=Impact.baseUrl+Impact.distanceEndpoint + '/patients/Jpefaq6m58'+'/daterange/start_date/$startDate/end_date/$endDate/';
-      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
-      final response = await http.get(Uri.parse(url), headers: headers);
+    //request
+    final url = Impact.baseUrl +
+        Impact.distanceEndpoint +
+        '/patients/Jpefaq6m58' +
+        '/daterange/start_date/$startDate/end_date/$endDate/';
+    final headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $access'
+    }; //fixed costruction!
+    final response = await http.get(Uri.parse(url), headers: headers);
 
     // Creatione of the response
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
-      Map stepsDistancedata={};
+      Map stepsDistancedata = {};
       //List stepsDistancedata=[];
-      for(var i=0; i<decodedResponse['data'].length;i++){
-        List dailyDistance=[];
-        for(var j=0;j<decodedResponse['data'][i]['data'].length;j++){
-          dailyDistance.add(Distance.fromJson(decodedResponse['data'][i]['date'],decodedResponse['data'][i]['data'][j]).getValue());
+      for (var i = 0; i < decodedResponse['data'].length; i++) {
+        List dailyDistance = [];
+        for (var j = 0; j < decodedResponse['data'][i]['data'].length; j++) {
+          dailyDistance.add(Distance.fromJson(
+                  decodedResponse['data'][i]['date'],
+                  decodedResponse['data'][i]['data'][j])
+              .getValue());
         }
-        double dayDist=dailyDistance.reduce((a, b) => a + b)/100.toInt();//udm: [m]
-        stepsDistancedata[decodedResponse['data'][i]['date']]=dayDist.toInt();
+        double dayDist =
+            dailyDistance.reduce((a, b) => a + b) / 100.toInt(); //udm: [m]
+        stepsDistancedata[decodedResponse['data'][i]['date']] = dayDist.toInt();
         //stepsDistancedata.add(dayDist);
       }
       return stepsDistancedata;
     } //if
 
-    else{
+    else {
       void result = null;
       return result;
-    }//else
-    
-    }
+    } //else
   }
+}
 
-  // getWeekSteps
-    Future _getWeekActivityTime( String startDate, String endDate )async{
-    // Returns the sum of the steps made into a certain day 
+// getWeekSteps
+Future _getWeekActivityTime(String startDate, String endDate) async {
+  // Returns the sum of the steps made into a certain day
 
-    // preliminary settings
-    final sp=await SharedPreferences.getInstance();
-    var access=sp.getString('access');
-    if (access == null){
-      return null;
+  // preliminary settings
+  final sp = await SharedPreferences.getInstance();
+  var access = sp.getString('access');
+  if (access == null) {
+    return null;
+  } else {
+    if (JwtDecoder.isExpired(access)) {
+      await _refreshTokens();
+      access = sp.getString('access');
     }
-    else{
-      if(JwtDecoder.isExpired(access)){
-        await _refreshTokens();
-        access = sp.getString('access');
-      }
-      //request
-      final url=Impact.baseUrl+Impact.activityEndpoint + '/patients/Jpefaq6m58'+'/daterange/start_date/$startDate/end_date/$endDate/';
-      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
-      final response = await http.get(Uri.parse(url), headers: headers);
+    //request
+    final url = Impact.baseUrl +
+        Impact.activityEndpoint +
+        '/patients/Jpefaq6m58' +
+        '/daterange/start_date/$startDate/end_date/$endDate/';
+    final headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $access'
+    }; //fixed costruction!
+    final response = await http.get(Uri.parse(url), headers: headers);
 
     // Creatione of the response
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
-     
-      Map ActivityTimeWeekdata={};
+
+      Map ActivityTimeWeekdata = {};
       //List ActivityTimeWeekdata=[];
-      for(var i=0; i<decodedResponse['data'].length;i++){
-        List dailySteps=[];
-        for(var j=0;j<decodedResponse['data'][i]['data'].length;j++){
-          dailySteps.add(Activity.fromJson(decodedResponse['data'][i]['date'],decodedResponse['data'][i]['data'][j]).getValue());
+      for (var i = 0; i < decodedResponse['data'].length; i++) {
+        List dailySteps = [];
+        for (var j = 0; j < decodedResponse['data'][i]['data'].length; j++) {
+          dailySteps.add(Activity.fromJson(decodedResponse['data'][i]['date'],
+                  decodedResponse['data'][i]['data'][j])
+              .getValue());
         }
-        if (dailySteps.length==0){
-          ActivityTimeWeekdata[decodedResponse['data'][i]['date']]=0;
+        if (dailySteps.length == 0) {
+          ActivityTimeWeekdata[decodedResponse['data'][i]['date']] = 0;
+        } else {
+          double dayTime =
+              dailySteps.reduce((a, b) => a + b) / 60000; //udm [min]
+          ActivityTimeWeekdata[decodedResponse['data'][i]['date']] =
+              dayTime.toInt();
         }
-        else{
-        double dayTime=dailySteps.reduce((a, b) => a + b)/60000;  //udm [min]
-        ActivityTimeWeekdata[decodedResponse['data'][i]['date']]=dayTime.toInt();}
         //ActivityTimeWeekdata.add(dayTime);
       }
       return ActivityTimeWeekdata;
     } //if
 
-    else{
+    else {
       void result = null;
       return result;
-    }//else
-    
-    }
+    } //else
   }
+}
 
 // --------------------------------- DATABASE ATTRIBUTES COMPUTATION --------------------------------------------------
- int _computeTotalQuestionnaire(List points)  {
-    int out=points.reduce((a, b) => a + b);
-    return out;
+int _computeTotalQuestionnaire(List points) {
+  int out = points.reduce((a, b) => a + b);
+  return out;
+}
+
+int _computeLoS(int point_answers, int daily_steps, int daily_distance,
+    int daily_activityTime) {
+  //For now, it's just a sum. In the future will be a weighted sum
+
+  // Defining of weights
+  int ans_w = 1;
+  int steps_w = 1;
+  int dist_w = 1;
+  int time_w = 1;
+
+  int malus = -50; //for example
+
+  // as a sum of int, round is not necessary (for now BUT in the future...)
+  num weightedSum = point_answers * ans_w +
+      daily_steps * steps_w +
+      daily_distance * dist_w +
+      daily_activityTime * time_w;
+  int result = weightedSum.toInt();
+
+  // if you didn't recorded anything, you'll get a malus
+  if (result == 0) {
+    return malus;
   }
-
-
-  int _computeLoS(int point_answers , int daily_steps,int daily_distance,int daily_activityTime) {
-    //For now, it's just a sum. In the future will be a weighted sum
-
-    // Defining of weights
-    int ans_w=1;
-    int steps_w=1;
-    int dist_w=1;
-    int time_w=1;
-
-    int malus=-50; //for example
-
-    // as a sum of int, round is not necessary (for now BUT in the future...)
-    num weightedSum= point_answers*ans_w+daily_steps*steps_w+daily_distance*dist_w+daily_activityTime*time_w;
-    int result=weightedSum.toInt();
-
-    // if you didn't recorded anything, you'll get a malus
-    if(result==0){return malus;} 
-    // Otherwise, good job!
-    else{return result;}
-    
+  // Otherwise, good job!
+  else {
+    return result;
   }
+}
 
 
 
@@ -668,10 +702,18 @@ Future<bool> _pingImpact() async{
     else {
       for(int i=0; i<=out.length-1; i++){
       out[i]=data[lnList-7+i].dailySteps;
+
     }
-    }
-    return out;
   }
+  // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+  else {
+    for (int i = 0; i <= out.length - 1; i++) {
+      out[i] = data[lnList - 7 + i].dailySteps;
+      print(data[lnList - 7 + i].dailySteps);
+    }
+  }
+  return out;
+}
 
   List<int> _createSDistanceDataForGraph( List<StatisticsData> data) {
     // require to pass to the function an item of userAllSingleStatisticsData query
@@ -688,10 +730,18 @@ Future<bool> _pingImpact() async{
     else {
       for(int i=0; i<=out.length-1; i++){
       out[i]=data[lnList-7+i].dailyDistance;
+
     }
-    }
-    return out;
   }
+  // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+  else {
+    for (int i = 0; i <= out.length - 1; i++) {
+      out[i] = data[lnList - 6 + i].dailyDistance;
+    }
+  }
+  return out;
+}
+
 
   List<int> _createActivityTimeDataForGraph( List<StatisticsData> data) {
     // require to pass to the function an item of userAllSingleStatisticsData query
@@ -708,10 +758,17 @@ Future<bool> _pingImpact() async{
     else {
       for(int i=0; i<=out.length-1; i++){
       out[i]=data[lnList-7+i].dailyActivityTime;
+
     }
-    }
-    return out;
   }
+  // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+  else {
+    for (int i = 0; i <= out.length - 1; i++) {
+      out[i] = data[lnList - 6 + i].dailyActivityTime;
+    }
+  }
+  return out;
+}
 
 
 
@@ -732,8 +789,8 @@ Future<bool> _pingImpact() async{
       for(int i=0; i<=out.length-1; i++){
       out[i]=data[lnList-7+i].levelOfSustainability;
     }
+
     }
-    return out;
   }
 
 
@@ -744,10 +801,17 @@ Future<bool> _pingImpact() async{
     for (int i=0; i<=data.length-1; i++){
       out=out+data[i].levelOfSustainability;
 
+
     }
-    return out;
   }
-  
+  return out;
+}
 
-
-  
+int _reachedLoS(List<Achievements> data) {
+  // basically the sum of allll the LoS recorded by the user
+  int out = 0;
+  for (int i = 0; i <= data.length - 1; i++) {
+    out = out + data[i].levelOfSustainability;
+  }
+  return out;
+}

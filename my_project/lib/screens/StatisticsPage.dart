@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:intl/intl.dart';
 import 'package:my_project/screens/AboutThisApp.dart';
 
 import 'package:my_project/screens/Barplot/bar_graph.dart';
@@ -32,6 +33,10 @@ import 'package:my_project/Database/entities/achievements.dart';
 import 'package:my_project/Database/entities/questionnaire.dart';
 import 'package:my_project/Database/entities/statisticsData.dart';
 
+final currentDate = DateTime.now().subtract(Duration(days: 1)); // once assigned can be changed
+final today = DateFormat('yyyy-MM-dd').format(currentDate);
+final startWeek = '2023-05-16';
+final oneWeekLater = '2023-05-22';
 
 class StatisticsPage extends StatefulWidget {
  const StatisticsPage ({super.key});
@@ -41,9 +46,8 @@ class StatisticsPage extends StatefulWidget {
 }
 
 class StatisticsPageState extends State<StatisticsPage> {
- //-------------- Index used trought the code to build widgets
 
-  final today='2023-05-16';
+ //-------------- Index used trought the code to build widgets
 
 static const routename = 'StatisticsPage';
   @override
@@ -56,8 +60,35 @@ static const routename = 'StatisticsPage';
 
           title: Text('Statistics'),
           actions: [IconButton(
-            icon: Icon(Icons.data_array),
-            onPressed: (){Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const databaseTestPage()));},
+            icon: Icon(Icons.downloading ),
+            onPressed: () async {
+
+              await _pingImpact();        // connect to impact
+              await  _getAndStoreTokens();// storing tokens. 
+              // Now we are ready to read data from impact
+
+              // simulation of one week of activities 
+              Map weekSteps=await _getWeekSteps(startWeek, oneWeekLater);
+              List days=await weekSteps.keys.toList();
+              List steps=await weekSteps.values.toList();
+          
+              Map weekDist=await _getWeekDistance(startWeek, oneWeekLater);
+              List distance=await weekDist.values.toList();
+
+              Map weekTime=await _getWeekActivityTime(startWeek, oneWeekLater);  
+              List activity_time=await weekTime.values.toList();
+
+              for(int i=0;i<7;i++){
+
+            int today_LoS=_computeLoS(steps[i],distance[i],activity_time[i]);
+
+            await Provider.of<DatabaseRepository>(context, listen: false).insertData(StatisticsData(1, days[i], steps[i],distance[i],activity_time[i]));
+            await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, days[i], 0, 0, 0, 0));
+            await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, days[i],today_LoS));
+          }
+              print('simulated data stored');
+
+            },
           )]
           ,
         ),
@@ -181,6 +212,7 @@ static const routename = 'StatisticsPage';
                   return _noDataGraph('Activity Time');
                 }
                 else{
+                  
                 List<double> weekActivity= _createActivityTimeDataForGraph(data); // so just a list created with a function
                return _dataGraph(weekActivity, 'Activity Time');
               }}
@@ -281,7 +313,7 @@ static const routename = 'StatisticsPage';
         ScaffoldMessenger.of(context).showSnackBar(snackBar);}
         
         },
-      child: Icon(Icons.add),
+      child: Icon(Icons.watch),
       backgroundColor: Constants.primaryColor,
       
       ),
@@ -296,13 +328,13 @@ static const routename = 'StatisticsPage';
 void _OnLogoutTapConfirm(BuildContext context)  {
     // set up the buttons
 
-    Widget cancelButton = TextButton(
-      child: Text("Cancel"),
-      onPressed: ()  {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const StatisticsPage()));},// Must be changed to point at the current page 
-      style: Constants.TextButtonStyle_Alert,
-    );
+    // Widget cancelButton = TextButton(
+    //   child: Text("Cancel"),
+    //   onPressed: ()  {
+    //     Navigator.of(context).pushReplacement(
+    //         MaterialPageRoute(builder: (context) => const StatisticsPage()));},// Must be changed to point at the current page 
+    //   style: Constants.TextButtonStyle_Alert,
+    // );
     Widget continueButton = TextButton(
       child: Text("Continue"),
       onPressed: () async {
@@ -318,7 +350,7 @@ void _OnLogoutTapConfirm(BuildContext context)  {
       title: const Text("Logout"),
       content: const Text("Are you sure you want to logout?"),
       actions: [
-        cancelButton,
+        //cancelButton,
         continueButton,
       ],
       backgroundColor: Constants.primaryLightColor,
@@ -416,6 +448,9 @@ void _OnLogoutTapConfirm(BuildContext context)  {
       final decodedResponse = jsonDecode(response.body);
       //List result = [];
       List steps_data=[];
+      if (decodedResponse['data'].length==0){
+        return 0; 
+      }
       final total_steps=0;
       for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
         //result.add(Steps.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]));
@@ -452,6 +487,9 @@ void _OnLogoutTapConfirm(BuildContext context)  {
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
       List distance_data=[];
+      if (decodedResponse['data'].length==0){
+        return 0; 
+      }
       for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
         distance_data.add(Distance.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]).getValue());
       }//for
@@ -482,6 +520,9 @@ void _OnLogoutTapConfirm(BuildContext context)  {
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
       List activity_time_data=[];
+      if (decodedResponse['data'].length==0){
+        return 0; 
+      }
       for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
         activity_time_data.add(Activity.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]).getValue());
       }//for
@@ -496,6 +537,148 @@ void _OnLogoutTapConfirm(BuildContext context)  {
   
   }//getActivity_time
 
+// --------------------------------------- SIMULATION OF A WEEK OF ACTIVITIES
+
+// getWeekSteps
+    Future _getWeekSteps( String startDate, String endDate )async{
+    // Returns the sum of the steps made into a certain day 
+
+    // preliminary settings
+    final sp=await SharedPreferences.getInstance();
+    var access=sp.getString('access');
+    if (access == null){
+      return null;
+    }
+    else{
+      if(JwtDecoder.isExpired(access)){
+        await _refreshTokens();
+        access = sp.getString('access');
+      }
+      //request
+      final url=Impact.baseUrl+Impact.stepEndpoint + '/patients/Jpefaq6m58'+'/daterange/start_date/$startDate/end_date/$endDate/';
+      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
+      final response = await http.get(Uri.parse(url), headers: headers);
+
+    // Creatione of the response
+    if (response.statusCode == 200) {
+      final decodedResponse = jsonDecode(response.body);
+      
+      Map stepsWeekdata={};
+      //List stepsWeekdata=[];
+      for(var i=0; i<decodedResponse['data'].length;i++){
+        List dailySteps=[];
+        for(var j=0;j<decodedResponse['data'][i]['data'].length;j++){
+          dailySteps.add(Steps.fromJson(decodedResponse['data'][i]['date'],decodedResponse['data'][i]['data'][j]).getValue());
+        }
+        int daySteps=dailySteps.reduce((a, b) => a + b);
+        stepsWeekdata[decodedResponse['data'][i]['date']]=daySteps; 
+        //stepsWeekdata.add(daySteps);
+      }
+      return stepsWeekdata;
+    } //if
+
+    else{
+      void result = null;
+      return result;
+    }//else
+    
+    }
+  }
+
+  // getWeekSteps
+    Future _getWeekDistance( String startDate, String endDate )async{
+    // Returns the sum of the steps made into a certain day 
+
+    // preliminary settings
+    final sp=await SharedPreferences.getInstance();
+    var access=sp.getString('access');
+    if (access == null){
+      return null;
+    }
+    else{
+      if(JwtDecoder.isExpired(access)){
+        await _refreshTokens();
+        access = sp.getString('access');
+      }
+      //request
+      final url=Impact.baseUrl+Impact.distanceEndpoint + '/patients/Jpefaq6m58'+'/daterange/start_date/$startDate/end_date/$endDate/';
+      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
+      final response = await http.get(Uri.parse(url), headers: headers);
+
+    // Creatione of the response
+    if (response.statusCode == 200) {
+      final decodedResponse = jsonDecode(response.body);
+      Map stepsDistancedata={};
+      //List stepsDistancedata=[];
+      for(var i=0; i<decodedResponse['data'].length;i++){
+        List dailyDistance=[];
+        for(var j=0;j<decodedResponse['data'][i]['data'].length;j++){
+          dailyDistance.add(Distance.fromJson(decodedResponse['data'][i]['date'],decodedResponse['data'][i]['data'][j]).getValue());
+        }
+        double dayDist=dailyDistance.reduce((a, b) => a + b)/100.toInt();//udm: [m]
+        stepsDistancedata[decodedResponse['data'][i]['date']]=dayDist.toInt();
+        //stepsDistancedata.add(dayDist);
+      }
+      return stepsDistancedata;
+    } //if
+
+    else{
+      void result = null;
+      return result;
+    }//else
+    
+    }
+  }
+
+  // getWeekSteps
+    Future _getWeekActivityTime( String startDate, String endDate )async{
+    // Returns the sum of the steps made into a certain day 
+
+    // preliminary settings
+    final sp=await SharedPreferences.getInstance();
+    var access=sp.getString('access');
+    if (access == null){
+      return null;
+    }
+    else{
+      if(JwtDecoder.isExpired(access)){
+        await _refreshTokens();
+        access = sp.getString('access');
+      }
+      //request
+      final url=Impact.baseUrl+Impact.activityEndpoint + '/patients/Jpefaq6m58'+'/daterange/start_date/$startDate/end_date/$endDate/';
+      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
+      final response = await http.get(Uri.parse(url), headers: headers);
+
+    // Creatione of the response
+    if (response.statusCode == 200) {
+      final decodedResponse = jsonDecode(response.body);
+     
+      Map ActivityTimeWeekdata={};
+      //List ActivityTimeWeekdata=[];
+      for(var i=0; i<decodedResponse['data'].length;i++){
+        List dailySteps=[];
+        for(var j=0;j<decodedResponse['data'][i]['data'].length;j++){
+          dailySteps.add(Activity.fromJson(decodedResponse['data'][i]['date'],decodedResponse['data'][i]['data'][j]).getValue());
+        }
+        if (dailySteps.length==0){
+          ActivityTimeWeekdata[decodedResponse['data'][i]['date']]=0;
+        }
+        else{
+        double dayTime=dailySteps.reduce((a, b) => a + b)/60000;  //udm [min]
+        ActivityTimeWeekdata[decodedResponse['data'][i]['date']]=dayTime.toInt();}
+        //ActivityTimeWeekdata.add(dayTime);
+      }
+      return ActivityTimeWeekdata;
+    } //if
+
+    else{
+      void result = null;
+      return result;
+    }//else
+    
+    }
+  }
 
 // --------------------------------------- DB FUNCTIONS TO PREPARE DATA
 
@@ -603,7 +786,7 @@ int _computeLoS(int daily_steps,int daily_distance,int daily_activityTime, {int 
 
 Widget _noDataGraph(String title){
 
- return  Padding(padding: const EdgeInsets.all(20),
+ return  Padding(padding: const EdgeInsets.all(15),
             child: Animate(
               effects: Constants.Fade_effect_options,
             child: ClipRRect(
@@ -633,7 +816,7 @@ Widget _noDataGraph(String title){
 }
 
 Widget _dataGraph(List<double> data, String title){
-  return Padding(padding: const EdgeInsets.all(20),
+  return Padding(padding: const EdgeInsets.all(15),
             child: Animate(
               effects: Constants.Fade_effect_options,
             child: ClipRRect(

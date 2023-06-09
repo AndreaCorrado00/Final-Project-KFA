@@ -185,21 +185,20 @@ class Sens_page extends State<SensPage> {
   void _OnLogoutTapConfirm(BuildContext context) {
     // set up the buttons
 
-    Widget cancelButton = TextButton(
-      child: Text("Cancel"),
-      onPressed: () {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const ProfilePage()));
-      },
-      style: Constants.TextButtonStyle_Alert,
-    );
+    // Widget cancelButton = TextButton(
+    //   child: Text("Cancel"),
+    //   onPressed: () {
+    //     Navigator.of(context).pushReplacement(
+    //         MaterialPageRoute(builder: (context) => const SensPage()));
+    //   },
+    //   style: Constants.TextButtonStyle_Alert,
+    // );
     Widget continueButton = TextButton(
       child: Text("Continue"),
       onPressed: () async {
         final user_preferences = await SharedPreferences.getInstance();
         await user_preferences.setBool('Rememeber_login', false);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SensPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>  LoginPage()));
         // Must be changed to point at the current page
       },
       style: Constants.TextButtonStyle_Alert,
@@ -209,7 +208,7 @@ class Sens_page extends State<SensPage> {
       title: const Text("Logout"),
       content: const Text("Are you sure you want to logout?"),
       actions: [
-        cancelButton,
+        //cancelButton,
         continueButton,
       ],
       backgroundColor: Constants.primaryLightColor,
@@ -251,7 +250,7 @@ class Sens_page extends State<SensPage> {
                 ),
                 Icon(
                   Icons.help_outline,
-                  color: const Color.fromARGB(255, 248, 249, 233),
+                  color: Constants.secondarylightColor,
                   size: 24.0,
                 ),
               ],
@@ -271,7 +270,7 @@ class Sens_page extends State<SensPage> {
                 ),
                 const Icon(
                   IconData(0xe3b3, fontFamily: 'MaterialIcons'),
-                  color: Color.fromARGB(255, 254, 254, 244),
+                  color: Constants.secondarylightColor,
                   size: 24.0,
                   semanticLabel: 'Text to announce in accessibility modes',
                 ),

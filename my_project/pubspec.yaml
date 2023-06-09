@@ -58,8 +58,7 @@ dependencies:
   webview_flutter: ^3.0.0
   flutter_animate: ^4.1.1+1
   floor: ^1.4.2
-
-
+  webview_flutter: ^3.0.0
 
   
 dev_dependencies:

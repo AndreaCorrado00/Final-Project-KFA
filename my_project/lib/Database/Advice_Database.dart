@@ -84,14 +84,11 @@ Map<String, String> Cur8 = {
   'child_cont_h': '135',
 };
 
-Map<String, String> Cur9 = {
-  'text':
-      'Higher-technology industries performed better and recovered faster, providing a strong example of how important technological innovation is.',
-  'url':
-      'https://www.un.org/sustainabledevelopment/infrastructure-industrialization/',
-  'big_cont_h': '230',
-  'child_cont_h': '135',
-};
+Map<String, String> Cur9={
+  'text': 'Higher-technology industries performed better and recovered faster, providing a strong example of how important technological innovation is.',
+  'url':'https://www.un.org/sustainabledevelopment/infrastructure-industrialization/',
+  'big_cont_h':'230',
+  'child_cont_h':'135',};
 
 Map<String, String> Cur10 = {
   'text':

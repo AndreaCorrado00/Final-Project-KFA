@@ -374,13 +374,13 @@ class TipsPageState extends State<TipsPage> {
 void _OnLogoutTapConfirm(BuildContext context)  {
     // set up the buttons
 
-    Widget cancelButton = TextButton(
-      child: Text("Cancel"),
-      onPressed: ()  {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const TipsPage()));},// Must be changed to point at the current page 
-      style: Constants.TextButtonStyle_Alert,
-    );
+    // Widget cancelButton = TextButton(
+    //   child: Text("Cancel"),
+    //   onPressed: ()  {
+    //     Navigator.of(context).pushReplacement(
+    //         MaterialPageRoute(builder: (context) => const TipsPage()));},// Must be changed to point at the current page 
+    //   style: Constants.TextButtonStyle_Alert,
+    // );
     Widget continueButton = TextButton(
       child: Text("Continue"),
       onPressed: () async {
@@ -396,7 +396,7 @@ void _OnLogoutTapConfirm(BuildContext context)  {
       title: const Text("Logout"),
       content: const Text("Are you sure you want to logout?"),
       actions: [
-        cancelButton,
+        //cancelButton,
         continueButton,
       ],
       backgroundColor: Constants.primaryLightColor,

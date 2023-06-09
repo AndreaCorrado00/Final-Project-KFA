@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:my_project/screens/Barplot/bar_data.dart';
@@ -20,13 +22,19 @@ class BarGraph extends StatelessWidget{
       sundaySteps: dailySteps[6],
     );
     myBarData.initializeBarData();
-    final List dat=List.of(dailySteps); 
+    final List dat=dailySteps.toList(); 
     dat.sort();
+
     return BarChart(
       
       BarChartData(
-        maxY: 30000, // dat[6], // dovrebbe essere il massimo dei passi/dati passati, è possibile?
+        barTouchData: BarTouchData(
+          enabled: true,
+          handleBuiltInTouches: true,
+          touchTooltipData: BarTouchTooltipData(tooltipBgColor: Constants.primaryLightColor)),
+        maxY: dat[6], // dovrebbe essere il massimo dei passi/dati passati, è possibile?
         minY: 0,
+       
         gridData: FlGridData(show: false),
         borderData: FlBorderData(show: false),
         titlesData: FlTitlesData(
@@ -39,13 +47,20 @@ class BarGraph extends StatelessWidget{
         barGroups: myBarData.barData.map((data) => BarChartGroupData(
           x: data.x,
           barRods: [BarChartRodData(
+            
             toY: data.y,
-            color: Constants.secondaryColor,
+            
+            //color: Constants.secondaryColor,
+            gradient:const LinearGradient(colors: [Color.fromARGB(255, 117, 76, 29),Color.fromARGB(255, 110, 204, 22)],
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                     ), 
             width: 10,
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(60),
             backDrawRodData: BackgroundBarChartRodData(
               show: true,
-              toY: 100,
+              toY: 1,
+              color: Color.fromARGB(255, 94, 61, 12)
             ),
           ),
           ],

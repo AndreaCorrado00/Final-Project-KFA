@@ -185,21 +185,20 @@ class Sens_page extends State<SensPage> {
   void _OnLogoutTapConfirm(BuildContext context) {
     // set up the buttons
 
-    Widget cancelButton = TextButton(
-      child: Text("Cancel"),
-      onPressed: () {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const ProfilePage()));
-      },
-      style: Constants.TextButtonStyle_Alert,
-    );
+    // Widget cancelButton = TextButton(
+    //   child: Text("Cancel"),
+    //   onPressed: () {
+    //     Navigator.of(context).pushReplacement(
+    //         MaterialPageRoute(builder: (context) => const SensPage()));
+    //   },
+    //   style: Constants.TextButtonStyle_Alert,
+    // );
     Widget continueButton = TextButton(
       child: Text("Continue"),
       onPressed: () async {
         final user_preferences = await SharedPreferences.getInstance();
         await user_preferences.setBool('Rememeber_login', false);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SensPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>  LoginPage()));
         // Must be changed to point at the current page
       },
       style: Constants.TextButtonStyle_Alert,
@@ -209,7 +208,7 @@ class Sens_page extends State<SensPage> {
       title: const Text("Logout"),
       content: const Text("Are you sure you want to logout?"),
       actions: [
-        cancelButton,
+        //cancelButton,
         continueButton,
       ],
       backgroundColor: Constants.primaryLightColor,

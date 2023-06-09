@@ -212,6 +212,7 @@ static const routename = 'StatisticsPage';
                   return _noDataGraph('Activity Time');
                 }
                 else{
+                  
                 List<double> weekActivity= _createActivityTimeDataForGraph(data); // so just a list created with a function
                return _dataGraph(weekActivity, 'Activity Time');
               }}
@@ -327,13 +328,13 @@ static const routename = 'StatisticsPage';
 void _OnLogoutTapConfirm(BuildContext context)  {
     // set up the buttons
 
-    Widget cancelButton = TextButton(
-      child: Text("Cancel"),
-      onPressed: ()  {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const StatisticsPage()));},// Must be changed to point at the current page 
-      style: Constants.TextButtonStyle_Alert,
-    );
+    // Widget cancelButton = TextButton(
+    //   child: Text("Cancel"),
+    //   onPressed: ()  {
+    //     Navigator.of(context).pushReplacement(
+    //         MaterialPageRoute(builder: (context) => const StatisticsPage()));},// Must be changed to point at the current page 
+    //   style: Constants.TextButtonStyle_Alert,
+    // );
     Widget continueButton = TextButton(
       child: Text("Continue"),
       onPressed: () async {
@@ -349,7 +350,7 @@ void _OnLogoutTapConfirm(BuildContext context)  {
       title: const Text("Logout"),
       content: const Text("Are you sure you want to logout?"),
       actions: [
-        cancelButton,
+        //cancelButton,
         continueButton,
       ],
       backgroundColor: Constants.primaryLightColor,

@@ -91,7 +91,7 @@ class databaseTestPageState extends State<databaseTestPage> {
 
                 // up to now the code works like a real-situation application. I think that we need to load one week of data for our demo.
 
-                if (newDataReady == true && weekData == false) {
+                 if (newDataReady == true && weekData == false) {
                   // to use this page, two consecutive dates are uploaded into the db
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .insertData(StatisticsData(
@@ -114,7 +114,7 @@ class databaseTestPageState extends State<databaseTestPage> {
                 } else if (weekData == true) {
                   Map weekSteps = await _getWeekSteps(today, oneWeekLater);
                   List days = await weekSteps.keys.toList();
-                  List steps = await weekSteps.values.toList();}
+                  List steps = await weekSteps.values.toList();
 
                   Map weekDist = await _getWeekDistance(today, oneWeekLater);
                   List distance = await weekDist.values.toList();
@@ -152,11 +152,9 @@ class databaseTestPageState extends State<databaseTestPage> {
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .updateAchievements(Achievements(1, today, today_LoS));
                   print('update the data');
-                }
+                }}),
 
-                // From now on the data are stored into the database. I hope that you'll find pretty clear how to pass properly the data!
-              },
-            ),
+            
 
 // Her you'll find a simple body with elementary operations on the db.
             body: Column(
@@ -316,8 +314,10 @@ class databaseTestPageState extends State<databaseTestPage> {
                         }
                       });
                 }),
-              ],
-            )));
+              ],)));
+                
+
+
   }
 }
 

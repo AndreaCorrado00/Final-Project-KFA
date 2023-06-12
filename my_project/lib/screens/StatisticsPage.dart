@@ -62,7 +62,9 @@ static const routename = 'StatisticsPage';
           actions: [IconButton(
             icon: Icon(Icons.downloading ),
             onPressed: () async {
-
+              final sp=await SharedPreferences.getInstance();
+              if(await sp.getBool('week_sim')==true || await sp.getBool('week_sim')==null){
+              
               await _pingImpact();        // connect to impact
               await  _getAndStoreTokens();// storing tokens. 
               // Now we are ready to read data from impact
@@ -85,6 +87,10 @@ static const routename = 'StatisticsPage';
             await Provider.of<DatabaseRepository>(context, listen: false).insertData(StatisticsData(1, days[i], steps[i],distance[i],activity_time[i]));
             await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, days[i], 0, 0, 0, 0));
             await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, days[i],today_LoS));
+
+            
+            await sp.setBool('week_sim', false); // a check to be sure that the simulation can be done one time only 
+            }
           }
               print('simulated data stored');
 

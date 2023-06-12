@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:my_project/Database/entities/questionnaire.dart';
-import 'package:my_project/Database/entities/questionnaire.dart';
+
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart'; // to view the map
@@ -9,21 +9,10 @@ import 'package:my_project/utils/constants.dart';
 import '../Database/repositries/appDatabaseRepository.dart';
 import 'AboutThisApp.dart';
 import 'LoginPage.dart';
-import 'ProfilePage.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
-import 'package:webview_flutter/webview_flutter.dart'; // to view the map
-import 'package:my_project/utils/constants.dart';
-import '../Database/repositries/appDatabaseRepository.dart';
-import 'AboutThisApp.dart';
-import 'LoginPage.dart';
-import 'ProfilePage.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-int? question1Value;
-int? question2Value;
-int? question3Value;
+
 int? question1Value;
 int? question2Value;
 int? question3Value;

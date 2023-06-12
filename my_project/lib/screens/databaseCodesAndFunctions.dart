@@ -43,6 +43,7 @@ class databaseTestPage extends StatefulWidget {
 
 
 class databaseTestPageState extends State<databaseTestPage> {
+
   static const routename = 'StatisticsPage';
   final today = '2023-05-16';
   final tomorrow = '2023-05-17';
@@ -51,6 +52,7 @@ class databaseTestPageState extends State<databaseTestPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
       title: 'Database functions test page',
       home: Scaffold(
         appBar: AppBar(
@@ -65,11 +67,9 @@ class databaseTestPageState extends State<databaseTestPage> {
       child: const Icon(Icons.punch_clock_sharp),
       
       onPressed: () async {
-        // Here we write on the database: (2 days)
         // First: check if there are new data available (= the date is different)
         bool newDataReady=await _newDataReady(today);
-        bool weekData=true;
-
+        bool weekData=true; // if we want to simulate an entire week of loadings.
                 await _pingImpact(); // connect to impact
                 await _getAndStoreTokens(); // storing tokens.
                 // Now we are ready to read data from impact
@@ -80,27 +80,27 @@ class databaseTestPageState extends State<databaseTestPage> {
                 int distance = await _getDistance(today);
                 int activity_time = await _getActivity_time(today);
 
-                // data for the questionnaire
-                int question1 = 1;
-                int question2 = 2;
-                int question3 = 3;
-                int total = _computeTotalQuestionnaire(
-                    [question1, question2, question3]); // total of the answers
+        // data for the questionnaire
+        int question1=1;
+        int question2=2;
+        int question3=3;
+        int total = _computeTotalQuestionnaire([question1,question2,question3]); // total of the answers
 
-                // data for the achievements
-                int today_LoS =
-                    _computeLoS(total, steps, distance, activity_time);
+        // data for the achievements
+        int today_LoS=_computeLoS(total, steps, distance, activity_time);
 
-        
-        
-        // up to now the code works like a real-situation application. I think that we need to load one week of data for our demo. 
-         
-        if(newDataReady==true && weekData==false){
-        
-      // to use this page, two consecutive dates are uploaded into the db
-        await Provider.of<DatabaseRepository>(context, listen: false).insertData(StatisticsData(1, today, steps,distance,activity_time));
-        await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, today, question1, question2, question3, total));
-        await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, today,today_LoS));
+                // up to now the code works like a real-situation application. I think that we need to load one week of data for our demo.
+
+                if (newDataReady == true && weekData == false) {
+                  // to use this page, two consecutive dates are uploaded into the db
+                  await Provider.of<DatabaseRepository>(context, listen: false)
+                      .insertData(StatisticsData(
+                          1, today, steps, distance, activity_time));
+                  await Provider.of<DatabaseRepository>(context, listen: false)
+                      .insertAnswers(Questionnaire(
+                          1, today, question1, question2, question3, total));
+                  await Provider.of<DatabaseRepository>(context, listen: false)
+                      .insertAchievements(Achievements(1, today, today_LoS));
 
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .insertData(StatisticsData(
@@ -116,126 +116,128 @@ class databaseTestPageState extends State<databaseTestPage> {
                   List days = await weekSteps.keys.toList();
                   List steps = await weekSteps.values.toList();}
 
-        else if ( weekData==true){
-          Map weekSteps=await _getWeekSteps(today, oneWeekLater);
-          List days=await weekSteps.keys.toList();
-          List steps=await weekSteps.values.toList();
-          
-          Map weekDist=await _getWeekDistance(today, oneWeekLater);
-          List distance=await weekDist.values.toList();
+                  Map weekDist = await _getWeekDistance(today, oneWeekLater);
+                  List distance = await weekDist.values.toList();
 
-          Map weekTime=await _getWeekActivityTime(today, oneWeekLater);  
-          List activity_time=await weekTime.values.toList();
+                  Map weekTime =
+                      await _getWeekActivityTime(today, oneWeekLater);
+                  List activity_time = await weekTime.values.toList();
 
           for(int i=0;i<7;i++){
 
-            int today_LoS=_computeLoS(total, steps[i],distance[i],activity_time[i]);
-            // simulation of a weekly db (this is not the correct position of this but ok, probably, esage of a map would suit better)
-            // idea:
-            // la key della mappa è il today
-            // il valore della mappa è il valore associato alla key
-            // questo per ogni statistics data.
+                    // per quanto riguarda il questionario, dovremmo simulare 7 risposte diverse date al singolo questionario, oppure semplicamente quel
+                    // giorno si mostra che, aggiungendo dati al questionario, le cose migliorano.
 
-            // per quanto riguarda il questionario, dovremmo simulare 7 risposte diverse date al singolo questionario, oppure semplicamente quel
-            // giorno si mostra che, aggiungendo dati al questionario, le cose migliorano.
+                    await Provider.of<DatabaseRepository>(context,
+                            listen: false)
+                        .insertData(StatisticsData(1, days[i], steps[i],
+                            distance[i], activity_time[i]));
+                    await Provider.of<DatabaseRepository>(context,
+                            listen: false)
+                        .insertAnswers(Questionnaire(1, days[i], question1,
+                            question2, question3, total));
+                    await Provider.of<DatabaseRepository>(context,
+                            listen: false)
+                        .insertAchievements(
+                            Achievements(1, days[i], today_LoS));
+                  }
+                } else {
+                  // otherwise, the data are just update to the new vale (nb: can work with differences into the hours!)
+                  await Provider.of<DatabaseRepository>(context, listen: false)
+                      .updateData(StatisticsData(
+                          1, today, steps, distance, activity_time));
+                  await Provider.of<DatabaseRepository>(context, listen: false)
+                      .updateAnswers(Questionnaire(
+                          1, today, question1, question2, question3, total));
+                  await Provider.of<DatabaseRepository>(context, listen: false)
+                      .updateAchievements(Achievements(1, today, today_LoS));
+                  print('update the data');
+                }
 
-            await Provider.of<DatabaseRepository>(context, listen: false).insertData(StatisticsData(1, days[i], steps[i],distance[i],activity_time[i]));
-            await Provider.of<DatabaseRepository>(context, listen: false).insertAnswers(Questionnaire(1, days[i], question1, question2, question3, total));
-            await Provider.of<DatabaseRepository>(context, listen: false).insertAchievements(Achievements(1, days[i],today_LoS));
-          }
-        }
-        else{
-      // otherwise, the data are just update to the new vale (nb: can work with differences into the hours!)
-        await Provider.of<DatabaseRepository>(context, listen: false).updateData(StatisticsData(1, today, steps,distance,activity_time));
-        await Provider.of<DatabaseRepository>(context, listen: false).updateAnswers(Questionnaire(1, today, question1, question2, question3, total));
-        await Provider.of<DatabaseRepository>(context, listen: false).updateAchievements(Achievements(1, today,today_LoS));
-        print('update the data');
-        }
-        
-
-        // From now on the data are stored into the database. I hope that you'll find pretty clear how to pass properly the data!
-      },),
+                // From now on the data are stored into the database. I hope that you'll find pretty clear how to pass properly the data!
+              },
+            ),
 
 // Her you'll find a simple body with elementary operations on the db.
-    body: Column(
-      children: [
+            body: Column(
+              children: [
 // -----------------------------------------------------------------------------------
-                Text('achievements entity queries'),
+        Text('achievements entity queries'),
+        SizedBox(height: 10,),
+
+                Consumer<DatabaseRepository>(// calling the consumer
+                    builder: (context, dbr, child) {
+                  // building
+                  List<Achievements> initialData = [
+                    Achievements(0, '0000', 0)
+                  ]; // data used to start (but can be null too, this is just an example)
+                  return FutureBuilder(
+                      // let's build a future (sounds pretty good, but it's a nightmare!)
+                      initialData: initialData,
+                      future: dbr.dailyAchievement(1, today), //the query used
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final data = snapshot.data as List<Achievements>;
+                          if (data.length == 0) {
+                            // a simple way to manage the possbility of an empty db
+                            return const Text(
+                                'there are not data available yet',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 255, 0, 0)));
+                          } else {
+                            final entity_row = data[0]; // here we work
+                            return Container(
+                              height: 20,
+                              width: 500,
+                              child: Text(
+                                'today LoS: ${entity_row.levelOfSustainability}', // showing the results
+                              ),
+                              color: Constants.containerColor,
+                            );
+                          }
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      });
+                }),
                 SizedBox(
                   height: 10,
                 ),
 
-        Consumer<DatabaseRepository>( // calling the consumer
-          builder: (context, dbr, child) { // building 
-            List<Achievements> initialData=  [Achievements(0,'0000',0)]; // data used to start (but can be null too, this is just an example)
-          return FutureBuilder(// let's build a future (sounds pretty good, but it's a nightmare!)
-            initialData: initialData, 
-            future: dbr.dailyAchievement(1,today), //the query used
-            builder: (context,snapshot){
-              if(snapshot.hasData){
-                
-                final data = snapshot.data as List<Achievements>;
-                if(data.length==0){// a simple way to manage the possbility of an empty db
-                  return const Text('there are not data available yet',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 255, 0, 0)
-                    ));
-                }
-                else{
-                final entity_row=data[0]; // here we work
-                return Container(
-                  height: 20,
-                  width: 500,
-                  child: Text(
-                    'today LoS: ${entity_row.levelOfSustainability}', // showing the resoult 
-
-                  ),
-                  color: Constants.containerColor,
-                );
-              }}
-              else{
-                return CircularProgressIndicator();
-              }
-            }
-          );}
-    ),
-    SizedBox(height: 10,),
-
-        Consumer<DatabaseRepository>(
-          builder: (context, dbr, child) {
-            List<Achievements> initialData=  [Achievements(0,'0000',0)];
-          return FutureBuilder(
-            
-            initialData: initialData,
-            future: dbr.userAllSingleAchievemnts(1),
-            builder: (context,snapshot){
-              if(snapshot.hasData){
-                final data = snapshot.data as List<Achievements>;
-                if(data.length==0){
-                  return const Text('there are not data available yet',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 255, 0, 0)
-                    ));
-                }
-                else{
-                int LoS=_reachedLoS(data); //it's the sum of ALLLL level of sustainability recorded up to now
-                int trees = LoS~/ 1000; // stupid but effective way
-                return Container(
-                  height: 20,
-                  width: 500,
-                  child: Text(
-                    'Comulative LoS: ${LoS} and total trees: ${trees}',
-                  ),
-                  color: Constants.containerColor,
-                );
-              }}
-              else{
-                return CircularProgressIndicator();
-              }
-            }
-          );}
-    ),
-    SizedBox(height: 10,),
+                Consumer<DatabaseRepository>(builder: (context, dbr, child) {
+                  List<Achievements> initialData = [Achievements(0, '0000', 0)];
+                  return FutureBuilder(
+                      initialData: initialData,
+                      future: dbr.userAllSingleAchievemnts(1),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          final data = snapshot.data as List<Achievements>;
+                          if (data.length == 0) {
+                            return const Text(
+                                'there are not data available yet',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 255, 0, 0)));
+                          } else {
+                            int LoS = _reachedLoS(
+                                data); //it's the sum of ALLLL level of sustainability recorded up to now
+                            int trees = LoS ~/ 1000; // stupid but effective way
+                            return Container(
+                              height: 20,
+                              width: 500,
+                              child: Text(
+                                'Comulative LoS: ${LoS} and total trees: ${trees}',
+                              ),
+                              color: Constants.containerColor,
+                            );
+                          }
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      });
+                }),
+                SizedBox(
+                  height: 10,
+                ),
 
                 // -----------------------------------------------------------------------------------
                 Text('statistics data entity queries'),
@@ -716,9 +718,11 @@ int _computeLoS(int point_answers, int daily_steps, int daily_distance,
     else {
       for(int i=0; i<=out.length-1; i++){
       out[i]=data[lnList-7+i].dailySteps;
-      print(data[lnList-7+i].dailySteps);
+
     }
   }
+  // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+
   return out;
 }
 
@@ -736,14 +740,17 @@ List<int> _createSDistanceDataForGraph(List<StatisticsData> data) {
     // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
     else {
       for(int i=0; i<=out.length-1; i++){
-      out[i]=data[lnList-6+i].dailyDistance;
+      out[i]=data[lnList-7+i].dailyDistance;
+
     }
   }
+
   return out;
 }
 
-List<int> _createActivityTimeDataForGraph(List<StatisticsData> data) {
-  // require to pass to the function an item of userAllSingleStatisticsData query
+
+  List<int> _createActivityTimeDataForGraph( List<StatisticsData> data) {
+    // require to pass to the function an item of userAllSingleStatisticsData query
 
     List<int> out=[0,0,0,0,0,0,0]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
     int lnList=data.length; // the length of the list of items
@@ -756,11 +763,17 @@ List<int> _createActivityTimeDataForGraph(List<StatisticsData> data) {
     // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
     else {
       for(int i=0; i<=out.length-1; i++){
-      out[i]=data[lnList-6+i].dailyActivityTime;
+      out[i]=data[lnList-7+i].dailyActivityTime;
+
     }
   }
+  // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+
   return out;
 }
+
+
+
 
   List<int> _createLoSDataForGraph( List<Achievements> data) {
     // require to pass to the function an item of userAllSingleAchievemnts query 
@@ -776,11 +789,14 @@ List<int> _createActivityTimeDataForGraph(List<StatisticsData> data) {
     // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
     else {
       for(int i=0; i<=out.length-1; i++){
-      out[i]=data[lnList-6+i].levelOfSustainability;
+      out[i]=data[lnList-7+i].levelOfSustainability;
     }
+    
+    }
+    return out;
   }
-  return out;
-}
+
+
 
   int _reachedLoS(List<Achievements> data){
     // basically the sum of allll the LoS recorded by the user
@@ -788,10 +804,8 @@ List<int> _createActivityTimeDataForGraph(List<StatisticsData> data) {
     for (int i=0; i<=data.length-1; i++){
       out=out+data[i].levelOfSustainability;
 
+
     }
-    return out;
+      return out;
   }
-  
 
-
-  

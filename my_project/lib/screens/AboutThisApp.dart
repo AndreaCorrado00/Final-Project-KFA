@@ -143,27 +143,71 @@ class AboutThisApp extends State<AboutThisAppState> {
                         ) )
           ),),
 
-          ],),
+          SizedBox(height: 10,),
+          Animate(
+            effects: Constants.Fade_effect_options,
+            child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+                height:  400,
+                color: Constants.containerColor,
+                child: Column(children: [
+                  const SizedBox(height: 10),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Nice to meet you!',
+                      style: Constants.Tips_Title_style,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Align(
+                  alignment: Alignment.center,
+                  child: 
+                  Row(
+                    children: [
+                        // ignore: prefer_const_literals_to_create_immutables
+                        Container(
+                          color: Color.fromARGB(255, 240, 241, 233),
+                          padding: EdgeInsets.only(left: 15),
+                          width: 200,
+                          height:  150,
+                          child: Text(
+                            'bla bla bla',
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        SizedBox(width: 15),
+                        Image(image: NetworkImage(
+                              'https://img.freepik.com/premium-vector/marketing-research-illustration_335657-4800.jpg',
+                              scale: 5)),
+                    ]
+                  ),
+                  ),
+                  Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    color: Color.fromARGB(255, 240, 241, 233),
+                          padding: EdgeInsets.only(left: 15),
+                          width: 350,
+                          height:  180,
+                          child: const Text(
+                            'this is another possibility',
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.left,
+                          ),
+                        ),),
+                ]
+                )
+            )
+            )
+          )
+        ]
+      ),
 
-// Row(
-                  //   children: [
-                  //       // ignore: prefer_const_literals_to_create_immutables
-                  //       Container(
-                  //         padding: EdgeInsets.only(left: 15),
-                  //         width: 220,
-                  //         height:  350,
-                  //         child: Text(
-                  //           'bla bla bla',
-                  //           style: TextStyle(fontSize: 16),
-                  //           textAlign: TextAlign.left,
-                  //         ),
-                  //       ),
-                  //       SizedBox(width: 15),
-                  //       Image(image: NetworkImage(
-                  //             'https://img.freepik.com/premium-vector/marketing-research-illustration_335657-4800.jpg',
-                  //             scale: 6)),
-                        
-                  //       ]),
 
       floatingActionButton: FloatingActionButton(
 

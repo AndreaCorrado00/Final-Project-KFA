@@ -178,7 +178,7 @@ class AboutThisApp extends State<AboutThisAppState> {
             child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: Container(
-                height:  370,
+                height:  390,
                 color: Constants.containerColor,
                 child: Column(children: [
                   const SizedBox(height: 10),
@@ -202,7 +202,7 @@ class AboutThisApp extends State<AboutThisAppState> {
                           //color: Color.fromARGB(255, 240, 241, 233),
                           padding: EdgeInsets.only(left: 15),
                           width: 180,
-                          height:  150,
+                          height:  170,
                           child: Text(
                             whyThisApp['little'],
                             style: TextStyle(fontSize: 16),

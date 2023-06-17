@@ -103,7 +103,6 @@ class AboutThisApp extends State<AboutThisAppState> {
       backgroundColor: Constants.primaryLightColor,
       //body: TO BE IMPLEMENTED
       floatingActionButton: FloatingActionButton(
-
         child: const Icon(Icons.home),
         onPressed: () {
           Navigator.push(
@@ -123,7 +122,6 @@ class AboutThisApp extends State<AboutThisAppState> {
       child: Text("Cancel"),
       onPressed: () {
         Navigator.push(
-
             context, MaterialPageRoute(builder: (context) => HomeScreen()));
       },
       style: Constants.TextButtonStyle_Alert,
@@ -162,7 +160,7 @@ class AboutThisApp extends State<AboutThisAppState> {
     print(await user_preferences.getBool('Rememeber_login'));
     Navigator.pop(context);
 
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const LoginPage()));
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => LoginPage()));
   }
 } //About this app 

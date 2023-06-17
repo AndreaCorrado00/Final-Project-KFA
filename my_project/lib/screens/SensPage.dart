@@ -36,7 +36,8 @@ class Sens_page extends State<SensPage> {
 
   void _showQuestionnaire() {
     // Get the current date
-    final currentDate = DateTime.now(); // once assigned can be changed
+    final currentDate =
+        DateTime.now(); // setting a reference date to compare with
     final todayDate = DateFormat('yyyy-MM-dd').format(lastSubmissionDate);
 
     showDialog(

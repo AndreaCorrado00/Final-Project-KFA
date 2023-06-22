@@ -4,13 +4,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_project/screens/AboutThisApp.dart';
-import 'package:my_project/screens/HomePage.dart';
 import 'package:my_project/screens/LoginPage.dart';
-import 'package:my_project/screens/StatisticsPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
-//import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:my_project/utils/constants.dart';
 import 'package:my_project/Database/Advice_Database.dart';
@@ -63,7 +58,7 @@ class TipsPageState extends State<TipsPage> {
           backgroundColor: Constants.secondaryColor,
           child: Column(
             children: [
-              SizedBox(
+              SizedBox( 
                 height: 100,
               ),
               Row(
@@ -379,13 +374,13 @@ class TipsPageState extends State<TipsPage> {
 void _OnLogoutTapConfirm(BuildContext context)  {
     // set up the buttons
 
-    Widget cancelButton = TextButton(
-      child: Text("Cancel"),
-      onPressed: ()  {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const TipsPage()));},// Must be changed to point at the current page 
-      style: Constants.TextButtonStyle_Alert,
-    );
+    // Widget cancelButton = TextButton(
+    //   child: Text("Cancel"),
+    //   onPressed: ()  {
+    //     Navigator.of(context).pushReplacement(
+    //         MaterialPageRoute(builder: (context) => const TipsPage()));},// Must be changed to point at the current page 
+    //   style: Constants.TextButtonStyle_Alert,
+    // );
     Widget continueButton = TextButton(
       child: Text("Continue"),
       onPressed: () async {
@@ -401,7 +396,7 @@ void _OnLogoutTapConfirm(BuildContext context)  {
       title: const Text("Logout"),
       content: const Text("Are you sure you want to logout?"),
       actions: [
-        cancelButton,
+        //cancelButton,
         continueButton,
       ],
       backgroundColor: Constants.primaryLightColor,

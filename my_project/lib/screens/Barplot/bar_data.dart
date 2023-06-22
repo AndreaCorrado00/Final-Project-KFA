@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:my_project/screens/Barplot/individual_bar.dart';
 import 'package:my_project/screens/StatisticsPage.dart';
 
@@ -21,7 +23,6 @@ class BarData{
     });
 
 List<IndivualBar> barData = [];
-
 void initializeBarData(){
   barData = [
     IndivualBar(x: 1, y: mondaySteps),

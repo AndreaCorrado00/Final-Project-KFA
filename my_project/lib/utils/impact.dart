@@ -4,7 +4,14 @@ class Impact {
   static String tokenEndpoint = 'gate/v1/token/';
   static String refreshEndpoint = 'gate/v1/refresh/';
 
-  static String stepsEndpoint = 'data/v1/steps/patients/';
+   // steps
+  static String stepEndpoint = 'data/v1/steps';
+
+  // Distance
+  static String distanceEndpoint = '/data/v1/distance';
+
+  // Activity
+  static String activityEndpoint = '/data/v1/exercise';
 
   static String username = 'iIWxjdSTr9';
   static String password = '12345678!';

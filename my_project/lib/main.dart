@@ -2,9 +2,21 @@ import 'package:my_project/screens/LoginPage.dart';
 import 'package:my_project/screens/SignUp.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:provider/provider.dart';
+import 'package:my_project/Database/repositries/appDatabaseRepository.dart';
+import 'Database/appdata_database.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+// Open database
+  final AppDatabase appdata_database =
+      await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+// Database repository creation
+  final databaseRepository = DatabaseRepository(database: appdata_database);
+// runnig the app and provide the daabase repository above
+  runApp(ChangeNotifierProvider<DatabaseRepository>(
+      create: (context) => databaseRepository, child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -80,7 +92,6 @@ class _loginState extends State<login> {
                   ),
                 ],
               ),
-
               MaterialButton(
                 minWidth: double.infinity,
                 height: 60,

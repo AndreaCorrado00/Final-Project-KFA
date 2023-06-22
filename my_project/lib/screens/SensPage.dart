@@ -1,234 +1,178 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:http/http.dart' as http;
+import 'package:my_project/Database/entities/questionnaire.dart';
+
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:my_project/utils/impact.dart';
-import 'package:my_project/models/steps.dart';
+import 'package:webview_flutter/webview_flutter.dart'; // to view the map
+import 'package:my_project/utils/constants.dart';
+import '../Database/repositries/appDatabaseRepository.dart';
+import 'AboutThisApp.dart';
+import 'LoginPage.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
-Future<int?> _authorize() async {
-  //Create the request
-  final url = Impact.baseUrl + Impact.tokenEndpoint;
-  final body = {'username': Impact.username, 'password': Impact.password};
 
-  //Get the response
-  print('Calling: $url');
-  final response = await http.post(Uri.parse(url), body: body);
-
-  //If 200, set the token
-  if (response.statusCode == 200) {
-    final decodedResponse = jsonDecode(response.body);
-    final sp = await SharedPreferences.getInstance();
-    sp.setString('access', decodedResponse['access']);
-    sp.setString('refresh', decodedResponse['refresh']);
-  } //if
-
-  //Just return the status code
-  return response.statusCode;
-} //_authorize
-
-//This method allows to obtain the JWT token pair from IMPACT and store it in SharedPreferences
-Future<List<Steps>?> _requestData() async {
-  //Initialize the result
-  List<Steps>? result;
-
-  //Get the stored access token (Note that this code does not work if the tokens are null)
-  final sp = await SharedPreferences.getInstance();
-  var access = sp.getString('access');
-
-  //If access token is expired, refresh it
-  if (JwtDecoder.isExpired(access!)) {
-    await _refreshTokens();
-    access = sp.getString('access');
-  } //if
-
-  //Create the (representative) request
-  final day = '2023-04-04';
-  final url = Impact.baseUrl +
-      Impact.stepsEndpoint +
-      Impact.patientUsername +
-      '/day/$day/';
-  final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'};
-
-  //Get the response
-  print('Calling: $url');
-  final response = await http.get(Uri.parse(url), headers: headers);
-
-  //if OK parse the response, otherwise return null
-  if (response.statusCode == 200) {
-    final decodedResponse = jsonDecode(response.body);
-    result = [];
-    for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
-      result.add(Steps.fromJson(
-          decodedResponse['data']['date'], decodedResponse['data']['data'][i]));
-    } //for
-  } //if
-  else {
-    result = null;
-  } //else
-
-  //Return the result
-  return result;
-} //_requestData
-
-//This method allows to obtain the JWT token pair from IMPACT and store it in SharedPreferences
-Future<int> _refreshTokens() async {
-  //Create the request
-  final url = Impact.baseUrl + Impact.refreshEndpoint;
-  final sp = await SharedPreferences.getInstance();
-  final refresh = sp.getString('refresh');
-  final body = {'refresh': refresh};
-
-  //Get the respone
-  print('Calling: $url');
-  final response = await http.post(Uri.parse(url), body: body);
-
-  //If 200 set the tokens
-  if (response.statusCode == 200) {
-    final decodedResponse = jsonDecode(response.body);
-    final sp = await SharedPreferences.getInstance();
-    sp.setString('access', decodedResponse['access']);
-    sp.setString('refresh', decodedResponse['refresh']);
-  } //if
-
-  //Return just the status code
-  return response.statusCode;
-}
+int? question1Value;
+int? question2Value;
+int? question3Value;
 
 class SensPage extends StatefulWidget {
-  SensPage({super.key});
-
+  const SensPage({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() => Sens_page();
 }
 
+// ignore: camel_case_types
 class Sens_page extends State<SensPage> {
-//verification de l'authenticitè
-  bool _isAuthorized = false;
-  String steps = '';
-  // attention! need to refresh the token
+  late DateTime lastSubmissionDate; // Store the last submission date
 
   @override
   void initState() {
     super.initState();
-    _authorize().then((result) async {
-      if (result == 200) {
-        setState(() {
-          _isAuthorized = true;
-        });
 
-        final stepsdata = await _requestData();
-        setState(() {
-          steps = stepsdata.toString();
-        });
-      }
-    });
+    // Initialize the last submission date
+    lastSubmissionDate = DateTime.now();
   }
 
   void _showQuestionnaire() {
-    int? question1Value = 3;
-    int? _question2Value = 3;
-    int? _question3Value = 3;
+    // Get the current date
+    final currentDate = DateTime.now(); // once assigned can be changed
+    final todayDate = DateFormat('yyyy-MM-dd').format(lastSubmissionDate);
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Questionnaire'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                const Text('Did you use public transportation today?'),
-                RadioListTile<int>(
-                  title: const Text('Yes'),
-                  value: 1,
-                  groupValue: question1Value,
-                  onChanged: (value) {
-                    setState(() {
-                      question1Value = value;
-                    });
-                  },
+          // the Alert should Satateful
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    const Text('Did you use public transportation today?'),
+                    RadioListTile<int>(
+                      title: const Text('Yes'),
+                      value: 1,
+                      groupValue: question1Value,
+                      onChanged: (value) {
+                        setState(
+                          () {
+                            question1Value = value!;
+                          },
+                        );
+                      },
+                    ),
+                    RadioListTile<int>(
+                      title: const Text('No'),
+                      value: 2,
+                      groupValue: question1Value,
+                      onChanged: (value) {
+                        setState(() {
+                          question1Value = value!;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                        'Did you save water today?If yes how much(approximatly)'),
+                    RadioListTile<int>(
+                      title: const Text('Less than 2L'),
+                      value: 1,
+                      groupValue: question2Value,
+                      onChanged: (value) {
+                        setState(() {
+                          question2Value = value!;
+                        });
+                      },
+                    ),
+                    RadioListTile<int>(
+                      title: const Text('More than 2L'),
+                      value: 2,
+                      groupValue: question2Value,
+                      onChanged: (value) {
+                        setState(() {
+                          question2Value = value!;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    const Text('Did you save a meal from being wasted today?'),
+                    RadioListTile<int>(
+                      title: const Text('Yes'),
+                      value: 1,
+                      groupValue: question3Value,
+                      onChanged: (value) {
+                        setState(() {
+                          question3Value = value!;
+                        });
+                      },
+                    ),
+                    RadioListTile<int>(
+                      title: const Text('No'),
+                      value: 2,
+                      groupValue: question3Value,
+                      onChanged: (value) {
+                        setState(() {
+                          question3Value = value!;
+                        });
+                      },
+                    ),
+                  ],
                 ),
-                RadioListTile<int>(
-                  title: const Text('No'),
-                  value: 2,
-                  groupValue: question1Value,
-                  onChanged: (value) {
-                    setState(() {
-                      question1Value = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                    'Did you save water today?If yes how much(approximatly)'),
-                RadioListTile<int>(
-                  title: const Text('Less than 2L'),
-                  value: 1,
-                  groupValue: _question2Value,
-                  onChanged: (value) {
-                    setState(() {
-                      _question2Value = value;
-                    });
-                  },
-                ),
-                RadioListTile<int>(
-                  title: const Text('More than 2L'),
-                  value: 2,
-                  groupValue: _question2Value,
-                  onChanged: (value) {
-                    setState(() {
-                      _question2Value = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 16),
-                const Text('Did you save a meal from being wasted today?'),
-                RadioListTile<int>(
-                  title: const Text('Yes'),
-                  value: 1,
-                  groupValue: _question3Value,
-                  onChanged: (value) {
-                    setState(() {
-                      _question3Value = value;
-                    });
-                  },
-                ),
-                RadioListTile<int>(
-                  title: const Text('No'),
-                  value: 2,
-                  groupValue: _question3Value,
-                  onChanged: (value) {
-                    setState(() {
-                      _question3Value = value;
-                    });
-                  },
-                ),
-              ],
-            ),
+              );
+            },
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
+// initialize the questionnaire
+                setState(() {
+                  question1Value = null;
+                  question2Value = null;
+                  question3Value = null;
+                });
+
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text('Cancel'), //close the Questionnaire
             ),
+
+//add/updating the values of the questions to the database
             TextButton(
-              onPressed: () {
+              onPressed: () async {
+                int total = question1Value! + question2Value! + question3Value!;
+                //if it's a new day insert new data otherwise update the current value in the data base
+                if (currentDate.day != lastSubmissionDate.day ||
+                    currentDate.month != lastSubmissionDate.month ||
+                    currentDate.year != lastSubmissionDate.year) {
+                  await Provider.of<DatabaseRepository>(context, listen: false)
+                      .insertAnswers(Questionnaire(
+                          1,
+                          todayDate,
+                          question1Value!,
+                          question2Value!,
+                          question3Value!,
+                          total));
+                } else {
+                  await Provider.of<DatabaseRepository>(context, listen: false)
+                      .updateAnswers(Questionnaire(
+                          1,
+                          todayDate,
+                          question1Value!,
+                          question2Value!,
+                          question3Value!,
+                          total));
+                }
+// initialize the questionnaire
+                setState(() {
+                  question1Value = null;
+                  question2Value = null;
+                  question3Value = null;
+                });
+                // ignore: use_build_context_synchronously
                 Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SensPage(
-                          // question1: question1Value,
-                          //question2: _question2Value,
-                          //question3: _question3Value,
-                          )),
-                );
               },
               child: const Text('Submit'),
             ),
@@ -238,144 +182,250 @@ class Sens_page extends State<SensPage> {
     );
   }
 
+  // ignore: non_constant_identifier_names
+  void _OnLogoutTapConfirm(BuildContext context) {
+    // set up the buttons
+
+    // Widget cancelButton = TextButton(
+    //   child: Text("Cancel"),
+    //   onPressed: () {
+    //     Navigator.of(context).pushReplacement(
+    //         MaterialPageRoute(builder: (context) => const SensPage()));
+    //   },
+    //   style: Constants.TextButtonStyle_Alert,
+    // );
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed: () async {
+        final user_preferences = await SharedPreferences.getInstance();
+        await user_preferences.setBool('Rememeber_login', false);
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>  LoginPage()));
+        // Must be changed to point at the current page
+      },
+      style: Constants.TextButtonStyle_Alert,
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text("Logout"),
+      content: const Text("Are you sure you want to logout?"),
+      actions: [
+        //cancelButton,
+        continueButton,
+      ],
+      backgroundColor: Constants.primaryLightColor,
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: GestureDetector(
-        onTap: () {
-          _showQuestionnaire();
-        },
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Hello Hero!'),
+        backgroundColor: Constants.primaryColor,
+      ),
+      drawer: Drawer(
+        backgroundColor: Constants.secondaryColor,
         child: Column(
           children: [
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.all(20),
-                children: [
-                  SizedBox(height: 50),
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10.0),
-                      topRight: Radius.circular(20.0),
-                      bottomRight: Radius.circular(30.0),
-                      bottomLeft: Radius.circular(40.0),
-                    ),
-                    child: Container(
-                      alignment: Alignment.center,
-                      constraints: const BoxConstraints(
-                        maxWidth: 380,
-                        maxHeight: 100,
-                      ),
-                      color: Color.fromARGB(255, 206, 191, 54),
-                      child: const DefaultTextStyle(
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          fontStyle: FontStyle.italic,
-                        ),
-                        child: Text(''),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 25),
-                  GestureDetector(
-                    onTap: () {
-                      // Handle tap event for the first ClipRRect
-                      print('First ClipRRect tapped');
-                    },
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(10.0),
-                        topRight: Radius.circular(20.0),
-                        bottomRight: Radius.circular(30.0),
-                        bottomLeft: Radius.circular(40.0),
-                      ),
-                      child: Container(
-                        alignment: Alignment.center,
-                        constraints: const BoxConstraints(
-                          maxWidth: 380,
-                          maxHeight: 100,
-                        ),
-                        color: const Color.fromARGB(255, 206, 191, 54),
-                        child: DefaultTextStyle(
-                          textAlign: TextAlign.start,
-                          style: const TextStyle(
-                            fontSize: 17.0,
-                            fontStyle: FontStyle.italic,
-                          ),
-                          child: AnimatedTextKit(
-                            animatedTexts: [
-                              RotateAnimatedText('What is Sustainability?',
-                                  duration: const Duration(seconds: 2)),
-                              RotateAnimatedText('why is it so important?',
-                                  duration: const Duration(seconds: 2)),
-                              RotateAnimatedText(
-                                  '   Sustainability is our society\'s ability to exist and develop without',
-                                  duration: const Duration(seconds: 5)),
-                              RotateAnimatedText(
-                                  '   depleting all of the natural resources needed to live in the future.',
-                                  duration: const Duration(seconds: 5)),
-                            ],
-                            onTap: () {
-                              print("Tap Event");
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            SizedBox(
+              height: 100,
             ),
-            Container(
-              margin: EdgeInsets.only(top: 10),
-              child:
-                  //[
-                  SizedBox(
-                width: 200,
-                height: 180,
-                //color: Colors.blue,
-                // child: Text('Additional Widget'),
-                child: CircularPercentIndicator(
-                  radius: 80.0,
-                  lineWidth: 12.0,
-                  animation: true,
-                  percent: 0.7,
-                  center: Text(
-                    '$steps',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
-                  ),
-                  footer: new Text(
-                    '',
-                    style: new TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 17.0),
-                  ),
-                  circularStrokeCap: CircularStrokeCap.round,
-                  progressColor: Color.fromARGB(255, 29, 131, 56),
+            Row(
+              children: [
+                TextButton(
+                  style: Constants.TextButtonStyle_Drawer,
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AboutThisAppState()));
+                  },
+                  child: const Text('About this App'),
                 ),
-              ),
-              // ],
+                Icon(
+                  Icons.help_outline,
+                  color: Constants.secondarylightColor,
+                  size: 24.0,
+                ),
+              ],
             ),
             SizedBox(
-              height: 200,
-              child: LinearPercentIndicator(
-                width: 300.0,
-                alignment: MainAxisAlignment.center,
-                lineHeight: 20.0,
-                percent: 0.5,
-                center: const Text(
-                  "50",
-                  style: TextStyle(fontSize: 12.0),
+              width: 300,
+              height: 1,
+            ),
+            Row(
+              children: [
+                TextButton(
+                  style: Constants.TextButtonStyle_Drawer,
+                  onPressed: () {
+                    _OnLogoutTapConfirm(context);
+                  },
+                  child: const Text('Logout'),
                 ),
-                trailing: Icon(Icons.nature),
-                linearStrokeCap: LinearStrokeCap.roundAll,
-                backgroundColor: Color.fromARGB(255, 251, 237, 92),
-                progressColor: Color.fromARGB(255, 183, 175, 23),
-              ),
+                const Icon(
+                  IconData(0xe3b3, fontFamily: 'MaterialIcons'),
+                  color: Constants.secondarylightColor,
+                  size: 24.0,
+                  semanticLabel: 'Text to announce in accessibility modes',
+                ),
+              ],
+            ),
+            const SizedBox(
+              width: 200,
+              height: 10,
             ),
           ],
         ),
       ),
+
+//end Drawer
+
+      body: Column(
+        children: [
+          // viewing the air quality map by Airly
+          const SizedBox(
+            width: 1000,
+            height: 264,
+            child: WebView(
+              initialUrl: 'https://airly.org/map/en/',
+              javascriptMode: JavascriptMode.unrestricted,
+            ),
+          ),
+          const SizedBox(height: 30),
+          Row(
+            children: [
+              // showing the Questionnaire whenever the user tap on Los
+              GestureDetector(
+                onTap: () {
+                  _showQuestionnaire();
+                },
+                child: SizedBox(
+                  width: 200,
+                  height: 200,
+                  child: CircularPercentIndicator(
+                    radius: 80.0,
+                    lineWidth: 12.0,
+                    animation: true,
+                    percent: 0.7,
+                    center: const Text(
+                      "70.0%",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                    ),
+                    footer: const Text(
+                      "LoS",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 17.0),
+                    ),
+                    circularStrokeCap: CircularStrokeCap.round,
+                    progressColor: Color.fromARGB(255, 19, 184, 24),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              SizedBox(
+                width: 200,
+                height: 200,
+                child: Center(
+                  child: DefaultTextStyle(
+                    style: const TextStyle(
+                      color: Color.fromARGB(255, 82, 153, 1),
+                      fontSize: 25,
+                    ),
+                    child: AnimatedTextKit(
+                      repeatForever: true,
+                      isRepeatingAnimation: true,
+                      animatedTexts: [
+                        TyperAnimatedText('Tap on LoS'),
+                        TyperAnimatedText('To update'),
+                        TyperAnimatedText('Your Sustainability Level.'),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              SizedBox(
+                width: 200,
+                height: 200,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const SizedBox(
+                      width: 190,
+                      height: 50,
+                      child: Text(
+                        'help the world to improve air quality by planting more trees!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 15.0),
+                      ),
+                    ),
+
+                    SizedBox(
+                      width: 185,
+                      height: 50,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 23, 178, 41),
+                          borderRadius:
+                              BorderRadius.circular(30), //border corner radius
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey
+                                  .withOpacity(0.5), //color of shadow
+                              spreadRadius: 5, //spread radius
+                              blurRadius: 7, // blur radius
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Total Trees Planted: 10',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15.0,
+                              color: Colors
+                                  .white, // Optionally change the text color
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    //
+                  ],
+                ),
+              ),
+              const SizedBox(
+                  width: 10), // Add some spacing between the containers
+              Container(
+                height: 200,
+                width: 200,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: NetworkImage(
+                          'https://us.123rf.com/450wm/3djuice/3djuice2109/3djuice210900073/173812664-reforestation-abstract-concept-vector-illustration.jpg?ver=6')),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      //),
     );
   }
 }

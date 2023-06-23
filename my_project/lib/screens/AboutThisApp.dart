@@ -17,8 +17,6 @@ class AboutThisAppState extends StatefulWidget {
 class AboutThisApp extends State<AboutThisAppState> {
   static const routename = 'AboutThisApp';
 
-
-
   @override
   Widget build(BuildContext context) {
     print('${AboutThisApp.routename} built');
@@ -105,263 +103,242 @@ class AboutThisApp extends State<AboutThisAppState> {
       //   ),
       // ),
 
-
       backgroundColor: Constants.primaryLightColor,
-      body: ListView(
-        padding: EdgeInsets.all(30),
-        children: [
-
-          Animate(
+      body: ListView(padding: EdgeInsets.all(30), children: [
+        Animate(
             effects: Constants.Fade_effect_options,
             child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-                height:  350,
-                color: Constants.containerColor,
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Nice to meet you!',
-                      style: Constants.Tips_Title_style,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Align(
-                  alignment: Alignment.center,
-                  child: 
-                  Row(
-                    children: [
-                        // ignore: prefer_const_literals_to_create_immutables
-                        Container(
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                    height: 350,
+                    color: Constants.containerColor,
+                    child: Column(children: [
+                      const SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Nice to meet you!',
+                          style: Constants.Tips_Title_style,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Row(children: [
+                          // ignore: prefer_const_literals_to_create_immutables
+                          Container(
+                            //color: Color.fromARGB(255, 240, 241, 233),
+                            padding: EdgeInsets.only(left: 15),
+                            width: 180,
+                            height: 150,
+                            child: Text(
+                              niceToMeetYou['little'],
+                              style: TextStyle(fontSize: 16),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                          SizedBox(width: 15),
+                          Image(
+                              image: NetworkImage(
+                                  'https://img.freepik.com/free-vector/foreign-language-workshop-illustration_335657-4784.jpg?w=740&t=st=1686848716~exp=1686849316~hmac=67674298e19d6fdbebd3686a4aa60c9e186bd5fcd8193b296e6c78b3bba30726',
+                                  scale: 5)),
+                        ]),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
                           //color: Color.fromARGB(255, 240, 241, 233),
                           padding: EdgeInsets.only(left: 15),
-                          width: 180,
-                          height:  150,
-                          child: Text(
-                            niceToMeetYou['little'],
-                            style: TextStyle(fontSize: 16),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        SizedBox(width: 15),
-                        Image(image: NetworkImage(
-                              'https://img.freepik.com/free-vector/foreign-language-workshop-illustration_335657-4784.jpg?w=740&t=st=1686848716~exp=1686849316~hmac=67674298e19d6fdbebd3686a4aa60c9e186bd5fcd8193b296e6c78b3bba30726',
-                              scale: 5)),
-                    ]
-                  ),
-                  ),
-                  Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    //color: Color.fromARGB(255, 240, 241, 233),
-                          padding: EdgeInsets.only(left: 15),
                           width: 340,
-                          height:  140,
+                          height: 140,
                           child: Text(
                             niceToMeetYou['bigger'],
                             style: TextStyle(fontSize: 16),
                             textAlign: TextAlign.left,
                           ),
-                        ),),
-                ]
-                )
-            )
-            ) 
-          ),
-          SizedBox(height: 20,),
-          Animate(
+                        ),
+                      ),
+                    ])))),
+        SizedBox(
+          height: 20,
+        ),
+        Animate(
             effects: Constants.Fade_effect_options,
             child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-                height:  390,
-                color: Constants.containerColor,
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Why this app?',
-                      style: Constants.Tips_Title_style,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Align(
-                  alignment: Alignment.center,
-                  child: 
-                  Row(
-                    children: [
-                        // ignore: prefer_const_literals_to_create_immutables
-                        Container(
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                    height: 390,
+                    color: Constants.containerColor,
+                    child: Column(children: [
+                      const SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Why this app?',
+                          style: Constants.Tips_Title_style,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Row(children: [
+                          // ignore: prefer_const_literals_to_create_immutables
+                          Container(
+                            //color: Color.fromARGB(255, 240, 241, 233),
+                            padding: EdgeInsets.only(left: 15),
+                            width: 180,
+                            height: 170,
+                            child: Text(
+                              whyThisApp['little'],
+                              style: TextStyle(fontSize: 16),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                          SizedBox(width: 15),
+                          Image(
+                              image: NetworkImage(
+                                  'https://img.freepik.com/premium-vector/job-seekers-illustration_335657-4659.jpg?w=740',
+                                  scale: 5)),
+                        ]),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
                           //color: Color.fromARGB(255, 240, 241, 233),
                           padding: EdgeInsets.only(left: 15),
-                          width: 180,
-                          height:  170,
-                          child: Text(
-                            whyThisApp['little'],
-                            style: TextStyle(fontSize: 16),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        SizedBox(width: 15),
-                        Image(image: NetworkImage(
-                              'https://img.freepik.com/premium-vector/job-seekers-illustration_335657-4659.jpg?w=740',
-                              scale: 5)),
-                    ]
-                  ),
-                  ),
-                  Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    //color: Color.fromARGB(255, 240, 241, 233),
-                          padding: EdgeInsets.only(left: 15),
                           width: 340,
-                          height:  170,
+                          height: 170,
                           child: Text(
                             whyThisApp['bigger'],
                             style: TextStyle(fontSize: 16),
                             textAlign: TextAlign.left,
                           ),
-                        ),),
-                ]
-                )
-            )
-            ) 
-          ),
-          SizedBox(height: 20,),
-          Animate(
+                        ),
+                      ),
+                    ])))),
+        SizedBox(
+          height: 20,
+        ),
+        Animate(
             effects: Constants.Fade_effect_options,
             child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-                height:  450,
-                color: Constants.containerColor,
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'What will you find here?',
-                      style: Constants.Tips_Title_style,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Align(
-                  alignment: Alignment.center,
-                  child: 
-                  Row(
-                    children: [
-                        // ignore: prefer_const_literals_to_create_immutables
-                        Container(
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                    height: 450,
+                    color: Constants.containerColor,
+                    child: Column(children: [
+                      const SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'What will you find here?',
+                          style: Constants.Tips_Title_style,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Row(children: [
+                          // ignore: prefer_const_literals_to_create_immutables
+                          Container(
+                            //color: Color.fromARGB(255, 240, 241, 233),
+                            padding: EdgeInsets.only(left: 15),
+                            width: 180,
+                            height: 152,
+                            child: Text(
+                              whatInside['little'],
+                              style: TextStyle(fontSize: 16),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                          SizedBox(width: 15),
+                          Image(
+                              image: NetworkImage(
+                                  'https://img.freepik.com/free-vector/big-data-analytics-abstract-concept-illustration_335657-4860.jpg?w=740&t=st=1686848874~exp=1686849474~hmac=85713165195f76925a9fa57d6f74709ec7058b9ed2ebe6a70d86cd2befa848b1',
+                                  scale: 5)),
+                        ]),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
                           //color: Color.fromARGB(255, 240, 241, 233),
                           padding: EdgeInsets.only(left: 15),
-                          width: 180,
-                          height:  152,
-                          child: Text(
-                            whatInside['little'],
-                            style: TextStyle(fontSize: 16),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        SizedBox(width: 15),
-                        Image(image: NetworkImage(
-                              'https://img.freepik.com/free-vector/big-data-analytics-abstract-concept-illustration_335657-4860.jpg?w=740&t=st=1686848874~exp=1686849474~hmac=85713165195f76925a9fa57d6f74709ec7058b9ed2ebe6a70d86cd2befa848b1',
-                              scale: 5)),
-                    ]
-                  ),
-                  ),
-                  Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    //color: Color.fromARGB(255, 240, 241, 233),
-                          padding: EdgeInsets.only(left: 15),
                           width: 340,
-                          height:  230,
+                          height: 230,
                           child: Text(
                             whatInside['bigger'],
                             style: TextStyle(fontSize: 16),
                             textAlign: TextAlign.left,
                           ),
-                        ),),
-                ]
-                )
-            )
-            ) 
-          ),
-          SizedBox(height: 20,),
-          Animate(
+                        ),
+                      ),
+                    ])))),
+        SizedBox(
+          height: 20,
+        ),
+        Animate(
             effects: Constants.Fade_effect_options,
             child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Container(
-                height:  390,
-                color: Constants.containerColor,
-                child: Column(children: [
-                  const SizedBox(height: 10),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      'Measure your improvements!',
-                      style: Constants.Tips_Title_style,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Align(
-                  alignment: Alignment.center,
-                  child: 
-                  Row(
-                    children: [
-                        // ignore: prefer_const_literals_to_create_immutables
-                        Container(
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                    height: 390,
+                    color: Constants.containerColor,
+                    child: Column(children: [
+                      const SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Measure your improvements!',
+                          style: Constants.Tips_Title_style,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Row(children: [
+                          // ignore: prefer_const_literals_to_create_immutables
+                          Container(
+                            //color: Color.fromARGB(255, 240, 241, 233),
+                            padding: EdgeInsets.only(left: 15),
+                            width: 180,
+                            height: 150,
+                            child: Text(
+                              levelOfSustainability['little'],
+                              style: TextStyle(fontSize: 16),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                          SizedBox(width: 15),
+                          Image(
+                              image: NetworkImage(
+                                  'https://img.freepik.com/premium-vector/teamwork-power-illustration_335657-4717.jpg?w=740',
+                                  scale: 5)),
+                        ]),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
                           //color: Color.fromARGB(255, 240, 241, 233),
                           padding: EdgeInsets.only(left: 15),
-                          width: 180,
-                          height:  150,
-                          child: Text(
-                            levelOfSustainability['little'],
-                            style: TextStyle(fontSize: 16),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        SizedBox(width: 15),
-                        Image(image: NetworkImage(
-                              'https://img.freepik.com/premium-vector/teamwork-power-illustration_335657-4717.jpg?w=740',
-                              scale: 5)),
-                    ]
-                  ),
-                  ),
-                  Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    //color: Color.fromARGB(255, 240, 241, 233),
-                          padding: EdgeInsets.only(left: 15),
                           width: 340,
-                          height:  170,
+                          height: 170,
                           child: Text(
                             levelOfSustainability['bigger'],
                             style: TextStyle(fontSize: 16),
                             textAlign: TextAlign.left,
                           ),
-                        ),),
-                ]
-                )
-            )
-            ) 
-          ),
-      
-        ]
-      ),
-
+                        ),
+                      ),
+                    ])))),
+      ]),
 
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.home),
@@ -379,7 +356,6 @@ class AboutThisApp extends State<AboutThisAppState> {
 
   void _OnLogoutTapConfirm(BuildContext context) {
     // set up the buttons
-<<<<<<< HEAD
     Widget cancelButton = TextButton(
       child: Text("Cancel"),
       onPressed: () {
@@ -388,9 +364,7 @@ class AboutThisApp extends State<AboutThisAppState> {
       },
       style: Constants.TextButtonStyle_Alert,
     );
-=======
-   
->>>>>>> cf1768b0f98610e067cb3a3cd5528f6c9566e835
+
     Widget continueButton = TextButton(
       child: Text("Continue"),
       onPressed: () {

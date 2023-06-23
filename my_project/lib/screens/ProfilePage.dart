@@ -89,7 +89,6 @@ class ProfilePageState extends State<ProfilePage> {
                 image: DecorationImage(
                   image: NetworkImage(
                       'https://img.freepik.com/free-vector/green-trees-leaves-flat-icons-set-oak-aspen-linden-maple-chestnut-clover-plants-isolated-vector-illustration_1284-3022.jpg?w=740&t=st=1684410201~exp=1684410801~hmac=f2643f557b94232a485bd203a769a09ad29aab8c4cb127f98c4fd6bb9fc54341'),
-                  // 'https://img.freepik.com/free-vector/different-colorful-leaves-collection-flat-design_23-2149112268.jpg?w=740&t=st=1684360667~exp=1684361267~hmac=6fa0275bc5b93080c06a7ee690dfcf36d09c2d960fd430c01fa78dec27b26396'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -105,13 +104,14 @@ class ProfilePageState extends State<ProfilePage> {
                         minRadius: 60.0,
                         child: CircleAvatar(
                           radius: 50.0,
-                          //backgroundImage: TO BE IMPLEMENTED
+                          backgroundImage: NetworkImage(
+                              'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png'),
                         ),
                       ),
                     ],
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 30,
                   ),
                   Text(
                     'Andrea Corrado',
@@ -119,6 +119,13 @@ class ProfilePageState extends State<ProfilePage> {
                       fontSize: 35,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 33, 92, 33),
+                      shadows: [
+                        Shadow(
+                          color: Color.fromARGB(255, 30, 5, 5),
+                          blurRadius: 3,
+                          offset: Offset(1, 1),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -138,7 +145,7 @@ class ProfilePageState extends State<ProfilePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '100',
+                          '0',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -160,40 +167,7 @@ class ProfilePageState extends State<ProfilePage> {
                 ),
 
                 const SizedBox(
-                    width: 16), // Add spacing between the circular boxes
-                Expanded(
-                  child: Container(
-                    width: 100,
-                    height: 100,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color.fromARGB(255, 196, 186, 58),
-                    ),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '500',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          'LoS',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white70,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
+                    width: 20), // Add spacing between the circular boxes
                 const SizedBox(
                     width: 16), // Add spacing between the circular boxes
                 Expanded(
@@ -208,7 +182,7 @@ class ProfilePageState extends State<ProfilePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '1',
+                          '100',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -217,7 +191,7 @@ class ProfilePageState extends State<ProfilePage> {
                           ),
                         ),
                         Text(
-                          'Level',
+                          'LoS',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 20,
@@ -309,7 +283,7 @@ class ProfilePageState extends State<ProfilePage> {
     //   child: Text("Cancel"),
     //   onPressed: ()  {
     //     Navigator.of(context).pushReplacement(
-    //         MaterialPageRoute(builder: (context) => const ProfilePage()));},// Must be changed to point at the current page 
+    //         MaterialPageRoute(builder: (context) => const ProfilePage()));},// Must be changed to point at the current page
     //   style: Constants.TextButtonStyle_Alert,
     // );
     Widget continueButton = TextButton(
@@ -320,7 +294,6 @@ class ProfilePageState extends State<ProfilePage> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => LoginPage()));
         // Must be changed to point at the current page
-
       },
       style: Constants.TextButtonStyle_Alert,
     );
@@ -343,3 +316,14 @@ class ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+
+
+
+  // int TotLos(List<Achievements> data){
+  //   int TotLos=0;
+  //   for (int i=0; i<=data.length-1; i++){
+  //     TotLos=TotLos+data[i].levelOfSustainability;
+
+
+  //   }
+  //     return TotLos;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:my_project/Database/entities/achievements.dart';
 import 'package:my_project/Database/entities/questionnaire.dart';
-
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart'; // to view the map
@@ -11,7 +11,6 @@ import 'AboutThisApp.dart';
 import 'LoginPage.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-
 
 int? question1Value;
 int? question2Value;
@@ -26,6 +25,12 @@ class SensPage extends StatefulWidget {
 // ignore: camel_case_types
 class Sens_page extends State<SensPage> {
   late DateTime lastSubmissionDate; // Store the last submission date
+  // ignore: prefer_typing_uninitialized_variables
+  double FLoS = 0.0;
+  int Trees = 0;
+
+  // ignore: non_constant_identifier_names
+  //Future<double>
 
   @override
   void initState() {
@@ -33,6 +38,18 @@ class Sens_page extends State<SensPage> {
 
     // Initialize the last submission date
     lastSubmissionDate = DateTime.now();
+  }
+
+//Calculate the LoS using GetLoS fct
+  void getLoS() async {
+    final newFLoS = await GetLoS(context: context);
+    setState(() {
+      FLoS = newFLoS!;
+      // if the FLoS = 1 (100%) a new tree added
+      if (FLoS >= 1) {
+        Trees += 1;
+      }
+    });
   }
 
   void _showQuestionnaire() {
@@ -183,24 +200,14 @@ class Sens_page extends State<SensPage> {
     );
   }
 
-  // ignore: non_constant_identifier_names
   void _OnLogoutTapConfirm(BuildContext context) {
-    // set up the buttons
-
-    // Widget cancelButton = TextButton(
-    //   child: Text("Cancel"),
-    //   onPressed: () {
-    //     Navigator.of(context).pushReplacement(
-    //         MaterialPageRoute(builder: (context) => const SensPage()));
-    //   },
-    //   style: Constants.TextButtonStyle_Alert,
-    // );
     Widget continueButton = TextButton(
       child: Text("Continue"),
       onPressed: () async {
-        final user_preferences = await SharedPreferences.getInstance();
-        await user_preferences.setBool('Rememeber_login', false);
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>  LoginPage()));
+        final userPreferences = await SharedPreferences.getInstance();
+        await userPreferences.setBool('Rememeber_login', false);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
         // Must be changed to point at the current page
       },
       style: Constants.TextButtonStyle_Alert,
@@ -314,9 +321,9 @@ class Sens_page extends State<SensPage> {
                     radius: 80.0,
                     lineWidth: 12.0,
                     animation: true,
-                    percent: 0.7,
-                    center: const Text(
-                      "70.0%",
+                    percent: FLoS,
+                    center: Text(
+                      '${FLoS.toStringAsFixed(1)}%',
                       style: TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 20.0),
                     ),
@@ -392,11 +399,11 @@ class Sens_page extends State<SensPage> {
                             ),
                           ],
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
-                            'Total Trees Planted: 10',
+                            'Total Trees Planted: $Trees',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 15.0,
                               color: Colors
@@ -429,4 +436,26 @@ class Sens_page extends State<SensPage> {
       //),
     );
   }
+}
+
+//calculate the %LoS
+
+// ignore: non_constant_identifier_names
+Future<double?> GetLoS({required BuildContext context}) async {
+  final databaseRepository =
+      Provider.of<DatabaseRepository>(context, listen: false);
+  List<Achievements> data =
+      await databaseRepository.userAllSingleAchievemnts(1);
+  var sumLoS;
+  var edSum;
+  if (data.isEmpty) {
+    return null; // Return null when the value is not available
+  } else {
+    for (var i = 0; i <= data.length - 1;) {
+      sumLoS += data[i].levelOfSustainability;
+      edSum = sumLoS / (data.length * 1000);
+    }
+  }
+  var LoS = edSum * 100;
+  return LoS!;
 }

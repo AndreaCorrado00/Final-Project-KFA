@@ -59,10 +59,7 @@ dependencies:
   flutter_animate: ^4.1.1+1
   floor: ^1.4.2
 
-<<<<<<< HEAD
-=======
   
->>>>>>> cf1768b0f98610e067cb3a3cd5528f6c9566e835
 dev_dependencies:
   flutter_test:
     sdk: flutter

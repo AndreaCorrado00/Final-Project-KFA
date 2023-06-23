@@ -32,18 +32,15 @@ class databaseTestPage extends StatefulWidget {
 
 // What will you find here:
 // this code hase inside same examples of what can we do with out database. First, decide if you want to simulate
-// an entire week or a real-life situation where you use the database to retrive only the daily data. 
+// an entire week or a real-life situation where you use the database to retrive only the daily data.
 
 // then some function are used to compute the values that must be inserted into the database and other to load data in the correct way
 
-// finally, into the body, you'll find same other function which create the correct visualization of the resource inside the database. 
+// finally, into the body, you'll find same other function which create the correct visualization of the resource inside the database.
 
 // Note that i've made same important assumpionts that i hope simplyfies a lot the workload and the code For example, all values are int.
 
-
-
 class databaseTestPageState extends State<databaseTestPage> {
-
   static const routename = 'StatisticsPage';
   final today = '2023-05-16';
   final tomorrow = '2023-05-17';
@@ -52,116 +49,128 @@ class databaseTestPageState extends State<databaseTestPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        title: 'Database functions test page',
+        home: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Constants.primaryColor,
+              title: const Text('Database functions test page'),
+              automaticallyImplyLeading: true,
+            ),
+            backgroundColor: Constants.primaryLightColor,
+            floatingActionButton: FloatingActionButton(
+                child: const Icon(Icons.punch_clock_sharp),
+                onPressed: () async {
+                  // First: check if there are new data available (= the date is different)
+                  bool newDataReady = await _newDataReady(today);
+                  bool weekData =
+                      true; // if we want to simulate an entire week of loadings.
+                  await _pingImpact(); // connect to impact
+                  await _getAndStoreTokens(); // storing tokens.
+                  // Now we are ready to read data from impact
 
-      title: 'Database functions test page',
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Constants.primaryColor,
+                  // Data for the statistics page
+                  // NB: here the data are collected just for one day.
+                  int steps = await _getStep(today);
+                  int distance = await _getDistance(today);
+                  int activity_time = await _getActivity_time(today);
 
-          title: const Text('Database functions test page'),
-          automaticallyImplyLeading: true,
-        ),
-       
-      backgroundColor:Constants.primaryLightColor,
-      floatingActionButton: FloatingActionButton(
-      child: const Icon(Icons.punch_clock_sharp),
-      
-      onPressed: () async {
-        // First: check if there are new data available (= the date is different)
-        bool newDataReady=await _newDataReady(today);
-        bool weekData=true; // if we want to simulate an entire week of loadings.
-                await _pingImpact(); // connect to impact
-                await _getAndStoreTokens(); // storing tokens.
-                // Now we are ready to read data from impact
+                  // data for the questionnaire
+                  int question1 = 1;
+                  int question2 = 2;
+                  int question3 = 3;
+                  int total = _computeTotalQuestionnaire([
+                    question1,
+                    question2,
+                    question3
+                  ]); // total of the answers
 
-                // Data for the statistics page
-                // NB: here the data are collected just for one day.
-                int steps = await _getStep(today);
-                int distance = await _getDistance(today);
-                int activity_time = await _getActivity_time(today);
+                  // data for the achievements
+                  int today_LoS =
+                      _computeLoS(total, steps, distance, activity_time);
 
-        // data for the questionnaire
-        int question1=1;
-        int question2=2;
-        int question3=3;
-        int total = _computeTotalQuestionnaire([question1,question2,question3]); // total of the answers
+                  // up to now the code works like a real-situation application. I think that we need to load one week of data for our demo.
 
-        // data for the achievements
-        int today_LoS=_computeLoS(total, steps, distance, activity_time);
-
-                // up to now the code works like a real-situation application. I think that we need to load one week of data for our demo.
-
-                 if (newDataReady == true && weekData == false) {
-                  // to use this page, two consecutive dates are uploaded into the db
-                  await Provider.of<DatabaseRepository>(context, listen: false)
-                      .insertData(StatisticsData(
-                          1, today, steps, distance, activity_time));
-                  await Provider.of<DatabaseRepository>(context, listen: false)
-                      .insertAnswers(Questionnaire(
-                          1, today, question1, question2, question3, total));
-                  await Provider.of<DatabaseRepository>(context, listen: false)
-                      .insertAchievements(Achievements(1, today, today_LoS));
-
-                  await Provider.of<DatabaseRepository>(context, listen: false)
-                      .insertData(StatisticsData(
-                          1, tomorrow, steps, distance, activity_time));
-                  await Provider.of<DatabaseRepository>(context, listen: false)
-                      .insertAnswers(Questionnaire(
-                          1, tomorrow, question1, question2, question3, total));
-                  await Provider.of<DatabaseRepository>(context, listen: false)
-                      .insertAchievements(Achievements(1, tomorrow, today_LoS));
-                  print('stored new data');
-                } else if (weekData == true) {
-                  Map weekSteps = await _getWeekSteps(today, oneWeekLater);
-                  List days = await weekSteps.keys.toList();
-                  List steps = await weekSteps.values.toList();
-
-                  Map weekDist = await _getWeekDistance(today, oneWeekLater);
-                  List distance = await weekDist.values.toList();
-
-                  Map weekTime =
-                      await _getWeekActivityTime(today, oneWeekLater);
-                  List activity_time = await weekTime.values.toList();
-
-          for(int i=0;i<7;i++){
-
-                    // per quanto riguarda il questionario, dovremmo simulare 7 risposte diverse date al singolo questionario, oppure semplicamente quel
-                    // giorno si mostra che, aggiungendo dati al questionario, le cose migliorano.
+                  if (newDataReady == true && weekData == false) {
+                    // to use this page, two consecutive dates are uploaded into the db
+                    await Provider.of<DatabaseRepository>(context,
+                            listen: false)
+                        .insertData(StatisticsData(
+                            1, today, steps, distance, activity_time));
+                    await Provider.of<DatabaseRepository>(context,
+                            listen: false)
+                        .insertAnswers(Questionnaire(
+                            1, today, question1, question2, question3, total));
+                    await Provider.of<DatabaseRepository>(context,
+                            listen: false)
+                        .insertAchievements(Achievements(1, today, today_LoS));
 
                     await Provider.of<DatabaseRepository>(context,
                             listen: false)
-                        .insertData(StatisticsData(1, days[i], steps[i],
-                            distance[i], activity_time[i]));
+                        .insertData(StatisticsData(
+                            1, tomorrow, steps, distance, activity_time));
                     await Provider.of<DatabaseRepository>(context,
                             listen: false)
-                        .insertAnswers(Questionnaire(1, days[i], question1,
+                        .insertAnswers(Questionnaire(1, tomorrow, question1,
                             question2, question3, total));
                     await Provider.of<DatabaseRepository>(context,
                             listen: false)
                         .insertAchievements(
-                            Achievements(1, days[i], today_LoS));
-                  }
-                } else {
-                  // otherwise, the data are just update to the new vale (nb: can work with differences into the hours!)
-                  await Provider.of<DatabaseRepository>(context, listen: false)
-                      .updateData(StatisticsData(
-                          1, today, steps, distance, activity_time));
-                  await Provider.of<DatabaseRepository>(context, listen: false)
-                      .updateAnswers(Questionnaire(
-                          1, today, question1, question2, question3, total));
-                  await Provider.of<DatabaseRepository>(context, listen: false)
-                      .updateAchievements(Achievements(1, today, today_LoS));
-                  print('update the data');
-                }}),
+                            Achievements(1, tomorrow, today_LoS));
+                    print('stored new data');
+                  } else if (weekData == true) {
+                    Map weekSteps = await _getWeekSteps(today, oneWeekLater);
+                    List days = await weekSteps.keys.toList();
+                    List steps = await weekSteps.values.toList();
 
-            
+                    Map weekDist = await _getWeekDistance(today, oneWeekLater);
+                    List distance = await weekDist.values.toList();
+
+                    Map weekTime =
+                        await _getWeekActivityTime(today, oneWeekLater);
+                    List activity_time = await weekTime.values.toList();
+
+                    for (int i = 0; i < 7; i++) {
+                      // per quanto riguarda il questionario, dovremmo simulare 7 risposte diverse date al singolo questionario, oppure semplicamente quel
+                      // giorno si mostra che, aggiungendo dati al questionario, le cose migliorano.
+
+                      await Provider.of<DatabaseRepository>(context,
+                              listen: false)
+                          .insertData(StatisticsData(1, days[i], steps[i],
+                              distance[i], activity_time[i]));
+                      await Provider.of<DatabaseRepository>(context,
+                              listen: false)
+                          .insertAnswers(Questionnaire(1, days[i], question1,
+                              question2, question3, total));
+                      await Provider.of<DatabaseRepository>(context,
+                              listen: false)
+                          .insertAchievements(
+                              Achievements(1, days[i], today_LoS));
+                    }
+                  } else {
+                    // otherwise, the data are just update to the new vale (nb: can work with differences into the hours!)
+                    await Provider.of<DatabaseRepository>(context,
+                            listen: false)
+                        .updateData(StatisticsData(
+                            1, today, steps, distance, activity_time));
+                    await Provider.of<DatabaseRepository>(context,
+                            listen: false)
+                        .updateAnswers(Questionnaire(
+                            1, today, question1, question2, question3, total));
+                    await Provider.of<DatabaseRepository>(context,
+                            listen: false)
+                        .updateAchievements(Achievements(1, today, today_LoS));
+                    print('update the data');
+                  }
+                }),
 
 // Her you'll find a simple body with elementary operations on the db.
             body: Column(
               children: [
 // -----------------------------------------------------------------------------------
-        Text('achievements entity queries'),
-        SizedBox(height: 10,),
+                Text('achievements entity queries'),
+                SizedBox(
+                  height: 10,
+                ),
 
                 Consumer<DatabaseRepository>(// calling the consumer
                     builder: (context, dbr, child) {
@@ -314,10 +323,8 @@ class databaseTestPageState extends State<databaseTestPage> {
                         }
                       });
                 }),
-              ],)));
-                
-
-
+              ],
+            )));
   }
 }
 
@@ -554,7 +561,7 @@ Future _getWeekSteps(String startDate, String endDate) async {
   }
 }
 
-// getWeekSteps
+// getWeekDistance
 Future _getWeekDistance(String startDate, String endDate) async {
   // Returns the sum of the steps made into a certain day
 
@@ -606,7 +613,7 @@ Future _getWeekDistance(String startDate, String endDate) async {
   }
 }
 
-// getWeekSteps
+// getWeekActivitytime
 Future _getWeekActivityTime(String startDate, String endDate) async {
   // Returns the sum of the steps made into a certain day
 
@@ -698,27 +705,29 @@ int _computeLoS(int point_answers, int daily_steps, int daily_distance,
   }
 }
 
+List<int> _createStepsDataForGraph(List<StatisticsData> data) {
+  // require to pass to the function an item of userAllSingleStatisticsData query
 
-
-
-
-
-  List<int> _createStepsDataForGraph( List<StatisticsData> data) {
-    // require to pass to the function an item of userAllSingleStatisticsData query
-
-    List<int> out=[0,0,0,0,0,0,0]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
-    int lnList=data.length; // the length of the list of items
-    // if data are collected for less than one week, the elements are associated one-to-one with the days
-    if(lnList<out.length){
-    for(int i=0; i<=lnList-1; i++){
-      out[i]=data[i].dailySteps;
-
-    }}
-    // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
-    else {
-      for(int i=0; i<=out.length-1; i++){
-      out[i]=data[lnList-7+i].dailySteps;
-
+  List<int> out = [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
+  int lnList = data.length; // the length of the list of items
+  // if data are collected for less than one week, the elements are associated one-to-one with the days
+  if (lnList < out.length) {
+    for (int i = 0; i <= lnList - 1; i++) {
+      out[i] = data[i].dailySteps;
+    }
+  }
+  // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+  else {
+    for (int i = 0; i <= out.length - 1; i++) {
+      out[i] = data[lnList - 7 + i].dailySteps;
     }
   }
   // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
@@ -729,42 +738,55 @@ int _computeLoS(int point_answers, int daily_steps, int daily_distance,
 List<int> _createSDistanceDataForGraph(List<StatisticsData> data) {
   // require to pass to the function an item of userAllSingleStatisticsData query
 
-    List<int> out=[0,0,0,0,0,0,0]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
-    int lnList=data.length; // the length of the list of items
-    // if data are collected for less than one week, the elements are associated one-to-one with the days
-    if(lnList<out.length){
-    for(int i=0; i<=lnList-1; i++){
-      out[i]=data[i].dailyDistance;
-
-    }}
-    // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
-    else {
-      for(int i=0; i<=out.length-1; i++){
-      out[i]=data[lnList-7+i].dailyDistance;
-
+  List<int> out = [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
+  int lnList = data.length; // the length of the list of items
+  // if data are collected for less than one week, the elements are associated one-to-one with the days
+  if (lnList < out.length) {
+    for (int i = 0; i <= lnList - 1; i++) {
+      out[i] = data[i].dailyDistance;
+    }
+  }
+  // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+  else {
+    for (int i = 0; i <= out.length - 1; i++) {
+      out[i] = data[lnList - 7 + i].dailyDistance;
     }
   }
 
   return out;
 }
 
+List<int> _createActivityTimeDataForGraph(List<StatisticsData> data) {
+  // require to pass to the function an item of userAllSingleStatisticsData query
 
-  List<int> _createActivityTimeDataForGraph( List<StatisticsData> data) {
-    // require to pass to the function an item of userAllSingleStatisticsData query
-
-    List<int> out=[0,0,0,0,0,0,0]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
-    int lnList=data.length; // the length of the list of items
-    // if data are collected for less than one week, the elements are associated one-to-one with the days
-    if(lnList<out.length){
-    for(int i=0; i<=lnList-1; i++){
-      out[i]=data[i].dailyActivityTime;
-
-    }}
-    // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
-    else {
-      for(int i=0; i<=out.length-1; i++){
-      out[i]=data[lnList-7+i].dailyActivityTime;
-
+  List<int> out = [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
+  int lnList = data.length; // the length of the list of items
+  // if data are collected for less than one week, the elements are associated one-to-one with the days
+  if (lnList < out.length) {
+    for (int i = 0; i <= lnList - 1; i++) {
+      out[i] = data[i].dailyActivityTime;
+    }
+  }
+  // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+  else {
+    for (int i = 0; i <= out.length - 1; i++) {
+      out[i] = data[lnList - 7 + i].dailyActivityTime;
     }
   }
   // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
@@ -772,40 +794,39 @@ List<int> _createSDistanceDataForGraph(List<StatisticsData> data) {
   return out;
 }
 
+List<int> _createLoSDataForGraph(List<Achievements> data) {
+  // require to pass to the function an item of userAllSingleAchievemnts query
 
-
-
-  List<int> _createLoSDataForGraph( List<Achievements> data) {
-    // require to pass to the function an item of userAllSingleAchievemnts query 
-
-    List<int> out=[0,0,0,0,0,0,0]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
-    int lnList=data.length; // the length of the list of items
-    // if data are collected for less than one week, the elements are associated one-to-one with the days
-    if(lnList<out.length){
-    for(int i=0; i<=out.length-1; i++){
-      out[i]=data[i].levelOfSustainability;
-
-    }}
-    // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
-    else {
-      for(int i=0; i<=out.length-1; i++){
-      out[i]=data[lnList-7+i].levelOfSustainability;
+  List<int> out = [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
+  int lnList = data.length; // the length of the list of items
+  // if data are collected for less than one week, the elements are associated one-to-one with the days
+  if (lnList < out.length) {
+    for (int i = 0; i <= out.length - 1; i++) {
+      out[i] = data[i].levelOfSustainability;
     }
-    
-    }
-    return out;
   }
-
-
-
-  int _reachedLoS(List<Achievements> data){
-    // basically the sum of allll the LoS recorded by the user
-    int out=0;
-    for (int i=0; i<=data.length-1; i++){
-      out=out+data[i].levelOfSustainability;
-
-
+  // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+  else {
+    for (int i = 0; i <= out.length - 1; i++) {
+      out[i] = data[lnList - 7 + i].levelOfSustainability;
     }
-      return out;
   }
+  return out;
+}
 
+int _reachedLoS(List<Achievements> data) {
+  // basically the sum of allll the LoS recorded by the user
+  int out = 0;
+  for (int i = 0; i <= data.length - 1; i++) {
+    out = out + data[i].levelOfSustainability;
+  }
+  return out;
+}

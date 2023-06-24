@@ -196,11 +196,11 @@ static const routename = 'StatisticsPage';
               if(snapshot.hasData){
                 final data = snapshot.data as List<StatisticsData>;
                 if(data.length==0){
-                  return _noDataGraph('Distance');
+                  return _noDataGraph('Daily Kilometers');
                 }
                 else{
                 List<double> weekDist= _createSDistanceDataForGraph(data); // so just a list created with a function
-               return _dataGraph(weekDist, 'Distance');
+               return _dataGraph(weekDist, 'Daily Kilometers');
               }}
               else{
                 return CircularProgressIndicator();
@@ -219,12 +219,12 @@ static const routename = 'StatisticsPage';
               if(snapshot.hasData){
                 final data = snapshot.data as List<StatisticsData>;
                 if(data.length==0){
-                  return _noDataGraph('Activity Time');
+                  return _noDataGraph('Minutes of Activity');
                 }
                 else{
                   
                 List<double> weekActivity= _createActivityTimeDataForGraph(data); // so just a list created with a function
-               return _dataGraph(weekActivity, 'Activity Time');
+               return _dataGraph(weekActivity, 'Minutes of Activity');
               }}
               else{
                 return CircularProgressIndicator();
@@ -697,9 +697,9 @@ int _computeLoS(int daily_steps,int daily_distance,int daily_activityTime, {int 
 
     // Defining of weights
     double ans_w=1;
-    double steps_w=0.1;
-    double dist_w=0.1;
-    double time_w=0.1;
+    double steps_w=0.01;
+    double dist_w=0.02;
+    double time_w=0.2;
 
     int malus=-50; //for example
 
@@ -795,6 +795,16 @@ int _computeLoS(int daily_steps,int daily_distance,int daily_activityTime, {int 
   }
 
 Widget _noDataGraph(String title){
+  String? description = '';
+  if ('$title' == 'Steps'){
+      description = 'This barplot summarises daily steps in week';
+  }else if ('$title' == 'Daily Kilometers'){
+      description = 'This barplot summarises daily distance covered in a week';
+  }else if ('$title' == 'Minutes of Activity'){
+      description = 'This barplot summarises the amount of daily activity time covered in a week';
+  }else if ('$title' == 'Level of Sustainability'){
+      description = 'This barplot summarises the daily trend of level of sustainability in a weekly view';
+  }
 
  return  Padding(padding: const EdgeInsets.all(15),
             child: Animate(
@@ -808,16 +818,32 @@ Widget _noDataGraph(String title){
               crossAxisAlignment: CrossAxisAlignment.center,
               children:  [
                 SizedBox(height: 10),
-                 Text('$title', style: TextStyle(
-                  color: Color.fromARGB(255, 1, 76, 4), fontSize: 24, fontWeight: FontWeight.bold,
+                Tooltip(
+                  message: description,
+                  textAlign: TextAlign.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Constants.primaryLightColor,
+                    border: Border.all(
+                      width: 2,
+                      color: Constants.primaryColor,
+                       ),
+                    ),
+                  height: 30,
+                  padding: const EdgeInsets.all(8.0),
+                  preferBelow: true,
+                  textStyle: const TextStyle(
+                    fontSize: 15,
+                    
                   ),
+                  showDuration: const Duration(seconds: 2),
+                  waitDuration: const Duration(seconds: 1),
+                  child:  Text('$title', style: TextStyle(
+                  color: Constants.secondaryColor, fontSize: 24, fontWeight: FontWeight.bold, 
                   ),
-                IconButton(
-                  onPressed: () {
-                  Text('Prova testo');
-                  },
-                  icon: Icon(Icons.directions_walk),
+                  textAlign: TextAlign.center,
                   ),
+                ),
                   SizedBox(height: 15),
                 
                 SizedBox(
@@ -836,9 +862,9 @@ Widget _dataGraph(List<double> data, String title){
   String? description = '';
   if ('$title' == 'Steps'){
       description = 'This barplot summarises daily steps in week';
-  }else if ('$title' == 'Distance'){
+  }else if ('$title' == 'Daily Kilometers'){
       description = 'This barplot summarises daily distance covered in a week';
-  }else if ('$title' == 'Activity Time'){
+  }else if ('$title' == 'Minutes of Activity'){
       description = 'This barplot summarises the amount of daily activity time covered in a week';
   }else if ('$title' == 'Level of Sustainability'){
       description = 'This barplot summarises the daily trend of level of sustainability in a weekly view';
@@ -864,6 +890,7 @@ Widget _dataGraph(List<double> data, String title){
                     color: Constants.primaryLightColor,
                     border: Border.all(
                       width: 2,
+                      color: Constants.primaryColor,
                        ),
                     ),
                   height: 30,

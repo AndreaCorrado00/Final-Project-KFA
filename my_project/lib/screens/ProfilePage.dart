@@ -1,4 +1,316 @@
-//run
+// //run
+// import 'package:flutter/material.dart';
+// import 'package:my_project/screens/AboutThisApp.dart';
+// import 'package:my_project/screens/LoginPage.dart';
+// import 'package:my_project/utils/constants.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+
+// class ProfilePage extends StatefulWidget {
+//   const ProfilePage({super.key});
+
+//   @override
+//   ProfilePageState createState() => ProfilePageState();
+// }
+// var Trees;
+//   var LoS;
+
+// class ProfilePageState extends State<ProfilePage> {
+
+//   static const routename = 'ProfileScreen';
+//   @override
+//   Widget build(BuildContext context) {
+//     print('${ProfilePageState.routename} built');
+//     return MaterialApp(
+//       title: 'Profile ',
+//       home: Scaffold(
+//         appBar: AppBar(
+//           backgroundColor: Constants.primaryColor,
+//           title: Text('Profile'),
+//           //actions: [IconButton(onPressed: () {}, icon: Icon(Icons.settings))],
+//           //automaticallyImplyLeading: true,
+//         ),
+//         drawer: Drawer(
+//           backgroundColor: Constants.secondaryColor,
+//           child: Column(
+//             children: [
+//               SizedBox(
+//                 height: 100,
+//               ),
+//               Row(
+//                 children: [
+//                   TextButton(
+//                     style: Constants.TextButtonStyle_Drawer,
+//                     onPressed: () {
+//                       Navigator.push(
+//                           context,
+//                           MaterialPageRoute(
+//                               builder: (context) => AboutThisAppState()));
+//                     },
+//                     child: const Text('About this App'),
+//                   ),
+//                   Icon(
+//                     Icons.help_outline,
+//                     color: Constants.secondarylightColor,
+//                     size: 24.0,
+//                   ),
+//                 ],
+//               ),
+//               SizedBox(
+//                 width: 300,
+//                 height: 1,
+//               ),
+//               Row(
+//                 children: [
+//                   TextButton(
+//                     style: Constants.TextButtonStyle_Drawer,
+//                     onPressed: () {
+//                       _OnLogoutTapConfirm(context);
+//                     },
+//                     child: const Text('Logout'),
+//                   ),
+//                   const Icon(
+//                     IconData(0xe3b3, fontFamily: 'MaterialIcons'),
+//                     color: Constants.secondarylightColor,
+//                     size: 24.0,
+//                     semanticLabel: 'Text to announce in accessibility modes',
+//                   ),
+//                 ],
+//               ),
+//               const SizedBox(
+//                 width: 200,
+//                 height: 10,
+//               ),
+//             ],
+//           ),
+//         ),
+//         backgroundColor: Color.fromARGB(255, 255, 255, 255),
+//         body: ListView(
+//           children: <Widget>[
+//             Container(
+//               height: 250,
+//               decoration: const BoxDecoration(
+//                 image: DecorationImage(
+//                   image: NetworkImage(
+//                       'https://img.freepik.com/free-vector/green-trees-leaves-flat-icons-set-oak-aspen-linden-maple-chestnut-clover-plants-isolated-vector-illustration_1284-3022.jpg?w=740&t=st=1684410201~exp=1684410801~hmac=f2643f557b94232a485bd203a769a09ad29aab8c4cb127f98c4fd6bb9fc54341'),
+//                   fit: BoxFit.cover,
+//                 ),
+//               ),
+//               child: const Column(
+//                 crossAxisAlignment: CrossAxisAlignment.center,
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: <Widget>[
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                     children: <Widget>[
+//                       CircleAvatar(
+//                         backgroundColor: Colors.white70,
+//                         minRadius: 60.0,
+//                         child: CircleAvatar(
+//                           radius: 50.0,
+//                           backgroundImage: NetworkImage(
+//                               'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png'),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                   SizedBox(
+//                     height: 30,
+//                   ),
+//                   Text(
+//                     'Andrea Corrado',
+//                     style: TextStyle(
+//                       fontSize: 35,
+//                       fontWeight: FontWeight.bold,
+//                       color: Color.fromARGB(255, 33, 92, 33),
+//                       shadows: [
+//                         Shadow(
+//                           color: Color.fromARGB(255, 30, 5, 5),
+//                           blurRadius: 3,
+//                           offset: Offset(1, 1),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             Row(
+//               children: <Widget>[
+//                 Expanded(
+//                   child: Container(
+//                     width: 100,
+//                     height: 100,
+//                     decoration: const BoxDecoration(
+//                       shape: BoxShape.circle,
+//                       color: Color.fromARGB(255, 220, 211, 51),
+//                     ),
+//                     child: const Column(
+//                       mainAxisAlignment: MainAxisAlignment.center,
+//                       children: [
+//                         Text(
+//                           '0',
+//                           textAlign: TextAlign.center,
+//                           style: TextStyle(
+//                             fontWeight: FontWeight.bold,
+//                             fontSize: 35,
+//                             color: Colors.white,
+//                           ),
+//                         ),
+//                         Text(
+//                           'Trees',
+//                           textAlign: TextAlign.center,
+//                           style: TextStyle(
+//                             fontSize: 15,
+//                             color: Colors.white70,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+
+//                 const SizedBox(
+//                     width: 20), // Add spacing between the circular boxes
+//                 const SizedBox(
+//                     width: 16), // Add spacing between the circular boxes
+//                 Expanded(
+//                   child: Container(
+//                     width: 100,
+//                     height: 100,
+//                     decoration: const BoxDecoration(
+//                       shape: BoxShape.circle,
+//                       color: Color.fromARGB(255, 176, 167, 37),
+//                     ),
+//                     child: const Column(
+//                       mainAxisAlignment: MainAxisAlignment.center,
+//                       children: [
+//                         Text(
+//                           '$LoS',
+//                           textAlign: TextAlign.center,
+//                           style: TextStyle(
+//                             fontWeight: FontWeight.bold,
+//                             fontSize: 30,
+//                             color: Colors.white,
+//                           ),
+//                         ),
+//                         Text(
+//                           'LoS',
+//                           textAlign: TextAlign.center,
+//                           style: TextStyle(
+//                             fontSize: 20,
+//                             color: Colors.white70,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//             Container(
+//               child: const Column(
+//                 children: <Widget>[
+//                   ListTile(
+//                     title: Text(
+//                       'Email',
+//                       style: TextStyle(
+//                         color: Constants.secondaryColor,
+//                         fontSize: 20,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                     subtitle: Text(
+//                       'andrea.corrado00@gmail.com',
+//                       style: TextStyle(fontSize: 18),
+//                     ),
+//                   ),
+//                   Divider(),
+//                   ListTile(
+//                     title: Text(
+//                       'Your device',
+//                       style: TextStyle(
+//                         color: Constants.secondaryColor,
+//                         fontSize: 20,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                     subtitle: Text(
+//                       'Amazfit GTS (2020)',
+//                       style: TextStyle(fontSize: 18),
+//                     ),
+//                   ),
+//                   Divider(),
+//                   ListTile(
+//                     title: Text(
+//                       'Password',
+//                       style: TextStyle(
+//                         color: Constants.secondaryColor,
+//                         fontSize: 20,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                     subtitle: Text(
+//                       '******',
+//                       style: TextStyle(fontSize: 18),
+//                     ),
+//                   ),
+//                   Divider(),
+//                   ListTile(
+//                     title: Text(
+//                       'Connected services',
+//                       style: TextStyle(
+//                         color: Constants.secondaryColor,
+//                         fontSize: 20,
+//                         fontWeight: FontWeight.bold,
+//                       ),
+//                     ),
+//                     subtitle: Text(
+//                       'Strava,Komoot, ...',
+//                       style: TextStyle(fontSize: 18),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             )
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+// // ignore: non_constant_identifier_names
+//   void _OnLogoutTapConfirm(BuildContext context) {
+//     Widget continueButton = TextButton(
+//       child: Text("Continue"),
+//       onPressed: () async {
+//         final user_preferences = await SharedPreferences.getInstance();
+//         await user_preferences.setBool('Rememeber_login', false);
+//         Navigator.push(
+//             context, MaterialPageRoute(builder: (context) => LoginPage()));
+//         // Must be changed to point at the current page
+//       },
+//       style: Constants.TextButtonStyle_Alert,
+//     );
+//     // set up the AlertDialog
+//     AlertDialog alert = AlertDialog(
+//       title: const Text("Logout"),
+//       content: const Text("Are you sure you want to logout?"),
+//       actions: [
+//         //cancelButton,
+//         continueButton,
+//       ],
+//       backgroundColor: Constants.primaryLightColor,
+//     );
+//     // show the dialog
+//     showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return alert;
+//       },
+//     );
+//   }
+// }
+
 import 'package:flutter/material.dart';
 import 'package:my_project/screens/AboutThisApp.dart';
 import 'package:my_project/screens/LoginPage.dart';
@@ -6,31 +318,36 @@ import 'package:my_project/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  ProfilePageState createState() => ProfilePageState();
+  State<StatefulWidget> createState() => ProfilePageState();
 }
 
 class ProfilePageState extends State<ProfilePage> {
-  static const routename = 'ProfileScreen';
+  var Trees;
+  var LoS;
+
+  @override
+  void initState() {
+    super.initState();
+    getTreesLoSValue(); // Call the function to retrieve Trees and LoS values
+  }
+
   @override
   Widget build(BuildContext context) {
-    print('${ProfilePageState.routename} built');
     return MaterialApp(
-      title: 'Profile ',
+      title: 'Profile',
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Constants.primaryColor,
-          title: Text('Profile'),
-          //actions: [IconButton(onPressed: () {}, icon: Icon(Icons.settings))],
-          //automaticallyImplyLeading: true,
+          title: const Text('Profile'),
         ),
         drawer: Drawer(
           backgroundColor: Constants.secondaryColor,
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 100,
               ),
               Row(
@@ -45,14 +362,14 @@ class ProfilePageState extends State<ProfilePage> {
                     },
                     child: const Text('About this App'),
                   ),
-                  Icon(
+                  const Icon(
                     Icons.help_outline,
                     color: Constants.secondarylightColor,
                     size: 24.0,
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 width: 300,
                 height: 1,
               ),
@@ -80,7 +397,7 @@ class ProfilePageState extends State<ProfilePage> {
             ],
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         body: ListView(
           children: <Widget>[
             Container(
@@ -115,7 +432,7 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                   Text(
                     'Andrea Corrado',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 35,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 33, 92, 33),
@@ -141,19 +458,19 @@ class ProfilePageState extends State<ProfilePage> {
                       shape: BoxShape.circle,
                       color: Color.fromARGB(255, 220, 211, 51),
                     ),
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '0',
+                          '$Trees',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 35,
                             color: Colors.white,
                           ),
                         ),
-                        Text(
+                        const Text(
                           'Trees',
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -165,7 +482,6 @@ class ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-
                 const SizedBox(
                     width: 20), // Add spacing between the circular boxes
                 const SizedBox(
@@ -178,19 +494,19 @@ class ProfilePageState extends State<ProfilePage> {
                       shape: BoxShape.circle,
                       color: Color.fromARGB(255, 176, 167, 37),
                     ),
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '100',
+                          '${(LoS * 100).toStringAsFixed(2)}%',
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 30,
+                            fontSize: 25,
                             color: Colors.white,
                           ),
                         ),
-                        Text(
+                        const Text(
                           'LoS',
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -205,10 +521,10 @@ class ProfilePageState extends State<ProfilePage> {
               ],
             ),
             Container(
-              child: const Column(
+              child: Column(
                 children: <Widget>[
                   ListTile(
-                    title: Text(
+                    title: const Text(
                       'Email',
                       style: TextStyle(
                         color: Constants.secondaryColor,
@@ -216,14 +532,14 @@ class ProfilePageState extends State<ProfilePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: Text(
+                    subtitle: const Text(
                       'andrea.corrado00@gmail.com',
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
-                  Divider(),
+                  const Divider(),
                   ListTile(
-                    title: Text(
+                    title: const Text(
                       'Your device',
                       style: TextStyle(
                         color: Constants.secondaryColor,
@@ -231,14 +547,14 @@ class ProfilePageState extends State<ProfilePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: Text(
+                    subtitle: const Text(
                       'Amazfit GTS (2020)',
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
-                  Divider(),
+                  const Divider(),
                   ListTile(
-                    title: Text(
+                    title: const Text(
                       'Password',
                       style: TextStyle(
                         color: Constants.secondaryColor,
@@ -246,14 +562,14 @@ class ProfilePageState extends State<ProfilePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: Text(
+                    subtitle: const Text(
                       '******',
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
-                  Divider(),
+                  const Divider(),
                   ListTile(
-                    title: Text(
+                    title: const Text(
                       'Connected services',
                       style: TextStyle(
                         color: Constants.secondaryColor,
@@ -261,7 +577,7 @@ class ProfilePageState extends State<ProfilePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: Text(
+                    subtitle: const Text(
                       'Strava,Komoot, ...',
                       style: TextStyle(fontSize: 18),
                     ),
@@ -275,39 +591,25 @@ class ProfilePageState extends State<ProfilePage> {
     );
   }
 
-// ignore: non_constant_identifier_names
   void _OnLogoutTapConfirm(BuildContext context) {
-    // set up the buttons
-
-    // Widget cancelButton = TextButton(
-    //   child: Text("Cancel"),
-    //   onPressed: ()  {
-    //     Navigator.of(context).pushReplacement(
-    //         MaterialPageRoute(builder: (context) => const ProfilePage()));},// Must be changed to point at the current page
-    //   style: Constants.TextButtonStyle_Alert,
-    // );
     Widget continueButton = TextButton(
-      child: Text("Continue"),
+      child: const Text("Continue"),
       onPressed: () async {
-        final user_preferences = await SharedPreferences.getInstance();
-        await user_preferences.setBool('Rememeber_login', false);
+        final userPreferences = await SharedPreferences.getInstance();
+        await userPreferences.setBool('Remember_login', false);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => LoginPage()));
-        // Must be changed to point at the current page
       },
       style: Constants.TextButtonStyle_Alert,
     );
-    // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: const Text("Logout"),
       content: const Text("Are you sure you want to logout?"),
       actions: [
-        //cancelButton,
         continueButton,
       ],
       backgroundColor: Constants.primaryLightColor,
     );
-    // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -315,15 +617,16 @@ class ProfilePageState extends State<ProfilePage> {
       },
     );
   }
+
+  Future<void> getTreesLoSValue() async {
+    final sp = await SharedPreferences.getInstance();
+    final storedTrees = sp.getInt('trees');
+    final storedLoS = sp.getDouble('FLoS');
+    if (storedTrees != null && storedLoS != null) {
+      setState(() {
+        Trees = storedTrees;
+        LoS = storedLoS;
+      });
+    }
+  }
 }
-
-
-
-  // int TotLos(List<Achievements> data){
-  //   int TotLos=0;
-  //   for (int i=0; i<=data.length-1; i++){
-  //     TotLos=TotLos+data[i].levelOfSustainability;
-
-
-  //   }
-  //     return TotLos;

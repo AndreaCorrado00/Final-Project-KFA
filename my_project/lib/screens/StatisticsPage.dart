@@ -88,6 +88,7 @@ class StatisticsPageState extends State<StatisticsPage> {
 
                   for (int i = 0; i < 7; i++) {
                     int today_LoS =
+
                         _computeLoS(steps[i], distance[i], activity_time[i],0);
 
                     await Provider.of<DatabaseRepository>(context,
@@ -167,8 +168,7 @@ class StatisticsPageState extends State<StatisticsPage> {
         ),
         backgroundColor: Color.fromARGB(189, 212, 214, 211),
         body: ListView(
-          children: [
-          
+          children: [          
           // ----------------------------Steps graph OK 
           Consumer<DatabaseRepository>(
           builder: (context, dbr, child) {
@@ -285,6 +285,7 @@ class StatisticsPageState extends State<StatisticsPage> {
             // data for the achievements
             // In this page, since the user could not even complete the homepage questionnaire, the LoS is computed by setting to zero the points of the questionnaire.
             // This is not a problem becouse the function which creates the list of LoS receive data from the db and not frum this function!
+
             int today_LoS = _computeLoS(steps, distance, activity_time,0);
 
             // Writing data:
@@ -296,6 +297,7 @@ class StatisticsPageState extends State<StatisticsPage> {
               sp.setInt("Activity", activity_time);
               final total = 0;
               sp.setInt('Total_Q', total);
+
               int  out = _computeLoS(steps, distance, activity_time, total);
               sp.setInt("LoS", out);
               await Provider.of<DatabaseRepository>(context, listen: false)
@@ -303,6 +305,7 @@ class StatisticsPageState extends State<StatisticsPage> {
                       StatisticsData(1, today, steps, distance, activity_time));
               // the date is changed, ones upon a day the questionnaire in inserted
               await Provider.of<DatabaseRepository>(context, listen: false)
+
                   .insertAnswers(Questionnaire(1, today, 0,0,0,total));
               await Provider.of<DatabaseRepository>(context, listen: false)
                   .insertAchievements(Achievements(1, today, out));
@@ -337,6 +340,7 @@ class StatisticsPageState extends State<StatisticsPage> {
                   .updateData(
                       StatisticsData(1, today, steps, distance, activity_time));
               await Provider.of<DatabaseRepository>(context, listen: false)
+
                   .insertAnswers(Questionnaire(1, today, 0,0,0,total!));
               await Provider.of<DatabaseRepository>(context, listen: false)
                   .updateAchievements(Achievements(1, today, out));
@@ -763,6 +767,7 @@ int _computeLoS(int daily_steps, int daily_distance, int daily_activityTime,
     int point_answers) {
   //For now, it's just a sum. In the future will be a weighted sum
 
+
     // Defining of weights
     double ans_w=1;
     double steps_w=0.01;
@@ -873,6 +878,7 @@ List<double> _createLoSDataForGraph(List<Achievements> data) {
   return out;
 }
 
+
 Widget _noDataGraph(String title){
   String? description = '';
   if ('$title' == 'Steps'){
@@ -906,6 +912,7 @@ Widget _noDataGraph(String title){
                     border: Border.all(
                       width: 2,
                       color: Constants.primaryColor,
+
                        ),
                     ),
                   height: 30,
@@ -913,6 +920,7 @@ Widget _noDataGraph(String title){
                   preferBelow: true,
                   textStyle: const TextStyle(
                     fontSize: 15,
+
                     
                   ),
                   showDuration: const Duration(seconds: 2),
@@ -921,6 +929,7 @@ Widget _noDataGraph(String title){
                   color: Constants.secondaryColor, fontSize: 24, fontWeight: FontWeight.bold, 
                   ),
                   textAlign: TextAlign.center,
+
                   ),
                 ),
                   SizedBox(height: 15),
@@ -937,6 +946,7 @@ Widget _noDataGraph(String title){
         ),
       ));
 }
+
 
 Widget _dataGraph(List<double> data, String title){
   String? description = '';
@@ -970,7 +980,7 @@ Widget _dataGraph(List<double> data, String title){
                     color: Constants.primaryLightColor,
                     border: Border.all(
                       width: 2,
-                      color: Constants.primaryColor,
+
                        ),
                     ),
                   height: 30,

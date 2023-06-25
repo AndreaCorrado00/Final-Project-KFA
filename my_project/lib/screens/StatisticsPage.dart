@@ -8,6 +8,10 @@ import 'package:intl/intl.dart';
 import 'package:my_project/screens/AboutThisApp.dart';
 
 import 'package:my_project/screens/Barplot/bar_graph.dart';
+import 'package:my_project/utils/constants.dart';
+import 'package:percent_indicator/percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:my_project/screens/Barplot/bar_graph.dart';
 import 'package:my_project/screens/LoginPage.dart';
 import 'package:my_project/screens/databaseCodesAndFunctions.dart';
 import 'package:my_project/utils/constants.dart';
@@ -84,7 +88,7 @@ class StatisticsPageState extends State<StatisticsPage> {
 
                   for (int i = 0; i < 7; i++) {
                     int today_LoS =
-                        _computeLoS(steps[i], distance[i], activity_time[i]);
+                        _computeLoS(steps[i], distance[i], activity_time[i],0);
 
                     await Provider.of<DatabaseRepository>(context,
                             listen: false)
@@ -164,97 +168,101 @@ class StatisticsPageState extends State<StatisticsPage> {
         backgroundColor: Color.fromARGB(189, 212, 214, 211),
         body: ListView(
           children: [
-            // ----------------------------Steps graph OK
-            Consumer<DatabaseRepository>(builder: (context, dbr, child) {
-              List<StatisticsData> initialData = [
-                StatisticsData(0, '0000', 0, 0, 0)
-              ];
-              return FutureBuilder(
-                  initialData: initialData,
-                  future: dbr.userAllSingleStatisticsData(1),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final data = snapshot.data as List<StatisticsData>;
-                      if (data.length == 0) {
-                        return _noDataGraph('Steps');
-                      } else {
-                        List<double> week_steps = _createStepsDataForGraph(
-                            data); // so just a list created with a function
-                        return _dataGraph(week_steps, 'Steps');
-                      }
-                    } else {
-                      return CircularProgressIndicator();
-                    }
-                  });
-            }),
-            // ------------------------------------------ distance graph UPDATE
-            Consumer<DatabaseRepository>(builder: (context, dbr, child) {
-              List<StatisticsData> initialData = [
-                StatisticsData(0, '0000', 0, 0, 0)
-              ];
-              return FutureBuilder(
-                  initialData: initialData,
-                  future: dbr.userAllSingleStatisticsData(1),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final data = snapshot.data as List<StatisticsData>;
-                      if (data.length == 0) {
-                        return _noDataGraph('Distance');
-                      } else {
-                        List<double> weekDist = _createSDistanceDataForGraph(
-                            data); // so just a list created with a function
-                        return _dataGraph(weekDist, 'Distance');
-                      }
-                    } else {
-                      return CircularProgressIndicator();
-                    }
-                  });
-            }),
-            // ----------------------------------------------- activity time graph UPDATE
-            Consumer<DatabaseRepository>(builder: (context, dbr, child) {
-              List<StatisticsData> initialData = [
-                StatisticsData(0, '0000', 0, 0, 0)
-              ];
-              return FutureBuilder(
-                  initialData: initialData,
-                  future: dbr.userAllSingleStatisticsData(1),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final data = snapshot.data as List<StatisticsData>;
-                      if (data.length == 0) {
-                        return _noDataGraph('Activity Time');
-                      } else {
-                        List<double> weekActivity =
-                            _createActivityTimeDataForGraph(
-                                data); // so just a list created with a function
-                        return _dataGraph(weekActivity, 'Activity Time');
-                      }
-                    } else {
-                      return CircularProgressIndicator();
-                    }
-                  });
-            }),
-            // ---------------------------------------------------LoS graph UPDATE
-            Consumer<DatabaseRepository>(builder: (context, dbr, child) {
-              List<Achievements> initialData = [Achievements(0, '0000', 0)];
-              return FutureBuilder(
-                  initialData: initialData,
-                  future: dbr.userAllSingleAchievemnts(1),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final data = snapshot.data as List<Achievements>;
-                      if (data.length == 0) {
-                        return _noDataGraph('Level of Sustainability');
-                      } else {
-                        List<double> weekLoS = _createLoSDataForGraph(
-                            data); // so just a list created with a function
-                        return _dataGraph(weekLoS, 'Level of Sustainability');
-                      }
-                    } else {
-                      return CircularProgressIndicator();
-                    }
-                  });
-            }),
+          
+          // ----------------------------Steps graph OK 
+          Consumer<DatabaseRepository>(
+          builder: (context, dbr, child) {
+            List<StatisticsData> initialData=[StatisticsData(0, '0000', 0, 0, 0)];
+          return FutureBuilder(
+            initialData: initialData,
+            future: dbr.userAllSingleStatisticsData(1),
+            builder: (context,snapshot){
+              if(snapshot.hasData){
+                final data = snapshot.data as List<StatisticsData>;
+                if(data.length==0){
+                  return _noDataGraph('Steps');
+                }
+                else{
+                List<double> week_steps= _createStepsDataForGraph(data); // so just a list created with a function
+               return _dataGraph(week_steps, 'Steps');
+              }}
+              else{
+                return CircularProgressIndicator();
+              }
+            }
+          );}
+    ),
+    // ------------------------------------------ distance graph UPDATE
+          Consumer<DatabaseRepository>(
+          builder: (context, dbr, child) {
+            List<StatisticsData> initialData=[StatisticsData(0, '0000', 0, 0, 0)];
+          return FutureBuilder(
+            initialData: initialData,
+            future: dbr.userAllSingleStatisticsData(1),
+            builder: (context,snapshot){
+              if(snapshot.hasData){
+                final data = snapshot.data as List<StatisticsData>;
+                if(data.length==0){
+                  return _noDataGraph('Daily Kilometers');
+                }
+                else{
+                List<double> weekDist= _createSDistanceDataForGraph(data); // so just a list created with a function
+               return _dataGraph(weekDist, 'Daily Kilometers');
+              }}
+              else{
+                return CircularProgressIndicator();
+              }
+            }
+          );}
+    ),
+    // ----------------------------------------------- activity time graph UPDATE
+          Consumer<DatabaseRepository>(
+          builder: (context, dbr, child) {
+            List<StatisticsData> initialData=[StatisticsData(0, '0000', 0, 0, 0)];
+          return FutureBuilder(
+            initialData: initialData,
+            future: dbr.userAllSingleStatisticsData(1),
+            builder: (context,snapshot){
+              if(snapshot.hasData){
+                final data = snapshot.data as List<StatisticsData>;
+                if(data.length==0){
+                  return _noDataGraph('Minutes of Activity');
+                }
+                else{
+                  
+                List<double> weekActivity= _createActivityTimeDataForGraph(data); // so just a list created with a function
+               return _dataGraph(weekActivity, 'Minutes of Activity');
+              }}
+              else{
+                return CircularProgressIndicator();
+              }
+            }
+          );}
+    ),
+    // ---------------------------------------------------LoS graph UPDATE
+          Consumer<DatabaseRepository>(
+          builder: (context, dbr, child) {
+            List<Achievements> initialData=[Achievements(0, '0000',  0)];
+          return FutureBuilder(
+            initialData: initialData,
+            future: dbr.userAllSingleAchievemnts(1),
+            builder: (context,snapshot){
+              if(snapshot.hasData){
+                final data = snapshot.data as List<Achievements>;
+                if(data.length==0){
+                  return _noDataGraph('Level of Sustainability');
+                }
+                else{
+                List<double> weekLoS= _createLoSDataForGraph(data); // so just a list created with a function
+               return _dataGraph(weekLoS, 'Level of Sustainability');
+              }}
+              else{
+                return CircularProgressIndicator();
+              }
+            }
+          );}
+    ),
+            
           ],
         ),
         floatingActionButton: FloatingActionButton(
@@ -277,22 +285,32 @@ class StatisticsPageState extends State<StatisticsPage> {
             // data for the achievements
             // In this page, since the user could not even complete the homepage questionnaire, the LoS is computed by setting to zero the points of the questionnaire.
             // This is not a problem becouse the function which creates the list of LoS receive data from the db and not frum this function!
-            int today_LoS = _computeLoS(steps, distance, activity_time);
+            int today_LoS = _computeLoS(steps, distance, activity_time,0);
 
             // Writing data:
             if (newDataReady == true) {
               // writing new data becouse the day has changed
+              final sp = await SharedPreferences.getInstance();
+              sp.setInt("Steps", steps);
+              sp.setInt("Distance", distance);
+              sp.setInt("Activity", activity_time);
+              final total = 0;
+              sp.setInt('Total_Q', total);
+              int  out = _computeLoS(steps, distance, activity_time, total);
+              sp.setInt("LoS", out);
               await Provider.of<DatabaseRepository>(context, listen: false)
                   .insertData(
                       StatisticsData(1, today, steps, distance, activity_time));
               // the date is changed, ones upon a day the questionnaire in inserted
               await Provider.of<DatabaseRepository>(context, listen: false)
-                  .insertAnswers(Questionnaire(1, today, 0, 0, 0, 0));
+                  .insertAnswers(Questionnaire(1, today, 0,0,0,total));
               await Provider.of<DatabaseRepository>(context, listen: false)
-                  .insertAchievements(Achievements(1, today, today_LoS));
+                  .insertAchievements(Achievements(1, today, out));
 
               print('stored new data');
 
+              
+          
               // a simple snackBar to return the state of the data
               final snackBar = SnackBar(
                   content: Text(
@@ -312,12 +330,18 @@ class StatisticsPageState extends State<StatisticsPage> {
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             } else {
               // update new data
+              final sp = await SharedPreferences.getInstance();
+              final total = sp.getInt("Total_Q");
+              int out = _computeLoS(steps, distance, activity_time, total!);
               await Provider.of<DatabaseRepository>(context, listen: false)
                   .updateData(
                       StatisticsData(1, today, steps, distance, activity_time));
               await Provider.of<DatabaseRepository>(context, listen: false)
-                  .updateAchievements(Achievements(1, today, today_LoS));
+                  .insertAnswers(Questionnaire(1, today, 0,0,0,total!));
+              await Provider.of<DatabaseRepository>(context, listen: false)
+                  .updateAchievements(Achievements(1, today, out));
               print('update the data');
+
 
               final snackBar = SnackBar(
                   content: Text(
@@ -736,14 +760,14 @@ Future _getWeekActivityTime(String startDate, String endDate) async {
 // --------------------------------------- DB FUNCTIONS TO PREPARE DATA
 
 int _computeLoS(int daily_steps, int daily_distance, int daily_activityTime,
-    {int point_answers = 0}) {
+    int point_answers) {
   //For now, it's just a sum. In the future will be a weighted sum
 
-  // Defining of weights
-  double ans_w = 1;
-  double steps_w = 0.1;
-  double dist_w = 0.1;
-  double time_w = 0.1;
+    // Defining of weights
+    double ans_w=1;
+    double steps_w=0.01;
+    double dist_w=0.005;
+    double time_w=0.02;
 
   int malus = -50; //for example
 
@@ -754,18 +778,15 @@ int _computeLoS(int daily_steps, int daily_distance, int daily_activityTime,
       daily_activityTime * time_w;
   int result = weightedSum.toInt();
 
-  // if you didn't recorded anything, you'll get a malus
-  if (result == 0) {
-    return malus;
+    // if you didn't recorded anything, you'll get a malus
+    if(result==0){return malus;} 
+    // Otherwise, good job!
+    else{return result;}
+    
   }
-  // Otherwise, good job!
-  else {
-    return result;
-  }
-}
 
-List<double> _createStepsDataForGraph(List<StatisticsData> data) {
-  // require to pass to the function an item of userAllSingleStatisticsData query
+ List<double> _createStepsDataForGraph( List<StatisticsData> data) {
+    // require to pass to the function an item of userAllSingleStatisticsData query
 
   List<double> out = [
     0,
@@ -795,26 +816,18 @@ List<double> _createStepsDataForGraph(List<StatisticsData> data) {
 List<double> _createSDistanceDataForGraph(List<StatisticsData> data) {
   // require to pass to the function an item of userAllSingleStatisticsData query
 
-  List<double> out = [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
-  int lnList = data.length; // the length of the list of items
-  // if data are collected for less than one week, the elements are associated one-to-one with the days
-  if (lnList < out.length) {
-    for (int i = 0; i <= lnList - 1; i++) {
-      out[i] = data[i].dailyDistance + 0.0;
-    }
-  }
-  // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
-  else {
-    for (int i = 0; i <= out.length - 1; i++) {
-      out[i] = data[lnList - 7 + i].dailyDistance + 0.0;
+    List<double> out=[0,0,0,0,0,0,0]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
+    int lnList=data.length; // the length of the list of items
+    // if data are collected for less than one week, the elements are associated one-to-one with the days
+    if(lnList<out.length){
+    for(int i=0; i<=lnList-1; i++){
+      out[i]=data[i].dailyDistance+0.0;
+
+    }}
+    // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+    else {
+      for(int i=0; i<=out.length-1; i++){
+      out[i]=data[lnList-7+i].dailyDistance+0.0;
     }
   }
   return out;
@@ -823,26 +836,18 @@ List<double> _createSDistanceDataForGraph(List<StatisticsData> data) {
 List<double> _createActivityTimeDataForGraph(List<StatisticsData> data) {
   // require to pass to the function an item of userAllSingleStatisticsData query
 
-  List<double> out = [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
-  int lnList = data.length; // the length of the list of items
-  // if data are collected for less than one week, the elements are associated one-to-one with the days
-  if (lnList < out.length) {
-    for (int i = 0; i <= lnList - 1; i++) {
-      out[i] = data[i].dailyActivityTime + 0.0;
-    }
-  }
-  // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
-  else {
-    for (int i = 0; i <= out.length - 1; i++) {
-      out[i] = data[lnList - 7 + i].dailyActivityTime + 0.0;
+    List<double> out=[0,0,0,0,0,0,0]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
+    int lnList=data.length; // the length of the list of items
+    // if data are collected for less than one week, the elements are associated one-to-one with the days
+    if(lnList<out.length){
+    for(int i=0; i<=lnList-1; i++){
+      out[i]=data[i].dailyActivityTime+0.0;
+
+    }}
+    // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+    else {
+      for(int i=0; i<=out.length-1; i++){
+      out[i]=data[lnList-7+i].dailyActivityTime+0.0;
     }
   }
   return out;
@@ -851,54 +856,75 @@ List<double> _createActivityTimeDataForGraph(List<StatisticsData> data) {
 List<double> _createLoSDataForGraph(List<Achievements> data) {
   // require to pass to the function an item of userAllSingleAchievemnts query
 
-  List<double> out = [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-  ]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
-  int lnList = data.length; // the length of the list of items
-  // if data are collected for less than one week, the elements are associated one-to-one with the days
-  if (lnList < out.length) {
-    for (int i = 0; i <= lnList - 1; i++) {
-      out[i] = data[i].levelOfSustainability + 0.0;
-    }
-  }
-  // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
-  else {
-    for (int i = 0; i <= out.length - 1; i++) {
-      out[i] = data[lnList - 7 + i].levelOfSustainability + 0.0;
+    List<double> out=[0,0,0,0,0,0,0]; //initially, the data are all zeros. [Mon,Tue,...,Sun]
+    int lnList=data.length; // the length of the list of items
+    // if data are collected for less than one week, the elements are associated one-to-one with the days
+    if(lnList<out.length){
+    for(int i=0; i<=lnList-1; i++){
+      out[i]=data[i].levelOfSustainability+0.0;
+
+    }}
+    // else, we need to translate the origin of days. But in this manner we aren't precise with the days...the last data will be alwais connected to sunday...
+    else {
+      for(int i=0; i<=out.length-1; i++){
+      out[i]=data[lnList-7+i].levelOfSustainability+0.0;
     }
   }
   return out;
 }
 
-Widget _noDataGraph(String title) {
-  return Padding(
-      padding: const EdgeInsets.all(15),
-      child: Animate(
-        effects: Constants.Fade_effect_options,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            height: 280,
-            color: Constants.containerColor,
-            child: Column(
+Widget _noDataGraph(String title){
+  String? description = '';
+  if ('$title' == 'Steps'){
+      description = 'This barplot summarises daily steps in week';
+  }else if ('$title' == 'Daily Kilometers'){
+      description = 'This barplot summarises daily distance covered in a week';
+  }else if ('$title' == 'Minutes of Activity'){
+      description = 'This barplot summarises the amount of daily activity time covered in a week';
+  }else if ('$title' == 'Level of Sustainability'){
+      description = 'This barplot summarises the daily trend of level of sustainability in a weekly view';
+  }
+
+ return  Padding(padding: const EdgeInsets.all(15),
+            child: Animate(
+              effects: Constants.Fade_effect_options,
+            child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              height: 280,
+                color: Constants.containerColor,
+                child:Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 10),
-                Text(
-                  '$title',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 1, 76, 4),
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                Tooltip(
+                  message: description,
+                  textAlign: TextAlign.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Constants.primaryLightColor,
+                    border: Border.all(
+                      width: 2,
+                      color: Constants.primaryColor,
+                       ),
+                    ),
+                  height: 30,
+                  padding: const EdgeInsets.all(8.0),
+                  preferBelow: true,
+                  textStyle: const TextStyle(
+                    fontSize: 15,
+                    
+                  ),
+                  showDuration: const Duration(seconds: 2),
+                  waitDuration: const Duration(seconds: 1),
+                  child:  Text('$title', style: TextStyle(
+                  color: Constants.secondaryColor, fontSize: 24, fontWeight: FontWeight.bold, 
+                  ),
+                  textAlign: TextAlign.center,
                   ),
                 ),
-                SizedBox(height: 15),
+                  SizedBox(height: 15),
+                
                 SizedBox(
                   height: 200,
                   child: BarGraph(
@@ -912,32 +938,60 @@ Widget _noDataGraph(String title) {
       ));
 }
 
-Widget _dataGraph(List<double> data, String title) {
-  return Padding(
-      padding: const EdgeInsets.all(15),
-      child: Animate(
-        effects: Constants.Fade_effect_options,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Container(
-            height: 280,
-            color: Constants.containerColor,
-            child: Column(
+Widget _dataGraph(List<double> data, String title){
+  String? description = '';
+  if ('$title' == 'Steps'){
+      description = 'This barplot summarises daily steps in week';
+  }else if ('$title' == 'Daily Kilometers'){
+      description = 'This barplot summarises daily distance covered in a week';
+  }else if ('$title' == 'Minutes of Activity'){
+      description = 'This barplot summarises the amount of daily activity time covered in a week';
+  }else if ('$title' == 'Level of Sustainability'){
+      description = 'This barplot summarises the daily trend of level of sustainability in a weekly view';
+  }
+  print(description);
+  return Padding(padding: const EdgeInsets.all(15),
+            child: Animate(
+              effects: Constants.Fade_effect_options,
+            child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Container(
+              height: 280,
+                color: Constants.containerColor,
+                child:Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 10),
-                Text(
-                  '$title',
-                  style: TextStyle(
-                    color: Constants.secondaryColor,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                Tooltip(
+                  message: description,
+                  textAlign: TextAlign.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Constants.primaryLightColor,
+                    border: Border.all(
+                      width: 2,
+                      color: Constants.primaryColor,
+                       ),
+                    ),
+                  height: 30,
+                  padding: const EdgeInsets.all(8.0),
+                  preferBelow: true,
+                  textStyle: const TextStyle(
+                    fontSize: 15,
+                    
+                  ),
+                  showDuration: const Duration(seconds: 2),
+                  waitDuration: const Duration(seconds: 1),
+                  child:  Text('$title', style: TextStyle(
+                  color: Constants.secondaryColor, fontSize: 24, fontWeight: FontWeight.bold, 
+                  ),
+                  textAlign: TextAlign.center,
                   ),
                 ),
-                SizedBox(height: 15),
+                  SizedBox(height: 15),
                 SizedBox(
                   height: 200,
-                  child: BarGraph(
+                    child: BarGraph(
                     dailySteps: data,
                   ),
                 ),

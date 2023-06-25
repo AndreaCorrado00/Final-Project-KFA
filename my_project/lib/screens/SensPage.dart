@@ -3,6 +3,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:intl/intl.dart';
 import 'package:my_project/Database/entities/achievements.dart';
 import 'package:my_project/Database/entities/questionnaire.dart';
+import 'package:my_project/Database/entities/statisticsData.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart'; // to view the map
@@ -27,6 +28,7 @@ class Sens_page extends State<SensPage> {
   // ignore: prefer_typing_uninitialized_variables
   double FLoS = 0.0;
   var Trees = 0;
+  var LoS = 0;
 
   // ignore: non_constant_identifier_names
 
@@ -155,15 +157,17 @@ class Sens_page extends State<SensPage> {
                 int? steps = sp.getInt('Steps');
                 int? distance = sp.getInt('Distance');
                 int? activityTime = sp.getInt('Activity');
-
                 int total = question1Value! + question2Value! + question3Value!;
+
                 // ignore: non_constant_identifier_names
-                int LoS = _computeLoS(steps!, distance!, activityTime!, total);
+                bool newDataReady = await _newDataReady(today);
+                if (newDataReady == true) {
+                  LoS = _computeLoS(0, 0, 0, 0);
+                } else {
+                  LoS = _computeLoS(steps!, distance!, activityTime!, total);
+                }
 
                 //Shared pref for total questionnaire
-// ignore: unrelated_type_equality_checks
-                bool newDataReady = await _newDataReady(today);
-
                 if (newDataReady == false) {
                   Future<void> totalquestion() async {
                     final sp = await SharedPreferences.getInstance();
@@ -189,12 +193,17 @@ class Sens_page extends State<SensPage> {
                   //INSERT the New Value of LoS
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .insertAchievements(Achievements(1, today, LoS));
+                  await Provider.of<DatabaseRepository>(context, listen: false)
+                      .insertData(StatisticsData(1, today, 0, 0, 0));
                 } else {
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .updateAnswers(Questionnaire(1, today, question1Value!,
                           question2Value!, question3Value!, total));
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .updateAchievements(Achievements(1, today, LoS));
+                  await Provider.of<DatabaseRepository>(context, listen: false)
+                      .updateData(StatisticsData(
+                          1, today, steps!, distance!, activityTime!));
                 }
 // initialize the questionnaire
                 setState(() {

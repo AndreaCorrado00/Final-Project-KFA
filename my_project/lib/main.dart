@@ -8,7 +8,6 @@ import 'Database/appdata_database.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
 // Open database
   final AppDatabase appdata_database =
       await $FloorAppDatabase.databaseBuilder('app_database.db').build();

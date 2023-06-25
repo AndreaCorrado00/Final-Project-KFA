@@ -21,8 +21,6 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -98,13 +96,13 @@ class _loginState extends State<login> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                    MaterialPageRoute(builder: (context) => LoginPage()),
                   );
                 },
                 color: const Color.fromARGB(255, 226, 203, 70),
                 shape: RoundedRectangleBorder(
                     side: const BorderSide(
-                      color: Color.fromARGB(255, 255, 251, 251),
+                      color: Color.fromARGB(255, 31, 27, 27),
                     ),
                     borderRadius: BorderRadius.circular(40)),
                 child: const Text(

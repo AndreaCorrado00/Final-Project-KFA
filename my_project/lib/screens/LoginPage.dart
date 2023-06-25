@@ -1,92 +1,212 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:my_project/screens/HomePage.dart';
-import 'package:flutter_login/flutter_login.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:my_project/utils/constants.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
-  static const routename = 'LoginPage';
-
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  @override
-  void initState() {
-    super.initState();
-    //Check if the user is already logged in before rendering the login page
-    _checkLogin();
-  } //initState
+class LoginPageState extends State<LoginPage> {
+  //TextEditingController it's a class that allows us to control the text in a TextField widget if there's any modifications or not
 
-  void _checkLogin() async {
-    final user_preferences = await SharedPreferences.getInstance();
-    if (await user_preferences.getBool('Rememeber_login') == true) {
-      print('Into_checkLogin');
-      print(await user_preferences.getBool('Rememeber_login'));
-      _toHomePage(context);
-    } //if
-  } //_checkLogin
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
-  static const routename = '_LoginPageState';
+  bool showError = false;
+  late String errormsg;
 
-  Future<String> _loginUser(LoginData data) async {
-    if (data.name == 'andrea@gmail.com' && data.password == '0000') {
-      final user_preferences = await SharedPreferences.getInstance();
-      await user_preferences.setBool('Rememeber_login', true);
-      print('Into _loginUser');
-      print(await user_preferences.getBool('Rememeber_login'));
-      return '';
+// check the credentials
+  void login() {
+    //text.trim() used to remove whitespace retreive only the text part
+    final String email = emailController.text.trim();
+    final String password = passwordController.text.trim();
+
+    if (email == 'user@gmail.com' && password == '0000') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+      // Clear email and password fields after we checked
+      showError = false;
+      emailController.clear();
+      passwordController.clear();
+      errormsg = '';
     } else {
-      return 'Wrong credentials';
+      setState(() {
+        showError = true;
+        errormsg = 'invalid Email or Password';
+      });
     }
-  } // _loginUser
-
-  Future<String> _signUpUser(SignupData data) async {
-    // Problems: i have to control the flow of the database. At the moment, the login doesn't uses the saved name, moreover, an other used different from andre@gmai.com will provide a logic erro
-    //final dataDB=await SharedPreferences.getInstance();
-    //await dataDB.setString('name', data.name!);
-    //await dataDB.setString('password', data.password!);
-    //SignupData.fromSignupForm(name: dataDB.getString('name'), password: dataDB.getString('password'));
-    return 'To be implemented';
-  } // _signUpUser
-
-  Future<String> _recoverPassword(String email) async {
-    return 'Recover password functionality needs to be implemented';
-  } // _recoverPassword
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FlutterLogin(
-      title: 'Hello!',
-      onLogin: _loginUser,
-      onSignup: _signUpUser,
-      onRecoverPassword: _recoverPassword,
-      onSubmitAnimationCompleted: () async {
-        _toHomePage(context);
-      },
-      theme: LoginTheme(
-        pageColorLight: Constants.primaryColor,
-        primaryColor: Constants.secondaryColor,
-        accentColor: Constants.secondarylightColor,
-        errorColor: Colors.deepOrange,
-
-        // ignore: prefer_const_constructors
-        titleStyle: TextStyle(
-          color: Constants.primaryLightColor,
-          fontFamily: Constants.myfontFamily,
-          letterSpacing: 4,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            size: 20,
+            color: Colors.black,
+          ),
+        ),
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
+      ),
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: double.infinity,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              children: [
+                Column(
+                  children: [
+                    const Text(
+                      "Login",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "Welcome back! Login with your credentials",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    )
+                  ],
+                ),
+                //controlling password + email
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Column(
+                    children: [
+                      makeInput(label: "Email", controller: emailController),
+                      makeInput(
+                        label: "Password",
+                        obscureText: true,
+                        controller: passwordController,
+                      ),
+                      //error message
+                      if (showError)
+                        Text(
+                          errormsg,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 14,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 3, left: 3),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      border: const Border(
+                        bottom: BorderSide(color: Colors.black),
+                        top: BorderSide(color: Colors.black),
+                        right: BorderSide(color: Colors.black),
+                        left: BorderSide(color: Colors.black),
+                      ),
+                    ),
+                    child: MaterialButton(
+                      minWidth: double.infinity,
+                      height: 60,
+                      onPressed: login,
+                      color: const Color.fromARGB(255, 226, 203, 70),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                      child: const Text(
+                        "LogIn",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Don't have an account?"),
+                    Text(
+                      "Sign Up",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ],
         ),
       ),
     );
-  } // build
+  }
+}
 
-
-  void _toHomePage(BuildContext context) {
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const HomeScreen()));
-  } //_toHomePage
-
-} // LoginScreen
+Widget makeInput({label, obscureText = false, controller}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        label,
+        style: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.w400,
+          color: Colors.black87,
+        ),
+      ),
+      const SizedBox(
+        height: 5,
+      ),
+      TextField(
+        controller: controller,
+        obscureText: obscureText,
+        decoration: const InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Color.fromARGB(255, 170, 157, 157),
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(color: Color.fromARGB(255, 170, 157, 157)),
+          ),
+        ),
+      ),
+      const SizedBox(
+        height: 30,
+      )
+    ],
+  );
+}

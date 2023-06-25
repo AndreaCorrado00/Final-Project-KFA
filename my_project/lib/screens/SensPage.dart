@@ -363,6 +363,8 @@ Future _getWeekActivityTime(String startDate, String endDate) async {
   }
 }
 
+// ---------------------------------------end impact --------------------------------------------------------
+
 class SensPage extends StatefulWidget {
   const SensPage({Key? key}) : super(key: key);
   @override
@@ -371,26 +373,14 @@ class SensPage extends StatefulWidget {
 
 // ignore: camel_case_types
 class Sens_page extends State<SensPage> {
-  late DateTime lastSubmissionDate; // Store the last submission date
   // ignore: prefer_typing_uninitialized_variables
   double FLoS = 0.0;
   var Trees = 0;
 
   // ignore: non_constant_identifier_names
-  //Future<double>
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Initialize the last submission date
-    lastSubmissionDate = DateTime.now();
-  }
 
   void _showQuestionnaire() async {
     // Get the current date
-    final currentDate =
-        DateTime.now(); // setting a reference date to compare with
     // final currentDate = DateTime.now()
     //     .subtract(Duration(days: 1)); // once assigned can be changed
     //final today = DateFormat('yyyy-MM-dd').format(lastSubmissionDate);
@@ -693,6 +683,7 @@ class Sens_page extends State<SensPage> {
                           Trees = FLoS ~/ 0.1;
                           final sp = await SharedPreferences.getInstance();
                           sp.setInt('trees', Trees);
+                          sp.setDouble('FLoS', FLoS);
                         }
 
                         updateTrees();

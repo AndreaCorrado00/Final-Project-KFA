@@ -1,12 +1,11 @@
+
 // ignore_for_file: prefer_const_constructors, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:my_project/screens/HomePage.dart';
-import 'package:my_project/screens/StatisticsPage.dart';
-
-
-//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:my_project/screens/AboutThisApp.dart';
+import 'package:my_project/screens/LoginPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:my_project/utils/constants.dart';
 import 'package:my_project/Database/Advice_Database.dart';
@@ -22,7 +21,6 @@ int cur_id = today % Cur_ln;
 int rep_id = today % Rep_ln;
 int adv_id = today % Adv_ln;
 int sta_id = today % Sta_ln;
-
 
 
 
@@ -55,13 +53,68 @@ class TipsPageState extends State<TipsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Constants.primaryColor,
-        title: Text('Advice and Tips'),
-        automaticallyImplyLeading: false,
-      ),
+        title: Text('Advice and Tips'),),
+          drawer: Drawer(
+          backgroundColor: Constants.secondaryColor,
+          child: Column(
+            children: [
+              SizedBox( 
+                height: 100,
+              ),
+              Row(
+                children: [
+                  TextButton(
+                    style: Constants.TextButtonStyle_Drawer,
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AboutThisAppState()));
+                    },
+                    child: const Text('About this App'),
+                  ),
+                  Icon(
+                    Icons.help_outline,
+                    color: Constants.secondarylightColor,
+                    size: 24.0,
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: 300,
+                height: 1,
+              ),
+              Row(
+                children: [
+                  TextButton(
+                    style: Constants.TextButtonStyle_Drawer,
+                    onPressed: () {
+                      _OnLogoutTapConfirm(context);
+                    },
+                    child: const Text('Logout'),
+                  ),
+                  const Icon(
+                    IconData(0xe3b3, fontFamily: 'MaterialIcons'),
+                    color: Constants.secondarylightColor,
+                    size: 24.0,
+                    semanticLabel: 'Text to announce in accessibility modes',
+                  ),
+                ],
+              ),
+              const SizedBox(
+                width: 200,
+                height: 10,
+              ),
+            ],
+          ),
+        ),
+
+
       backgroundColor: Constants.primaryLightColor,
       body:  ListView(
         padding: EdgeInsets.all(30),
         children: [
+
           Animate(
             effects: Constants.Fade_effect_options,
             child: ClipRRect(
@@ -314,20 +367,46 @@ class TipsPageState extends State<TipsPage> {
       //     );
       //   },
       // ),
+
     );
   }
 
-// Future<List<int>> _todayIndex(int today)async{
+void _OnLogoutTapConfirm(BuildContext context)  {
+    // set up the buttons
 
-// final daily_constants = await SharedPreferences.getInstance();
-// final int? current_day=daily_constants.getInt('today');
-
-// if(today != current_day ){
-//   await daily_constants.setInt('today',today);
-//   int ran_daily_index=Random().nextInt(100)+1;
-//   //await daily_constants.setInt('today_index', ran_daily_index );
-//   List<int> out=[ran_daily_index%Cur_ln, ran_daily_index%Rep_ln,ran_daily_index%Adv_ln,ran_daily_index%Sta_ln];
-//   return out;}
-//   else{return [1,1,1,1];}
-// }
+    // Widget cancelButton = TextButton(
+    //   child: Text("Cancel"),
+    //   onPressed: ()  {
+    //     Navigator.of(context).pushReplacement(
+    //         MaterialPageRoute(builder: (context) => const TipsPage()));},// Must be changed to point at the current page 
+    //   style: Constants.TextButtonStyle_Alert,
+    // );
+    Widget continueButton = TextButton(
+      child: Text("Continue"),
+      onPressed: () async {
+        final user_preferences = await SharedPreferences.getInstance();
+         await user_preferences.setBool('Rememeber_login', false);
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>  LoginPage()));
+         
+      },
+      style: Constants.TextButtonStyle_Alert,
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text("Logout"),
+      content: const Text("Are you sure you want to logout?"),
+      actions: [
+        //cancelButton,
+        continueButton,
+      ],
+      backgroundColor: Constants.primaryLightColor,
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 }

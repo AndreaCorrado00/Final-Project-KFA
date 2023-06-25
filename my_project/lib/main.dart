@@ -1,33 +1,26 @@
-// import 'package:flutter/material.dart';
-// import 'package:my_project/screens/LoginPage.dart';
-// void main() {
-//   runApp(
-//     MyApp());}
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       home:  LoginPage(),
-//     );
-//   }
-// }
-
-
 import 'package:my_project/screens/LoginPage.dart';
 import 'package:my_project/screens/SignUp.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:provider/provider.dart';
+import 'package:my_project/Database/repositries/appDatabaseRepository.dart';
+import 'Database/appdata_database.dart';
 
-void main() {
-  runApp(new MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+// Open database
+  final AppDatabase appdata_database =
+      await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+// Database repository creation
+  final databaseRepository = DatabaseRepository(database: appdata_database);
+// runnig the app and provide the daabase repository above
+  runApp(ChangeNotifierProvider<DatabaseRepository>(
+      create: (context) => databaseRepository, child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -97,7 +90,6 @@ class _loginState extends State<login> {
                   ),
                 ],
               ),
-
               MaterialButton(
                 minWidth: double.infinity,
                 height: 60,
@@ -107,10 +99,10 @@ class _loginState extends State<login> {
                     MaterialPageRoute(builder: (context) => LoginPage()),
                   );
                 },
-                color: Color.fromARGB(255, 226, 203, 70),
+                color: const Color.fromARGB(255, 226, 203, 70),
                 shape: RoundedRectangleBorder(
                     side: const BorderSide(
-                      color: Color.fromARGB(255, 255, 251, 251),
+                      color: Color.fromARGB(255, 31, 27, 27),
                     ),
                     borderRadius: BorderRadius.circular(40)),
                 child: const Text(
@@ -130,7 +122,7 @@ class _loginState extends State<login> {
                     MaterialPageRoute(builder: (context) => SignupPage()),
                   );
                 },
-                color: Color.fromARGB(255, 39, 97, 24),
+                color: const Color.fromARGB(255, 39, 97, 24),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(40)),
                 child: const Text(

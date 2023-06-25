@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:intl/intl.dart';
 import 'package:my_project/Database/entities/achievements.dart';
 import 'package:my_project/Database/entities/questionnaire.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -10,360 +11,10 @@ import '../Database/repositries/appDatabaseRepository.dart';
 import 'AboutThisApp.dart';
 import 'LoginPage.dart';
 import 'package:provider/provider.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'package:my_project/utils/impact.dart';
-import 'package:my_project/Models/Steps.dart';
-import 'package:my_project/Models/Distance.dart';
-import 'package:my_project/Models/Activity.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
-import 'package:http/http.dart' as http;
 
 int? question1Value;
 int? question2Value;
 int? question3Value;
-
-// --------------------------------- IMPACT -------------------------------------------------- //
-Future<bool> _pingImpact() async {
-  final url = Impact.baseUrl + Impact.pingEndpoint;
-  // call
-  final response = await http.get(Uri.parse(url)); // is an async function
-  return response.statusCode == 200;
-}
-
-Future<int> _getAndStoreTokens() async {
-  //Create the request
-  final url = Impact.baseUrl + Impact.tokenEndpoint;
-  final body = {'username': Impact.username, 'password': Impact.password};
-  //Get the response
-  print('Calling: $url');
-  final response = await http.post(Uri.parse(url), body: body);
-  //If response is OK, decode it and store the tokens. Otherwise do nothing.
-  if (response.statusCode == 200) {
-    final decodedResponse = jsonDecode(response.body);
-    final sp = await SharedPreferences.getInstance();
-    await sp.setString('access', decodedResponse['access']);
-    await sp.setString('refresh', decodedResponse['refresh']);
-  } //if
-  // return the status code
-  return response.statusCode;
-} //_getAndStoreTokens
-
-//This method allows to refresh the stored JWT in SharedPreferences
-Future<int> _refreshTokens() async {
-  //Create the request
-  final url = Impact.baseUrl + Impact.refreshEndpoint;
-  final sp = await SharedPreferences.getInstance();
-  final refresh = sp.getString('refresh');
-  final body = {'refresh': refresh};
-  //Get the response
-  print('Calling: $url');
-  final response = await http.post(Uri.parse(url), body: body);
-  //If the response is OK, set the tokens in SharedPreferences to the new values
-  if (response.statusCode == 200) {
-    final decodedResponse = jsonDecode(response.body);
-    final sp = await SharedPreferences.getInstance();
-    await sp.setString('access', decodedResponse['access']);
-    await sp.setString('refresh', decodedResponse['refresh']);
-  } //if
-  //Just return the status code
-  return response.statusCode;
-}
-
-Future<bool> _newDataReady(String day) async {
-  final sp = await SharedPreferences.getInstance();
-  print('into newDataReady');
-  if (sp.getString('today') != day || sp.getString('today') == null) {
-    print('the day is changed');
-    sp.setString('today', day);
-    return true;
-  } else {
-    print('date is not changed');
-    return false;
-  }
-}
-
-// --------------------------------- IMPACT AND MODELS --------------------------------------------------
-Future _getStep(today) async {
-  // Returns the sum of the steps made into a certain day
-  // preliminary settings
-  final sp = await SharedPreferences.getInstance();
-  var access = sp.getString('access');
-  if (access == null) {
-    return null;
-  } else {
-    if (JwtDecoder.isExpired(access)) {
-      await _refreshTokens();
-      access = sp.getString('access');
-    }
-    //request
-    final url = Impact.baseUrl +
-        Impact.stepEndpoint +
-        '/patients/Jpefaq6m58' +
-        '/day/$today/';
-    final headers = {
-      HttpHeaders.authorizationHeader: 'Bearer $access'
-    }; //fixed costruction!
-    final response = await http.get(Uri.parse(url), headers: headers);
-
-    // Creatione of the response
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      //List result = [];
-      List stepsData = [];
-      final totalSteps = 0;
-      for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
-        //result.add(Steps.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]));
-        stepsData.add(Steps.fromJson(decodedResponse['data']['date'],
-                decodedResponse['data']['data'][i])
-            .getValue());
-      } //for
-      int out = stepsData.reduce((a, b) => a + b); // here we compute the sum
-      return out;
-    } //if
-    else {
-      void result = null;
-    } //else
-  }
-} //getStep
-
-Future _getDistance(today) async {
-  final sp = await SharedPreferences.getInstance();
-  var access = sp.getString('access');
-  if (access == null) {
-    return null;
-  } else {
-    if (JwtDecoder.isExpired(access)) {
-      await _refreshTokens();
-      access = sp.getString('access');
-    }
-
-    final url = Impact.baseUrl +
-        Impact.distanceEndpoint +
-        '/patients/Jpefaq6m58' +
-        '/day/$today/';
-    final headers = {
-      HttpHeaders.authorizationHeader: 'Bearer $access'
-    }; //fixed costruction
-    final response = await http.get(Uri.parse(url), headers: headers);
-
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      List distanceData = [];
-      for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
-        distanceData.add(Distance.fromJson(decodedResponse['data']['date'],
-                decodedResponse['data']['data'][i])
-            .getValue());
-      } //for
-      double out = distanceData.reduce((a, b) => a + b) / 100; //udm: [m]
-      return out.toInt();
-    } //if
-    else {
-      void result = null;
-    } //else
-  }
-} //getDistance
-
-Future _getActivity_time(today) async {
-  final sp = await SharedPreferences.getInstance();
-  var access = sp.getString('access');
-  if (access == null) {
-    return null;
-  } else {
-    if (JwtDecoder.isExpired(access)) {
-      await _refreshTokens();
-      access = sp.getString('access');
-    }
-    final url = Impact.baseUrl +
-        Impact.activityEndpoint +
-        '/patients/Jpefaq6m58' +
-        '/day/$today/';
-    final headers = {
-      HttpHeaders.authorizationHeader: 'Bearer $access'
-    }; //fixed costruction!
-    final response = await http.get(Uri.parse(url), headers: headers);
-
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      List activityTimeData = [];
-      for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
-        activityTimeData.add(Activity.fromJson(decodedResponse['data']['date'],
-                decodedResponse['data']['data'][i])
-            .getValue());
-      } //for
-      double out =
-          (activityTimeData.reduce((a, b) => a + b)) / 60000; //udm [min]
-      return out.toInt();
-    } //if
-    else {
-      void result = null;
-    } //else
-  }
-} //getActivity_time
-
-//--------------------------------- WEEK DATA FOR THE DEMO -------------------------
-
-// getWeekSteps
-Future _getWeekSteps(String startDate, String endDate) async {
-  // Returns the sum of the steps made into a certain day
-
-  // preliminary settings
-  final sp = await SharedPreferences.getInstance();
-  var access = sp.getString('access');
-  if (access == null) {
-    return null;
-  } else {
-    if (JwtDecoder.isExpired(access)) {
-      await _refreshTokens();
-      access = sp.getString('access');
-    }
-    //request
-    final url = Impact.baseUrl +
-        Impact.stepEndpoint +
-        '/patients/Jpefaq6m58' +
-        '/daterange/start_date/$startDate/end_date/$endDate/';
-    final headers = {
-      HttpHeaders.authorizationHeader: 'Bearer $access'
-    }; //fixed costruction!
-    final response = await http.get(Uri.parse(url), headers: headers);
-
-    // Creatione of the response
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-
-      Map stepsWeekdata = {};
-      //List stepsWeekdata=[];
-      for (var i = 0; i < decodedResponse['data'].length; i++) {
-        List dailySteps = [];
-        for (var j = 0; j < decodedResponse['data'][i]['data'].length; j++) {
-          dailySteps.add(Steps.fromJson(decodedResponse['data'][i]['date'],
-                  decodedResponse['data'][i]['data'][j])
-              .getValue());
-        }
-        int daySteps = dailySteps.reduce((a, b) => a + b);
-        stepsWeekdata[decodedResponse['data'][i]['date']] = daySteps;
-        //stepsWeekdata.add(daySteps);
-      }
-      return stepsWeekdata;
-    } //if
-
-    else {
-      void result = null;
-      return result;
-    } //else
-  }
-}
-
-// getWeekDistance
-Future _getWeekDistance(String startDate, String endDate) async {
-  // Returns the sum of the steps made into a certain day
-
-  // preliminary settings
-  final sp = await SharedPreferences.getInstance();
-  var access = sp.getString('access');
-  if (access == null) {
-    return null;
-  } else {
-    if (JwtDecoder.isExpired(access)) {
-      await _refreshTokens();
-      access = sp.getString('access');
-    }
-    //request
-    final url = Impact.baseUrl +
-        Impact.distanceEndpoint +
-        '/patients/Jpefaq6m58' +
-        '/daterange/start_date/$startDate/end_date/$endDate/';
-    final headers = {
-      HttpHeaders.authorizationHeader: 'Bearer $access'
-    }; //fixed costruction!
-    final response = await http.get(Uri.parse(url), headers: headers);
-
-    // Creatione of the response
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-      Map stepsDistancedata = {};
-      //List stepsDistancedata=[];
-      for (var i = 0; i < decodedResponse['data'].length; i++) {
-        List dailyDistance = [];
-        for (var j = 0; j < decodedResponse['data'][i]['data'].length; j++) {
-          dailyDistance.add(Distance.fromJson(
-                  decodedResponse['data'][i]['date'],
-                  decodedResponse['data'][i]['data'][j])
-              .getValue());
-        }
-        double dayDist =
-            dailyDistance.reduce((a, b) => a + b) / 100.toInt(); //udm: [m]
-        stepsDistancedata[decodedResponse['data'][i]['date']] = dayDist.toInt();
-        //stepsDistancedata.add(dayDist);
-      }
-      return stepsDistancedata;
-    } //if
-
-    else {
-      void result = null;
-      return result;
-    } //else
-  }
-}
-
-// getWeekActivitytime
-Future _getWeekActivityTime(String startDate, String endDate) async {
-  // Returns the sum of the steps made into a certain day
-
-  // preliminary settings
-  final sp = await SharedPreferences.getInstance();
-  var access = sp.getString('access');
-  if (access == null) {
-    return null;
-  } else {
-    if (JwtDecoder.isExpired(access)) {
-      await _refreshTokens();
-      access = sp.getString('access');
-    }
-    //request
-    final url = Impact.baseUrl +
-        Impact.activityEndpoint +
-        '/patients/Jpefaq6m58' +
-        '/daterange/start_date/$startDate/end_date/$endDate/';
-    final headers = {
-      HttpHeaders.authorizationHeader: 'Bearer $access'
-    }; //fixed costruction!
-    final response = await http.get(Uri.parse(url), headers: headers);
-
-    // Creatione of the response
-    if (response.statusCode == 200) {
-      final decodedResponse = jsonDecode(response.body);
-
-      Map ActivityTimeWeekdata = {};
-      //List ActivityTimeWeekdata=[];
-      for (var i = 0; i < decodedResponse['data'].length; i++) {
-        List dailySteps = [];
-        for (var j = 0; j < decodedResponse['data'][i]['data'].length; j++) {
-          dailySteps.add(Activity.fromJson(decodedResponse['data'][i]['date'],
-                  decodedResponse['data'][i]['data'][j])
-              .getValue());
-        }
-        if (dailySteps.length == 0) {
-          ActivityTimeWeekdata[decodedResponse['data'][i]['date']] = 0;
-        } else {
-          double dayTime =
-              dailySteps.reduce((a, b) => a + b) / 60000; //udm [min]
-          ActivityTimeWeekdata[decodedResponse['data'][i]['date']] =
-              dayTime.toInt();
-        }
-        //ActivityTimeWeekdata.add(dayTime);
-      }
-      return ActivityTimeWeekdata;
-    } //if
-
-    else {
-      void result = null;
-      return result;
-    } //else
-  }
-}
-
-// ---------------------------------------end impact --------------------------------------------------------
 
 class SensPage extends StatefulWidget {
   const SensPage({Key? key}) : super(key: key);
@@ -379,12 +30,24 @@ class Sens_page extends State<SensPage> {
 
   // ignore: non_constant_identifier_names
 
+  Future<bool> _newDataReady(String today) async {
+    final sp = await SharedPreferences.getInstance();
+    print('into newDataReady');
+    if (sp.getString('today') != today || sp.getString('today') == null) {
+      print('the day is changed');
+      sp.setString('today', today);
+      return true;
+    } else {
+      print('date is not changed');
+      return false;
+    }
+  }
+
   void _showQuestionnaire() async {
     // Get the current date
-    // final currentDate = DateTime.now()
-    //     .subtract(Duration(days: 1)); // once assigned can be changed
-    //final today = DateFormat('yyyy-MM-dd').format(lastSubmissionDate);
-    const today = '2023-05-15';
+    final currentDate = DateTime.now()
+        .subtract(Duration(days: 1)); // once assigned can be changed
+    final today = DateFormat('yyyy-MM-dd').format(currentDate);
     // ignore: use_build_context_synchronously
     showDialog(
       context: context,
@@ -400,7 +63,7 @@ class Sens_page extends State<SensPage> {
                     const Text('Did you use public transportation today?'),
                     RadioListTile<int>(
                       title: const Text('Yes'),
-                      value: 2,
+                      value: 20,
                       groupValue: question1Value,
                       onChanged: (value) {
                         setState(
@@ -425,7 +88,7 @@ class Sens_page extends State<SensPage> {
                         'Did you save water today?If yes how much(approximatly)'),
                     RadioListTile<int>(
                       title: const Text('Less than 2L'),
-                      value: 2,
+                      value: 20,
                       groupValue: question2Value,
                       onChanged: (value) {
                         setState(() {
@@ -447,7 +110,7 @@ class Sens_page extends State<SensPage> {
                     const Text('Did you save a meal from being wasted today?'),
                     RadioListTile<int>(
                       title: const Text('Yes'),
-                      value: 200,
+                      value: 20,
                       groupValue: question3Value,
                       onChanged: (value) {
                         setState(() {
@@ -488,20 +151,20 @@ class Sens_page extends State<SensPage> {
 //add/updating the values of the questions to the database
             TextButton(
               onPressed: () async {
-                await _pingImpact(); // connect to impact
-                await _getAndStoreTokens(); // storing tokens.
-
-                int steps = await _getStep(today);
-                int distance = await _getDistance(today);
-                int activityTime = await _getActivity_time(today);
+                final sp = await SharedPreferences.getInstance();
+                int? steps = sp.getInt('Steps');
+                int? distance = sp.getInt('Distance');
+                int? activityTime = sp.getInt('Activity');
 
                 int total = question1Value! + question2Value! + question3Value!;
                 // ignore: non_constant_identifier_names
-                int LoS = _computeLoS(steps, distance, activityTime, total);
+                int LoS = _computeLoS(steps!, distance!, activityTime!, total);
 
                 //Shared pref for total questionnaire
 // ignore: unrelated_type_equality_checks
-                if (_newDataReady(today) == false) {
+                bool newDataReady = await _newDataReady(today);
+
+                if (newDataReady == false) {
                   Future<void> totalquestion() async {
                     final sp = await SharedPreferences.getInstance();
                     sp.setInt('Total_Q', total);
@@ -519,7 +182,7 @@ class Sens_page extends State<SensPage> {
 
                 //if it's a new day insert new data otherwise update the current value in the database
                 // ignore: unrelated_type_equality_checks
-                if (_newDataReady(today) == true) {
+                if (newDataReady == true) {
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .insertAnswers(Questionnaire(1, today, question1Value!,
                           question2Value!, question3Value!, total));
@@ -680,7 +343,7 @@ class Sens_page extends State<SensPage> {
 
                         //a class to store the number of trees
                         Future<void> updateTrees() async {
-                          Trees = FLoS ~/ 0.1;
+                          Trees = FLoS ~/ 0.01;
                           final sp = await SharedPreferences.getInstance();
                           sp.setInt('trees', Trees);
                           sp.setDouble('FLoS', FLoS);

@@ -8,6 +8,10 @@ import 'package:intl/intl.dart';
 import 'package:my_project/screens/AboutThisApp.dart';
 
 import 'package:my_project/screens/Barplot/bar_graph.dart';
+import 'package:my_project/utils/constants.dart';
+import 'package:percent_indicator/percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:my_project/screens/Barplot/bar_graph.dart';
 import 'package:my_project/screens/LoginPage.dart';
 import 'package:my_project/screens/databaseCodesAndFunctions.dart';
 import 'package:my_project/utils/constants.dart';
@@ -84,7 +88,7 @@ class StatisticsPageState extends State<StatisticsPage> {
 
                   for (int i = 0; i < 7; i++) {
                     int today_LoS =
-                        _computeLoS(steps[i], distance[i], activity_time[i]);
+                        _computeLoS(steps[i], distance[i], activity_time[i], 0);
 
                     await Provider.of<DatabaseRepository>(context,
                             listen: false)
@@ -199,11 +203,11 @@ class StatisticsPageState extends State<StatisticsPage> {
                     if (snapshot.hasData) {
                       final data = snapshot.data as List<StatisticsData>;
                       if (data.length == 0) {
-                        return _noDataGraph('Distance');
+                        return _noDataGraph('Daily Kilometers');
                       } else {
                         List<double> weekDist = _createSDistanceDataForGraph(
                             data); // so just a list created with a function
-                        return _dataGraph(weekDist, 'Distance');
+                        return _dataGraph(weekDist, 'Daily Kilometers');
                       }
                     } else {
                       return CircularProgressIndicator();
@@ -222,12 +226,12 @@ class StatisticsPageState extends State<StatisticsPage> {
                     if (snapshot.hasData) {
                       final data = snapshot.data as List<StatisticsData>;
                       if (data.length == 0) {
-                        return _noDataGraph('Activity Time');
+                        return _noDataGraph('Minutes of Activity');
                       } else {
                         List<double> weekActivity =
                             _createActivityTimeDataForGraph(
                                 data); // so just a list created with a function
-                        return _dataGraph(weekActivity, 'Activity Time');
+                        return _dataGraph(weekActivity, 'Minutes of Activity');
                       }
                     } else {
                       return CircularProgressIndicator();
@@ -277,19 +281,27 @@ class StatisticsPageState extends State<StatisticsPage> {
             // data for the achievements
             // In this page, since the user could not even complete the homepage questionnaire, the LoS is computed by setting to zero the points of the questionnaire.
             // This is not a problem becouse the function which creates the list of LoS receive data from the db and not frum this function!
-            int today_LoS = _computeLoS(steps, distance, activity_time);
+            int today_LoS = _computeLoS(steps, distance, activity_time, 0);
 
             // Writing data:
             if (newDataReady == true) {
               // writing new data becouse the day has changed
+              final sp = await SharedPreferences.getInstance();
+              sp.setInt("Steps", steps);
+              sp.setInt("Distance", distance);
+              sp.setInt("Activity", activity_time);
+              final total = 0;
+              sp.setInt('Total_Q', total);
+              int out = _computeLoS(steps, distance, activity_time, total);
+              sp.setInt("LoS", out);
               await Provider.of<DatabaseRepository>(context, listen: false)
                   .insertData(
                       StatisticsData(1, today, steps, distance, activity_time));
               // the date is changed, ones upon a day the questionnaire in inserted
               await Provider.of<DatabaseRepository>(context, listen: false)
-                  .insertAnswers(Questionnaire(1, today, 0, 0, 0, 0));
+                  .insertAnswers(Questionnaire(1, today, 0, 0, 0, total));
               await Provider.of<DatabaseRepository>(context, listen: false)
-                  .insertAchievements(Achievements(1, today, today_LoS));
+                  .insertAchievements(Achievements(1, today, out));
 
               print('stored new data');
 
@@ -312,11 +324,16 @@ class StatisticsPageState extends State<StatisticsPage> {
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             } else {
               // update new data
+              final sp = await SharedPreferences.getInstance();
+              final total = sp.getInt("Total_Q");
+              int out = _computeLoS(steps, distance, activity_time, total!);
               await Provider.of<DatabaseRepository>(context, listen: false)
                   .updateData(
                       StatisticsData(1, today, steps, distance, activity_time));
               await Provider.of<DatabaseRepository>(context, listen: false)
-                  .updateAchievements(Achievements(1, today, today_LoS));
+                  .insertAnswers(Questionnaire(1, today, 0, 0, 0, total!));
+              await Provider.of<DatabaseRepository>(context, listen: false)
+                  .updateAchievements(Achievements(1, today, out));
               print('update the data');
 
               final snackBar = SnackBar(
@@ -736,14 +753,14 @@ Future _getWeekActivityTime(String startDate, String endDate) async {
 // --------------------------------------- DB FUNCTIONS TO PREPARE DATA
 
 int _computeLoS(int daily_steps, int daily_distance, int daily_activityTime,
-    {int point_answers = 0}) {
+    int point_answers) {
   //For now, it's just a sum. In the future will be a weighted sum
 
   // Defining of weights
   double ans_w = 1;
-  double steps_w = 0.1;
-  double dist_w = 0.1;
-  double time_w = 0.1;
+  double steps_w = 0.01;
+  double dist_w = 0.005;
+  double time_w = 0.02;
 
   int malus = -50; //for example
 
@@ -877,6 +894,19 @@ List<double> _createLoSDataForGraph(List<Achievements> data) {
 }
 
 Widget _noDataGraph(String title) {
+  String? description = '';
+  if ('$title' == 'Steps') {
+    description = 'This barplot summarises daily steps in week';
+  } else if ('$title' == 'Daily Kilometers') {
+    description = 'This barplot summarises daily distance covered in a week';
+  } else if ('$title' == 'Minutes of Activity') {
+    description =
+        'This barplot summarises the amount of daily activity time covered in a week';
+  } else if ('$title' == 'Level of Sustainability') {
+    description =
+        'This barplot summarises the daily trend of level of sustainability in a weekly view';
+  }
+
   return Padding(
       padding: const EdgeInsets.all(15),
       child: Animate(
@@ -890,12 +920,33 @@ Widget _noDataGraph(String title) {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 10),
-                Text(
-                  '$title',
-                  style: TextStyle(
-                    color: Color.fromARGB(255, 1, 76, 4),
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                Tooltip(
+                  message: description,
+                  textAlign: TextAlign.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Constants.primaryLightColor,
+                    border: Border.all(
+                      width: 2,
+                      color: Constants.primaryColor,
+                    ),
+                  ),
+                  height: 30,
+                  padding: const EdgeInsets.all(8.0),
+                  preferBelow: true,
+                  textStyle: const TextStyle(
+                    fontSize: 15,
+                  ),
+                  showDuration: const Duration(seconds: 2),
+                  waitDuration: const Duration(seconds: 1),
+                  child: Text(
+                    '$title',
+                    style: TextStyle(
+                      color: Constants.secondaryColor,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 SizedBox(height: 15),
@@ -913,6 +964,19 @@ Widget _noDataGraph(String title) {
 }
 
 Widget _dataGraph(List<double> data, String title) {
+  String? description = '';
+  if ('$title' == 'Steps') {
+    description = 'This barplot summarises daily steps in week';
+  } else if ('$title' == 'Daily Kilometers') {
+    description = 'This barplot summarises daily distance covered in a week';
+  } else if ('$title' == 'Minutes of Activity') {
+    description =
+        'This barplot summarises the amount of daily activity time covered in a week';
+  } else if ('$title' == 'Level of Sustainability') {
+    description =
+        'This barplot summarises the daily trend of level of sustainability in a weekly view';
+  }
+  print(description);
   return Padding(
       padding: const EdgeInsets.all(15),
       child: Animate(
@@ -926,12 +990,33 @@ Widget _dataGraph(List<double> data, String title) {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 10),
-                Text(
-                  '$title',
-                  style: TextStyle(
-                    color: Constants.secondaryColor,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                Tooltip(
+                  message: description,
+                  textAlign: TextAlign.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Constants.primaryLightColor,
+                    border: Border.all(
+                      width: 2,
+                      color: Constants.primaryColor,
+                    ),
+                  ),
+                  height: 30,
+                  padding: const EdgeInsets.all(8.0),
+                  preferBelow: true,
+                  textStyle: const TextStyle(
+                    fontSize: 15,
+                  ),
+                  showDuration: const Duration(seconds: 2),
+                  waitDuration: const Duration(seconds: 1),
+                  child: Text(
+                    '$title',
+                    style: TextStyle(
+                      color: Constants.secondaryColor,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
                 ),
                 SizedBox(height: 15),

@@ -88,7 +88,7 @@ class StatisticsPageState extends State<StatisticsPage> {
 
                   for (int i = 0; i < 7; i++) {
                     int today_LoS =
-                        _computeLoS(steps[i], distance[i], activity_time[i]);
+                        _computeLoS(steps[i], distance[i], activity_time[i],0);
 
                     await Provider.of<DatabaseRepository>(context,
                             listen: false)
@@ -285,22 +285,32 @@ class StatisticsPageState extends State<StatisticsPage> {
             // data for the achievements
             // In this page, since the user could not even complete the homepage questionnaire, the LoS is computed by setting to zero the points of the questionnaire.
             // This is not a problem becouse the function which creates the list of LoS receive data from the db and not frum this function!
-            int today_LoS = _computeLoS(steps, distance, activity_time);
+            int today_LoS = _computeLoS(steps, distance, activity_time,0);
 
             // Writing data:
             if (newDataReady == true) {
               // writing new data becouse the day has changed
+              final sp = await SharedPreferences.getInstance();
+              sp.setInt("Steps", steps);
+              sp.setInt("Distance", distance);
+              sp.setInt("Activity", activity_time);
+              final total = 0;
+              sp.setInt('Total_Q', total);
+              int  out = _computeLoS(steps, distance, activity_time, total);
+              sp.setInt("LoS", out);
               await Provider.of<DatabaseRepository>(context, listen: false)
                   .insertData(
                       StatisticsData(1, today, steps, distance, activity_time));
               // the date is changed, ones upon a day the questionnaire in inserted
               await Provider.of<DatabaseRepository>(context, listen: false)
-                  .insertAnswers(Questionnaire(1, today, 0, 0, 0, 0));
+                  .insertAnswers(Questionnaire(1, today, 0,0,0,total));
               await Provider.of<DatabaseRepository>(context, listen: false)
-                  .insertAchievements(Achievements(1, today, today_LoS));
+                  .insertAchievements(Achievements(1, today, out));
 
               print('stored new data');
 
+              
+          
               // a simple snackBar to return the state of the data
               final snackBar = SnackBar(
                   content: Text(
@@ -320,12 +330,18 @@ class StatisticsPageState extends State<StatisticsPage> {
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             } else {
               // update new data
+              final sp = await SharedPreferences.getInstance();
+              final total = sp.getInt("Total_Q");
+              int out = _computeLoS(steps, distance, activity_time, total!);
               await Provider.of<DatabaseRepository>(context, listen: false)
                   .updateData(
                       StatisticsData(1, today, steps, distance, activity_time));
               await Provider.of<DatabaseRepository>(context, listen: false)
-                  .updateAchievements(Achievements(1, today, today_LoS));
+                  .insertAnswers(Questionnaire(1, today, 0,0,0,total!));
+              await Provider.of<DatabaseRepository>(context, listen: false)
+                  .updateAchievements(Achievements(1, today, out));
               print('update the data');
+
 
               final snackBar = SnackBar(
                   content: Text(
@@ -744,14 +760,14 @@ Future _getWeekActivityTime(String startDate, String endDate) async {
 // --------------------------------------- DB FUNCTIONS TO PREPARE DATA
 
 int _computeLoS(int daily_steps, int daily_distance, int daily_activityTime,
-    {int point_answers = 0}) {
+    int point_answers) {
   //For now, it's just a sum. In the future will be a weighted sum
 
     // Defining of weights
     double ans_w=1;
     double steps_w=0.01;
-    double dist_w=0.02;
-    double time_w=0.2;
+    double dist_w=0.005;
+    double time_w=0.02;
 
   int malus = -50; //for example
 

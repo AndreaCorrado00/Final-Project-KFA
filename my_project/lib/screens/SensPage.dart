@@ -10,7 +10,6 @@ import '../Database/repositries/appDatabaseRepository.dart';
 import 'AboutThisApp.dart';
 import 'LoginPage.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:my_project/utils/impact.dart';
@@ -375,7 +374,7 @@ class Sens_page extends State<SensPage> {
   late DateTime lastSubmissionDate; // Store the last submission date
   // ignore: prefer_typing_uninitialized_variables
   double FLoS = 0.0;
-  int Trees = 0;
+  var Trees = 0;
 
   // ignore: non_constant_identifier_names
   //Future<double>
@@ -395,7 +394,7 @@ class Sens_page extends State<SensPage> {
     // final currentDate = DateTime.now()
     //     .subtract(Duration(days: 1)); // once assigned can be changed
     //final today = DateFormat('yyyy-MM-dd').format(lastSubmissionDate);
-    const today = '2023-05-16';
+    const today = '2023-05-15';
     // ignore: use_build_context_synchronously
     showDialog(
       context: context,
@@ -411,7 +410,7 @@ class Sens_page extends State<SensPage> {
                     const Text('Did you use public transportation today?'),
                     RadioListTile<int>(
                       title: const Text('Yes'),
-                      value: 1,
+                      value: 2,
                       groupValue: question1Value,
                       onChanged: (value) {
                         setState(
@@ -423,7 +422,7 @@ class Sens_page extends State<SensPage> {
                     ),
                     RadioListTile<int>(
                       title: const Text('No'),
-                      value: 2,
+                      value: 0,
                       groupValue: question1Value,
                       onChanged: (value) {
                         setState(() {
@@ -436,7 +435,7 @@ class Sens_page extends State<SensPage> {
                         'Did you save water today?If yes how much(approximatly)'),
                     RadioListTile<int>(
                       title: const Text('Less than 2L'),
-                      value: 1,
+                      value: 2,
                       groupValue: question2Value,
                       onChanged: (value) {
                         setState(() {
@@ -446,7 +445,7 @@ class Sens_page extends State<SensPage> {
                     ),
                     RadioListTile<int>(
                       title: const Text('More than 2L'),
-                      value: 2,
+                      value: 0,
                       groupValue: question2Value,
                       onChanged: (value) {
                         setState(() {
@@ -458,7 +457,7 @@ class Sens_page extends State<SensPage> {
                     const Text('Did you save a meal from being wasted today?'),
                     RadioListTile<int>(
                       title: const Text('Yes'),
-                      value: 1,
+                      value: 200,
                       groupValue: question3Value,
                       onChanged: (value) {
                         setState(() {
@@ -468,7 +467,7 @@ class Sens_page extends State<SensPage> {
                     ),
                     RadioListTile<int>(
                       title: const Text('No'),
-                      value: 2,
+                      value: 0,
                       groupValue: question3Value,
                       onChanged: (value) {
                         setState(() {
@@ -510,10 +509,27 @@ class Sens_page extends State<SensPage> {
                 // ignore: non_constant_identifier_names
                 int LoS = _computeLoS(steps, distance, activityTime, total);
 
+                //Shared pref for total questionnaire
+// ignore: unrelated_type_equality_checks
+                if (_newDataReady(today) == false) {
+                  Future<void> totalquestion() async {
+                    final sp = await SharedPreferences.getInstance();
+                    sp.setInt('Total_Q', total);
+                  }
+
+                  totalquestion();
+                } else {
+                  Future<void> totalquestion() async {
+                    final sp = await SharedPreferences.getInstance();
+                    sp.setInt('Total_Q', 0);
+                  }
+
+                  totalquestion();
+                }
+
                 //if it's a new day insert new data otherwise update the current value in the database
-                if (currentDate.day != lastSubmissionDate.day ||
-                    currentDate.month != lastSubmissionDate.month ||
-                    currentDate.year != lastSubmissionDate.year) {
+                // ignore: unrelated_type_equality_checks
+                if (_newDataReady(today) == true) {
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .insertAnswers(Questionnaire(1, today, question1Value!,
                           question2Value!, question3Value!, total));
@@ -671,9 +687,30 @@ class Sens_page extends State<SensPage> {
                         FLoS = 0.0;
                       } else {
                         double FLoS = _reachedLoS(data) as double;
-                        if (FLoS >= 1) {
-                          Trees = Trees + 1;
+
+                        //a class to store the number of trees
+                        Future<void> updateTrees() async {
+                          Trees = FLoS ~/ 0.1;
+                          final sp = await SharedPreferences.getInstance();
+                          sp.setInt('trees', Trees);
                         }
+
+                        updateTrees();
+
+                        // a class to and update the number of trees
+
+                        Future<void> getTreesValue() async {
+                          final sp = await SharedPreferences.getInstance();
+                          final storedTrees = sp.getInt('trees');
+                          if (storedTrees != null) {
+                            setState(() {
+                              Trees = storedTrees;
+                            });
+                          }
+                        }
+
+                        getTreesValue();
+
                         return SizedBox(
                           width: 200,
                           height: 200,
@@ -741,7 +778,7 @@ class Sens_page extends State<SensPage> {
                       width: 190,
                       height: 50,
                       child: Text(
-                        'help the world to improve air quality by planting more trees!',
+                        'help the world to improve by planting more trees!',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 15.0),
@@ -809,9 +846,9 @@ int _computeLoS(
     int dailySteps, int dailyDistance, int dailyActivitytime, int total) {
   // Defining of weights
   double ansW = 1;
-  double stepsW = 0.1;
-  double distW = 0.1;
-  double timeW = 0.1;
+  double stepsW = 0.01;
+  double distW = 0.005;
+  double timeW = 0.02;
 
   int malus = -50; //for example
 

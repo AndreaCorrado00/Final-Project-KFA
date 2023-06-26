@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_project/screens/HomePage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -10,34 +11,53 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  //TextEditingController it's a class that allows us to control the text in a TextField widget if there's any modifications or not
-
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   bool showError = false;
-  late String errormsg;
+  late String errorMsg;
 
-// check the credentials
-  void login() {
-    //text.trim() used to remove whitespace retreive only the text part
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
+  }
+
+  void checkLoginStatus() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    bool isLoggedIn = sp.getBool('isLoggedIn') ?? false;
+
+    if (isLoggedIn) {
+      // User is already logged in, navigate to HomeScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    }
+  }
+
+  void login() async {
     final String email = emailController.text.trim();
     final String password = passwordController.text.trim();
 
     if (email == 'user@gmail.com' && password == '0000') {
-      Navigator.push(
+      // Record login activity
+      SharedPreferences sp = await SharedPreferences.getInstance();
+      sp.setBool('isLoggedIn', true);
+
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
-      // Clear email and password fields after we checked
+
       showError = false;
       emailController.clear();
       passwordController.clear();
-      errormsg = '';
+      errorMsg = '';
     } else {
       setState(() {
         showError = true;
-        errormsg = 'invalid Email or Password';
+        errorMsg = 'Invalid Email or Password';
       });
     }
   }
@@ -94,7 +114,6 @@ class LoginPageState extends State<LoginPage> {
                     )
                   ],
                 ),
-                //controlling password + email
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: Column(
@@ -105,10 +124,9 @@ class LoginPageState extends State<LoginPage> {
                         obscureText: true,
                         controller: passwordController,
                       ),
-                      //error message
                       if (showError)
                         Text(
-                          errormsg,
+                          errorMsg,
                           style: const TextStyle(
                             color: Colors.red,
                             fontSize: 14,

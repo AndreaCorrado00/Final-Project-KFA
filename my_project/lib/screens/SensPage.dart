@@ -162,7 +162,9 @@ class Sens_page extends State<SensPage> {
                 // ignore: non_constant_identifier_names
                 bool newDataReady = await _newDataReady(today);
                 if (newDataReady == true) {
-                  LoS = _computeLoS(0, 0, 0, 0);
+                  sp.setInt('Total_Q', total);
+                  LoS = _computeLoS(0, 0, 0, total);
+
                 } else {
                   LoS = _computeLoS(steps!, distance!, activityTime!, total);
                 }
@@ -205,6 +207,7 @@ class Sens_page extends State<SensPage> {
                       .updateData(StatisticsData(
                           1, today, steps!, distance!, activityTime!));
                 }
+
 // initialize the questionnaire
                 setState(() {
                   question1Value = null;

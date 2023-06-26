@@ -337,7 +337,7 @@ class StatisticsPageState extends State<StatisticsPage> {
                       StatisticsData(1, today, steps, distance, activity_time));
               await Provider.of<DatabaseRepository>(context, listen: false)
 
-                  .insertAnswers(Questionnaire(1, today, 0,0,0,total!));
+                  .updateAnswers(Questionnaire(1, today, 0,0,0,total));
               await Provider.of<DatabaseRepository>(context, listen: false)
                   .updateAchievements(Achievements(1, today, out));
               print('update the data');

@@ -154,33 +154,37 @@ class Sens_page extends State<SensPage> {
             TextButton(
               onPressed: () async {
                 final sp = await SharedPreferences.getInstance();
-                int? steps = sp.getInt('Steps');
-                int? distance = sp.getInt('Distance');
-                int? activityTime = sp.getInt('Activity');
+                
                 int total = question1Value! + question2Value! + question3Value!;
 
                 // ignore: non_constant_identifier_names
                 bool newDataReady = await _newDataReady(today);
                 if (newDataReady == true) {
-                  sp.setInt('Total_Q', total);
+                  await sp.setInt('Steps',0);
+                  await sp.setInt('Distance',0);
+                  await sp.setInt('Activity',0);
                   LoS = _computeLoS(0, 0, 0, total);
 
                 } else {
+                int? steps = sp.getInt('Steps');
+                int? distance = sp.getInt('Distance');
+                int? activityTime = sp.getInt('Activity');
                   LoS = _computeLoS(steps!, distance!, activityTime!, total);
                 }
 
                 //Shared pref for total questionnaire
-                if (newDataReady == false) {
+                if (newDataReady ==  false) {
                   Future<void> totalquestion() async {
                     final sp = await SharedPreferences.getInstance();
                     sp.setInt('Total_Q', total);
-                  }
 
+                  }
                   totalquestion();
                 } else {
                   Future<void> totalquestion() async {
                     final sp = await SharedPreferences.getInstance();
                     sp.setInt('Total_Q', 0);
+
                   }
 
                   totalquestion();
@@ -198,14 +202,17 @@ class Sens_page extends State<SensPage> {
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .insertData(StatisticsData(1, today, 0, 0, 0));
                 } else {
+                      // int? steps = sp.getInt('Steps');
+                      // int? distance = sp.getInt('Distance');
+                      // int? activityTime = sp.getInt('Activity');
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .updateAnswers(Questionnaire(1, today, question1Value!,
                           question2Value!, question3Value!, total));
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .updateAchievements(Achievements(1, today, LoS));
-                  await Provider.of<DatabaseRepository>(context, listen: false)
-                      .updateData(StatisticsData(
-                          1, today, steps!, distance!, activityTime!));
+                  // await Provider.of<DatabaseRepository>(context, listen: false)
+                  //     .updateData(StatisticsData(
+                  //         1, today, steps!, distance!, activityTime!));
                 }
 
 // initialize the questionnaire
@@ -516,7 +523,7 @@ int _computeLoS(
   double distW = 0.005;
   double timeW = 0.02;
 
-  int malus = -50; //for example
+  // int malus = -50; //for example
 
   // as a sum of int, round is not necessary (for now BUT in the future...)
   num weightedSum = total * ansW +
@@ -527,7 +534,7 @@ int _computeLoS(
 
   // if you didn't recorded anything, you'll get a malus
   if (result == 0) {
-    return malus;
+    return result;
   }
   // Otherwise, good job!
   else {

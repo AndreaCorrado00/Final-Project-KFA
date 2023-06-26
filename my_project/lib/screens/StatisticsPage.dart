@@ -328,16 +328,19 @@ class StatisticsPageState extends State<StatisticsPage> {
                   ));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             } else {
-              // update new data
               final sp = await SharedPreferences.getInstance();
+              sp.setInt("Steps", steps);
+              sp.setInt("Distance", distance);
+              sp.setInt("Activity", activity_time);
+              // update new data
               final total = sp.getInt("Total_Q");
               int out = _computeLoS(steps, distance, activity_time, total!);
               await Provider.of<DatabaseRepository>(context, listen: false)
-                  .updateData(
-                      StatisticsData(1, today, steps, distance, activity_time));
-              await Provider.of<DatabaseRepository>(context, listen: false)
+                  .updateData(StatisticsData(1, today, steps, distance, activity_time));
 
-                  .updateAnswers(Questionnaire(1, today, 0,0,0,total));
+              // await Provider.of<DatabaseRepository>(context, listen: false)
+              //     .updateAnswers(Questionnaire(1, today, 0,0,0,total));
+
               await Provider.of<DatabaseRepository>(context, listen: false)
                   .updateAchievements(Achievements(1, today, out));
               print('update the data');
@@ -770,7 +773,7 @@ int _computeLoS(int daily_steps, int daily_distance, int daily_activityTime,
     double dist_w=0.005;
     double time_w=0.02;
 
-  int malus = -50; //for example
+  // int malus = -50; //for example
 
   // as a sum of int, round is not necessary (for now BUT in the future...)
   num weightedSum = point_answers * ans_w +
@@ -780,7 +783,7 @@ int _computeLoS(int daily_steps, int daily_distance, int daily_activityTime,
   int result = weightedSum.toInt();
 
     // if you didn't recorded anything, you'll get a malus
-    if(result==0){return malus;} 
+    if(result==0){return result;} 
     // Otherwise, good job!
     else{return result;}
     

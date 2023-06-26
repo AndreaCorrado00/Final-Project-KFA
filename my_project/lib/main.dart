@@ -8,6 +8,7 @@ import 'Database/appdata_database.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
 // Open database
   final AppDatabase appdata_database =
       await $FloorAppDatabase.databaseBuilder('app_database.db').build();
@@ -20,6 +21,8 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  // const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -95,13 +98,13 @@ class _loginState extends State<login> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
                   );
                 },
                 color: const Color.fromARGB(255, 226, 203, 70),
                 shape: RoundedRectangleBorder(
                     side: const BorderSide(
-                      color: Color.fromARGB(255, 31, 27, 27),
+                      color: Color.fromARGB(255, 255, 251, 251),
                     ),
                     borderRadius: BorderRadius.circular(40)),
                 child: const Text(

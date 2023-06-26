@@ -154,37 +154,35 @@ class Sens_page extends State<SensPage> {
             TextButton(
               onPressed: () async {
                 final sp = await SharedPreferences.getInstance();
-                
+
                 int total = question1Value! + question2Value! + question3Value!;
 
                 // ignore: non_constant_identifier_names
                 bool newDataReady = await _newDataReady(today);
                 if (newDataReady == true) {
-                  await sp.setInt('Steps',0);
-                  await sp.setInt('Distance',0);
-                  await sp.setInt('Activity',0);
+                  await sp.setInt('Steps', 0);
+                  await sp.setInt('Distance', 0);
+                  await sp.setInt('Activity', 0);
                   LoS = _computeLoS(0, 0, 0, total);
-
                 } else {
-                int? steps = sp.getInt('Steps');
-                int? distance = sp.getInt('Distance');
-                int? activityTime = sp.getInt('Activity');
+                  int? steps = sp.getInt('Steps');
+                  int? distance = sp.getInt('Distance');
+                  int? activityTime = sp.getInt('Activity');
                   LoS = _computeLoS(steps!, distance!, activityTime!, total);
                 }
 
                 //Shared pref for total questionnaire
-                if (newDataReady ==  false) {
+                if (newDataReady == false) {
                   Future<void> totalquestion() async {
                     final sp = await SharedPreferences.getInstance();
                     sp.setInt('Total_Q', total);
-
                   }
+
                   totalquestion();
                 } else {
                   Future<void> totalquestion() async {
                     final sp = await SharedPreferences.getInstance();
                     sp.setInt('Total_Q', 0);
-
                   }
 
                   totalquestion();
@@ -202,9 +200,9 @@ class Sens_page extends State<SensPage> {
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .insertData(StatisticsData(1, today, 0, 0, 0));
                 } else {
-                      // int? steps = sp.getInt('Steps');
-                      // int? distance = sp.getInt('Distance');
-                      // int? activityTime = sp.getInt('Activity');
+                  // int? steps = sp.getInt('Steps');
+                  // int? distance = sp.getInt('Distance');
+                  // int? activityTime = sp.getInt('Activity');
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .updateAnswers(Questionnaire(1, today, question1Value!,
                           question2Value!, question3Value!, total));
@@ -409,7 +407,17 @@ class Sens_page extends State<SensPage> {
                       }
                     }
 
-                    return CircularProgressIndicator();
+                    return SizedBox(
+                      width: 200,
+                      height: 200,
+                      child: Center(
+                        child: Container(
+                          width: 120,
+                          height: 120,
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    );
                   },
                 );
               })),
@@ -549,6 +557,6 @@ double _reachedLoS(List<Achievements> data) {
     out += data[i].levelOfSustainability;
     
   }
-  out = out / 50000.0;
+  out = out / 25000.0;
   return out;
 }

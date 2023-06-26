@@ -9,14 +9,10 @@ import 'package:my_project/screens/AboutThisApp.dart';
 
 import 'package:my_project/screens/Barplot/bar_graph.dart';
 import 'package:my_project/utils/constants.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:my_project/screens/Barplot/bar_graph.dart';
 import 'package:my_project/screens/LoginPage.dart';
-import 'package:my_project/screens/databaseCodesAndFunctions.dart';
-import 'package:my_project/utils/constants.dart';
-//import 'package:percent_indicator/percent_indicator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+      
+
 
 // to receive datacfrom impact
 import 'dart:convert';

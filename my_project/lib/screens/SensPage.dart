@@ -557,6 +557,6 @@ double _reachedLoS(List<Achievements> data) {
     out += data[i].levelOfSustainability;
     
   }
-  out = out / 50000.0;
+  out = out / 25000.0;
   return out;
 }

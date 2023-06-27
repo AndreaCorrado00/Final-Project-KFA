@@ -557,46 +557,40 @@ Future _getDistance(today) async {
   }
 } //getDistance
 
-Future _getActivity_time(today) async {
-  final sp = await SharedPreferences.getInstance();
-  var access = sp.getString('access');
-  if (access == null) {
-    return null;
-  } else {
-    if (JwtDecoder.isExpired(access)) {
-      await _refreshTokens();
-      access = sp.getString('access');
+Future _getActivity_time(today)async{
+    final sp=await SharedPreferences.getInstance();
+    var access=sp.getString('access');
+    if (access == null){
+      return null;
     }
-    final url = Impact.baseUrl +
-        Impact.activityEndpoint +
-        '/patients/Jpefaq6m58' +
-        '/day/$today/';
-    final headers = {
-      HttpHeaders.authorizationHeader: 'Bearer $access'
-    }; //fixed costruction!
-    final response = await http.get(Uri.parse(url), headers: headers);
+    else{
+      if(JwtDecoder.isExpired(access)){
+        await _refreshTokens();
+        access = sp.getString('access');
+      }
+      final url=Impact.baseUrl+Impact.activityEndpoint + '/patients/Jpefaq6m58'+'/day/$today/';
+      final headers = {HttpHeaders.authorizationHeader: 'Bearer $access'}; //fixed costruction!
+      final response = await http.get(Uri.parse(url), headers: headers);
 
     if (response.statusCode == 200) {
       final decodedResponse = jsonDecode(response.body);
-      List activity_time_data = [];
-      if (decodedResponse['data'].length == 0) {
-        return 0;
+      List activity_time_data=[];
+      if (decodedResponse['data'].length==0){
+        return 0; 
       }
       for (var i = 0; i < decodedResponse['data']['data'].length; i++) {
-        activity_time_data.add(Activity.fromJson(
-                decodedResponse['data']['date'],
-                decodedResponse['data']['data'][i])
-            .getValue());
-      } //for
-      double out =
-          (activity_time_data.reduce((a, b) => a + b)) / 60000; //udm [min]
+        activity_time_data.add(Activity.fromJson(decodedResponse['data']['date'], decodedResponse['data']['data'][i]).getValue());
+      }//for
+      double out=(activity_time_data.reduce((a, b) => a + b))/60000; //udm [min]
       return out.toInt();
     } //if
-    else {
+    else{
       void result = null;
-    } //else
-  }
-} //getActivity_time
+    }//else
+    
+    }
+  
+  }//getActivity_time
 
 // --------------------------------------- SIMULATION OF A WEEK OF ACTIVITIES
 

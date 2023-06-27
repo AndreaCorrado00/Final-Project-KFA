@@ -9,11 +9,12 @@ class Activity{
 
   Activity.fromJson(String date, Map<String, dynamic> json) :
       time = DateFormat('yyyy-MM-dd HH:mm:ss').parse('$date ${json["time"]}'),
-      minutes = json["duration"];
+      minutes = json["duration"]+0.0;
   
   double getValue(){
     return minutes;
   }
+
 
   @override
   String toString() {

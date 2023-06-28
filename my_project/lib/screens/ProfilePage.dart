@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_project/main.dart';
 import 'package:my_project/screens/AboutThisApp.dart';
 import 'package:my_project/screens/LoginPage.dart';
 import 'package:my_project/utils/constants.dart';
@@ -285,7 +286,7 @@ class ProfilePageState extends State<ProfilePage> {
         final userPreferences = await SharedPreferences.getInstance();
         await userPreferences.setBool('Remember_login', false);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
+            context, MaterialPageRoute(builder: (context) =>MyApp()));
       },
       style: Constants.TextButtonStyle_Alert,
     );

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:my_project/Database/entities/achievements.dart';
 import 'package:my_project/Database/entities/questionnaire.dart';
 import 'package:my_project/Database/entities/statisticsData.dart';
+import 'package:my_project/main.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart'; // to view the map
@@ -12,6 +13,7 @@ import '../Database/repositries/appDatabaseRepository.dart';
 import 'AboutThisApp.dart';
 import 'LoginPage.dart';
 import 'package:provider/provider.dart';
+
 
 int? question1Value;
 int? question2Value;
@@ -237,7 +239,7 @@ class Sens_page extends State<SensPage> {
         final userPreferences = await SharedPreferences.getInstance();
         await userPreferences.setBool('Rememeber_login', false);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
+            context, MaterialPageRoute(builder: (context) => MyApp()));
         // Must be changed to point at the current page
       },
       style: Constants.TextButtonStyle_Alert,

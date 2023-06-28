@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:my_project/main.dart';
 import 'package:my_project/screens/AboutThisApp.dart';
 import 'package:my_project/screens/LoginPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -386,7 +387,7 @@ void _OnLogoutTapConfirm(BuildContext context)  {
       onPressed: () async {
         final user_preferences = await SharedPreferences.getInstance();
          await user_preferences.setBool('Rememeber_login', false);
-        Navigator.push(context, MaterialPageRoute(builder: (context) =>  LoginPage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>  MyApp()));
          
       },
       style: Constants.TextButtonStyle_Alert,

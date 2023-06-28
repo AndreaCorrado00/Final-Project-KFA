@@ -22,7 +22,6 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -50,6 +49,7 @@ class login extends StatefulWidget {
 class _loginState extends State<login> {
   get child => null;
 
+//nothing paticular just the User UI
   @override
   Widget build(BuildContext context) {
     return Scaffold(

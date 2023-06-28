@@ -11,7 +11,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  TextEditingController emailController = TextEditingController();
+  TextEditingController emailController =
+      TextEditingController(); // instances are used to retrieve and manipulate the text entered by the user in the email and password input fields of the login form
   TextEditingController passwordController = TextEditingController();
 
   bool showError = false;
@@ -23,6 +24,7 @@ class LoginPageState extends State<LoginPage> {
     checkLoginStatus();
   }
 
+// a function to check the loging state
   void checkLoginStatus() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
     bool isLoggedIn = sp.getBool('isLoggedIn') ?? false;
@@ -36,10 +38,11 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
+//a function to remember if the user is already loged in or not
   void login() async {
     final String email = emailController.text.trim();
     final String password = passwordController.text.trim();
-
+// if the user credantial are correct store the login activity by setting it to true and navigate to the homepage
     if (email == 'user@gmail.com' && password == '0000') {
       // Record login activity
       SharedPreferences sp = await SharedPreferences.getInstance();
@@ -49,12 +52,13 @@ class LoginPageState extends State<LoginPage> {
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
-
+//initialize the settings
       showError = false;
       emailController.clear();
       passwordController.clear();
       errorMsg = '';
     } else {
+      //error message if the cred are wrong
       setState(() {
         showError = true;
         errorMsg = 'Invalid Email or Password';
@@ -64,6 +68,7 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    //UI
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,

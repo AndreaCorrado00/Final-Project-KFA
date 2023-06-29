@@ -293,8 +293,8 @@ class ProfilePageState extends State<ProfilePage> {
     Widget continueButton = TextButton(
       child: const Text("Continue"),
       onPressed: () async {
-        final userPreferences = await SharedPreferences.getInstance();
-        await userPreferences.setBool('Remember_login', false);
+        final sp = await SharedPreferences.getInstance();
+        sp.setBool('isLoggedIn', false);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => MyApp()));
       },

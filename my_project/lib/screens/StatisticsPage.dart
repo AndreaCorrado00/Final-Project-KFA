@@ -387,8 +387,8 @@ void _OnLogoutTapConfirm(BuildContext context) {
   Widget continueButton = TextButton(
     child: Text("Continue"),
     onPressed: () async {
-      final user_preferences = await SharedPreferences.getInstance();
-      await user_preferences.setBool('Rememeber_login', false);
+      final sp = await SharedPreferences.getInstance();
+        sp.setBool('isLoggedIn', false);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => MyApp()));
     },

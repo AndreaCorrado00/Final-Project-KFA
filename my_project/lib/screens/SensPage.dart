@@ -227,8 +227,8 @@ class Sens_page extends State<SensPage> {
     Widget continueButton = TextButton(
       child: Text("Continue"),
       onPressed: () async {
-        final userPreferences = await SharedPreferences.getInstance();
-        await userPreferences.setBool('Rememeber_login', false);
+        final sp = await SharedPreferences.getInstance();
+        sp.setBool('isLoggedIn', false);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => MyApp()));
         // Must be changed to point at the current page

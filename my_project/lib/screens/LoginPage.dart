@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_project/screens/HomePage.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -19,12 +19,14 @@ class LoginPageState extends State<LoginPage> {
   late String errormsg;
 
 // check the credentials
-  void login() {
+  void login() async {
     //text.trim() used to remove whitespace retreive only the text part
     final String email = emailController.text.trim();
     final String password = passwordController.text.trim();
 
     if (email == 'user@gmail.com' && password == '0000') {
+      final userPreferences = await SharedPreferences.getInstance();
+        await userPreferences.setBool('Rememeber_login', true);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),

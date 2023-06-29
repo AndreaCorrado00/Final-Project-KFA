@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_project/screens/HomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class LoginPage extends StatefulWidget {
@@ -10,42 +11,64 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  //TextEditingController it's a class that allows us to control the text in a TextField widget if there's any modifications or not
-
-  TextEditingController emailController = TextEditingController();
+  TextEditingController emailController =
+      TextEditingController(); // instances are used to retrieve and manipulate the text entered by the user in the email and password input fields of the login form
   TextEditingController passwordController = TextEditingController();
 
   bool showError = false;
-  late String errormsg;
+  late String errorMsg;
 
-// check the credentials
-  void login() async {
-    //text.trim() used to remove whitespace retreive only the text part
-    final String email = emailController.text.trim();
-    final String password = passwordController.text.trim();
+  @override
+  void initState() {
+    super.initState();
+    checkLoginStatus();
+  }
 
-    if (email == 'user@gmail.com' && password == '0000') {
-      final userPreferences = await SharedPreferences.getInstance();
-        await userPreferences.setBool('Rememeber_login', true);
-      Navigator.push(
+// a function to check the loging state
+  void checkLoginStatus() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    bool isLoggedIn = sp.getBool('isLoggedIn') ?? false;
+
+    if (isLoggedIn) {
+      // User is already logged in, navigate to HomeScreen
+      Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
-      // Clear email and password fields after we checked
+    }
+  }
+
+//a function to remember if the user is already loged in or not
+  void login() async {
+    final String email = emailController.text.trim();
+    final String password = passwordController.text.trim();
+// if the user credantial are correct store the login activity by setting it to true and navigate to the homepage
+    if (email == 'user@gmail.com' && password == '0000') {
+      // Record login activity
+      SharedPreferences sp = await SharedPreferences.getInstance();
+      sp.setBool('isLoggedIn', true);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+//initialize the settings
       showError = false;
       emailController.clear();
       passwordController.clear();
-      errormsg = '';
+      errorMsg = '';
     } else {
+      //error message if the cred are wrong
       setState(() {
         showError = true;
-        errormsg = 'invalid Email or Password';
+        errorMsg = 'Invalid Email or Password';
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    //UI
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -96,7 +119,6 @@ class LoginPageState extends State<LoginPage> {
                     )
                   ],
                 ),
-                //controlling password + email
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: Column(
@@ -107,10 +129,9 @@ class LoginPageState extends State<LoginPage> {
                         obscureText: true,
                         controller: passwordController,
                       ),
-                      //error message
                       if (showError)
                         Text(
-                          errormsg,
+                          errorMsg,
                           style: const TextStyle(
                             color: Colors.red,
                             fontSize: 14,

@@ -11,10 +11,9 @@ import 'package:webview_flutter/webview_flutter.dart'; // to view the map
 import 'package:my_project/utils/constants.dart';
 import '../Database/repositries/appDatabaseRepository.dart';
 import 'AboutThisApp.dart';
-import 'LoginPage.dart';
 import 'package:provider/provider.dart';
 
-
+//initialize the question value (to be assigned later)
 int? question1Value;
 int? question2Value;
 int? question3Value;
@@ -25,15 +24,13 @@ class SensPage extends StatefulWidget {
   State<StatefulWidget> createState() => Sens_page();
 }
 
-// ignore: camel_case_types
 class Sens_page extends State<SensPage> {
-  // ignore: prefer_typing_uninitialized_variables
+  //initialize FLoS/Trees/LoS
   double FLoS = 0.0;
   var Trees = 0;
   var LoS = 0;
 
-  // ignore: non_constant_identifier_names
-
+//check if the date is changed or not
   Future<bool> _newDataReady(String today) async {
     final sp = await SharedPreferences.getInstance();
     print('into newDataReady');
@@ -47,18 +44,19 @@ class Sens_page extends State<SensPage> {
     }
   }
 
+//create a async function to show the questionnaire alert
   void _showQuestionnaire() async {
     // Get the current date
     final currentDate = DateTime.now()
         .subtract(Duration(days: 1)); // once assigned can be changed
     final today = DateFormat('yyyy-MM-dd').format(currentDate);
-    // ignore: use_build_context_synchronously
+
+    //define the questions and the responses values
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Questionnaire'),
-          // the Alert should Satateful
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return SingleChildScrollView(
@@ -140,7 +138,7 @@ class Sens_page extends State<SensPage> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-// initialize the questionnaire
+// initialize the question values after clicking on cancel
                 setState(() {
                   question1Value = null;
                   question2Value = null;
@@ -151,29 +149,30 @@ class Sens_page extends State<SensPage> {
               },
               child: const Text('Cancel'), //close the Questionnaire
             ),
-
-//add/updating the values of the questions to the database
             TextButton(
               onPressed: () async {
+                // call the sp : Shared Preferences
                 final sp = await SharedPreferences.getInstance();
-
+                //calculate the total value obtained by the questionnaire
                 int total = question1Value! + question2Value! + question3Value!;
 
-                // ignore: non_constant_identifier_names
                 bool newDataReady = await _newDataReady(today);
                 if (newDataReady == true) {
+                  //if the date is changed initialize all the activities values and calculate the new LoS
                   await sp.setInt('Steps', 0);
                   await sp.setInt('Distance', 0);
                   await sp.setInt('Activity', 0);
                   LoS = _computeLoS(0, 0, 0, total);
                 } else {
+                  //if the date is not changed get all activities values from the shared preferenes and calculate the finale LoS
                   int? steps = sp.getInt('Steps');
                   int? distance = sp.getInt('Distance');
                   int? activityTime = sp.getInt('Activity');
                   LoS = _computeLoS(steps!, distance!, activityTime!, total);
                 }
 
-                //Shared pref for total questionnaire
+                //Shared pref for the total of questionnaire to be used in the statistics page also here if we have a new day the value stored have
+                //to be initialized to 0.if the date sill the same set the value into the DB
                 if (newDataReady == false) {
                   Future<void> totalquestion() async {
                     final sp = await SharedPreferences.getInstance();
@@ -191,37 +190,28 @@ class Sens_page extends State<SensPage> {
                 }
 
                 //if it's a new day insert new data otherwise update the current value in the database
-                // ignore: unrelated_type_equality_checks
                 if (newDataReady == true) {
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .insertAnswers(Questionnaire(1, today, question1Value!,
                           question2Value!, question3Value!, total));
-                  //INSERT the New Value of LoS
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .insertAchievements(Achievements(1, today, LoS));
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .insertData(StatisticsData(1, today, 0, 0, 0));
                 } else {
-                  // int? steps = sp.getInt('Steps');
-                  // int? distance = sp.getInt('Distance');
-                  // int? activityTime = sp.getInt('Activity');
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .updateAnswers(Questionnaire(1, today, question1Value!,
                           question2Value!, question3Value!, total));
                   await Provider.of<DatabaseRepository>(context, listen: false)
                       .updateAchievements(Achievements(1, today, LoS));
-                  // await Provider.of<DatabaseRepository>(context, listen: false)
-                  //     .updateData(StatisticsData(
-                  //         1, today, steps!, distance!, activityTime!));
                 }
 
-// initialize the questionnaire
+                // initialize the questionnaire
                 setState(() {
                   question1Value = null;
                   question2Value = null;
                   question3Value = null;
                 });
-                // ignore: use_build_context_synchronously
                 Navigator.of(context).pop();
               },
               child: const Text('Submit'),
@@ -232,6 +222,7 @@ class Sens_page extends State<SensPage> {
     );
   }
 
+// the Logout function
   void _OnLogoutTapConfirm(BuildContext context) {
     Widget continueButton = TextButton(
       child: Text("Continue"),
@@ -249,7 +240,6 @@ class Sens_page extends State<SensPage> {
       title: const Text("Logout"),
       content: const Text("Are you sure you want to logout?"),
       actions: [
-        //cancelButton,
         continueButton,
       ],
       backgroundColor: Constants.primaryLightColor,
@@ -264,12 +254,15 @@ class Sens_page extends State<SensPage> {
   }
 
   @override
+  // build the Sens page UI
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Hello Hero!'),
         backgroundColor: Constants.primaryColor,
       ),
+
+      //drawer for : logout and about this app
       drawer: Drawer(
         backgroundColor: Constants.secondaryColor,
         child: Column(
@@ -342,10 +335,11 @@ class Sens_page extends State<SensPage> {
 
           Row(
             children: [
-              // showing the Questionnaire whenever the user tap on Los
+              // showing the Questionnaire whenever the user tap on Los %
               GestureDetector(onTap: () {
                 _showQuestionnaire();
               }, child:
+                  //updating the LoS by obtaining the Achivements data stored in the DB
                   Consumer<DatabaseRepository>(builder: (context, dbr, child) {
                 List<Achievements> initialData = [Achievements(0, '0000', 0)];
 
@@ -356,13 +350,15 @@ class Sens_page extends State<SensPage> {
                     if (snapshot.hasData) {
                       final data = snapshot.data as List<Achievements>;
                       if (data.length == 0) {
-                        FLoS = 0.0;
+                        FLoS = 0.0; // if we don't have data return FLoS = 0
                       } else {
-                        double FLoS = _reachedLoS(data) as double;
+                        double FLoS = _reachedLoS(data)
+                            as double; // otherwise calculate the FinaL LoS after obtaining all the data
 
-                        //a class to store the number of trees
+                        //store and update the number of trees, PS : to be used later
                         Future<void> updateTrees() async {
-                          Trees = FLoS ~/ 0.01;
+                          Trees = FLoS ~/
+                              0.01; //every 1% we have a new planted tree
                           final sp = await SharedPreferences.getInstance();
                           sp.setInt('trees', Trees);
                           sp.setDouble('FLoS', FLoS);
@@ -370,7 +366,9 @@ class Sens_page extends State<SensPage> {
 
                         updateTrees();
 
-                        // a class to and update the number of trees
+                        //update the number of trees
+
+                        //get the number of trees
 
                         Future<void> getTreesValue() async {
                           final sp = await SharedPreferences.getInstance();
@@ -383,7 +381,7 @@ class Sens_page extends State<SensPage> {
                         }
 
                         getTreesValue();
-
+                        //showing the cicular percent indicator with the LoS value
                         return SizedBox(
                           width: 200,
                           height: 200,
@@ -416,14 +414,14 @@ class Sens_page extends State<SensPage> {
                         child: Container(
                           width: 120,
                           height: 120,
-                          child: CircularProgressIndicator(),
+                          child: CircularProgressIndicator(), //loading
                         ),
                       ),
                     );
                   },
                 );
               })),
-
+              // animated text
               const SizedBox(width: 10),
               SizedBox(
                 width: 200,
@@ -448,7 +446,7 @@ class Sens_page extends State<SensPage> {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 8), // Add some spacing between the containers
           Row(
             children: [
               SizedBox(
@@ -467,21 +465,19 @@ class Sens_page extends State<SensPage> {
                             fontWeight: FontWeight.w600, fontSize: 15.0),
                       ),
                     ),
-
+                    //viewing the reached total numbers of trees
                     SizedBox(
                       width: 185,
                       height: 50,
                       child: Container(
                         decoration: BoxDecoration(
                           color: Color.fromARGB(255, 23, 178, 41),
-                          borderRadius:
-                              BorderRadius.circular(30), //border corner radius
+                          borderRadius: BorderRadius.circular(30),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey
-                                  .withOpacity(0.5), //color of shadow
-                              spreadRadius: 5, //spread radius
-                              blurRadius: 7, // blur radius
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
                               offset: Offset(0, 2),
                             ),
                           ],
@@ -493,8 +489,7 @@ class Sens_page extends State<SensPage> {
                             style: const TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 15.0,
-                              color: Colors
-                                  .white, // Optionally change the text color
+                              color: Colors.white,
                             ),
                           ),
                         ),
@@ -525,6 +520,8 @@ class Sens_page extends State<SensPage> {
   }
 }
 
+//function to compute the total LoS
+
 int _computeLoS(
     int dailySteps, int dailyDistance, int dailyActivitytime, int total) {
   // Defining of weights
@@ -533,8 +530,6 @@ int _computeLoS(
   double distW = 0.005;
   double timeW = 0.02;
 
-  // int malus = -50; //for example
-
   // as a sum of int, round is not necessary (for now BUT in the future...)
   num weightedSum = total * ansW +
       dailySteps * stepsW +
@@ -542,7 +537,7 @@ int _computeLoS(
       dailyActivitytime * timeW;
   int result = weightedSum.toInt();
 
-  // if you didn't recorded anything, you'll get a malus
+  // if you didn't recorded anything, you'll get a 0
   if (result == 0) {
     return result;
   }
@@ -552,12 +547,11 @@ int _computeLoS(
   }
 }
 
+//function to calculate the sum of the reached Level Of Suistainbiltity that were stored in DB
 double _reachedLoS(List<Achievements> data) {
-  // basically the sum of allll the LoS recorded by the user
   double out = 0;
   for (int i = 0; i <= data.length - 1; i++) {
     out += data[i].levelOfSustainability;
-    
   }
   out = out / 25000.0;
   return out;

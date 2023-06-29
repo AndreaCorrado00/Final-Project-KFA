@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_project/main.dart';
 import 'package:my_project/screens/AboutThisApp.dart';
-import 'package:my_project/screens/LoginPage.dart';
 import 'package:my_project/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +12,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
+  //initialize the value of Tree and LoS
   var Trees;
   double LoS = 0.0;
 
@@ -31,6 +31,7 @@ class ProfilePageState extends State<ProfilePage> {
           backgroundColor: Constants.primaryColor,
           title: const Text('Profile'),
         ),
+        //drawer for : logout and about this app
         drawer: Drawer(
           backgroundColor: Constants.secondaryColor,
           child: Column(
@@ -85,6 +86,8 @@ class ProfilePageState extends State<ProfilePage> {
             ],
           ),
         ),
+        //end Drawer
+
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         body: ListView(
           children: <Widget>[
@@ -92,6 +95,7 @@ class ProfilePageState extends State<ProfilePage> {
               height: 250,
               decoration: const BoxDecoration(
                 image: DecorationImage(
+                  //image for background
                   image: NetworkImage(
                       'https://img.freepik.com/free-vector/green-trees-leaves-flat-icons-set-oak-aspen-linden-maple-chestnut-clover-plants-isolated-vector-illustration_1284-3022.jpg?w=740&t=st=1684410201~exp=1684410801~hmac=f2643f557b94232a485bd203a769a09ad29aab8c4cb127f98c4fd6bb9fc54341'),
                   fit: BoxFit.cover,
@@ -107,6 +111,7 @@ class ProfilePageState extends State<ProfilePage> {
                       CircleAvatar(
                         backgroundColor: Colors.white70,
                         minRadius: 60.0,
+                        //image for avatar
                         child: CircleAvatar(
                           radius: 50.0,
                           backgroundImage: NetworkImage(
@@ -118,9 +123,10 @@ class ProfilePageState extends State<ProfilePage> {
                   SizedBox(
                     height: 30,
                   ),
+                  //user name
                   Text(
                     'Andrea Corrado',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 35,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 33, 92, 33),
@@ -136,6 +142,8 @@ class ProfilePageState extends State<ProfilePage> {
                 ],
               ),
             ),
+
+            //showing the current number of Trees and LoS: stored in sp
             Row(
               children: <Widget>[
                 Expanded(
@@ -208,11 +216,12 @@ class ProfilePageState extends State<ProfilePage> {
                 ),
               ],
             ),
+            //showing some information about the user: used device,email ...
             Container(
-              child: Column(
+              child: const Column(
                 children: <Widget>[
                   ListTile(
-                    title: const Text(
+                    title: Text(
                       'Email',
                       style: TextStyle(
                         color: Constants.secondaryColor,
@@ -220,14 +229,14 @@ class ProfilePageState extends State<ProfilePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: const Text(
+                    subtitle: Text(
                       'andrea.corrado00@gmail.com',
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
-                  const Divider(),
+                  Divider(),
                   ListTile(
-                    title: const Text(
+                    title: Text(
                       'Your device',
                       style: TextStyle(
                         color: Constants.secondaryColor,
@@ -235,14 +244,14 @@ class ProfilePageState extends State<ProfilePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: const Text(
+                    subtitle: Text(
                       'Amazfit GTS (2020)',
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
-                  const Divider(),
+                  Divider(),
                   ListTile(
-                    title: const Text(
+                    title: Text(
                       'Password',
                       style: TextStyle(
                         color: Constants.secondaryColor,
@@ -250,14 +259,14 @@ class ProfilePageState extends State<ProfilePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: const Text(
+                    subtitle: Text(
                       '******',
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
-                  const Divider(),
+                  Divider(),
                   ListTile(
-                    title: const Text(
+                    title: Text(
                       'Connected services',
                       style: TextStyle(
                         color: Constants.secondaryColor,
@@ -265,7 +274,7 @@ class ProfilePageState extends State<ProfilePage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    subtitle: const Text(
+                    subtitle: Text(
                       'Strava,Komoot, ...',
                       style: TextStyle(fontSize: 18),
                     ),
@@ -279,6 +288,7 @@ class ProfilePageState extends State<ProfilePage> {
     );
   }
 
+// funcion to logout
   void _OnLogoutTapConfirm(BuildContext context) {
     Widget continueButton = TextButton(
       child: const Text("Continue"),
@@ -286,7 +296,7 @@ class ProfilePageState extends State<ProfilePage> {
         final userPreferences = await SharedPreferences.getInstance();
         await userPreferences.setBool('Remember_login', false);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) =>MyApp()));
+            context, MaterialPageRoute(builder: (context) => MyApp()));
       },
       style: Constants.TextButtonStyle_Alert,
     );
@@ -305,6 +315,7 @@ class ProfilePageState extends State<ProfilePage> {
       },
     );
   }
+  //function to get the number of trees and LoS stored in the sp
 
   Future<void> getTreesLoSValue() async {
     final sp = await SharedPreferences.getInstance();

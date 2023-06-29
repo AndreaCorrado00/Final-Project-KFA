@@ -387,8 +387,8 @@ void _OnLogoutTapConfirm(BuildContext context) {
   Widget continueButton = TextButton(
     child: Text("Continue"),
     onPressed: () async {
-      final user_preferences = await SharedPreferences.getInstance();
-      await user_preferences.setBool('Rememeber_login', false);
+      final sp = await SharedPreferences.getInstance();
+        sp.setBool('isLoggedIn', false);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => MyApp()));
     },
@@ -549,7 +549,7 @@ Future _getDistance(today) async {
                 decodedResponse['data']['data'][i])
             .getValue());
       } //for
-      double out = distance_data.reduce((a, b) => a + b) / 100; //udm: [m]
+      double out = distance_data.reduce((a, b) => a + b) / 100000; //udm: [m]
       return out.toInt();
     } //if
     else {
@@ -684,7 +684,7 @@ Future _getWeekDistance(String startDate, String endDate) async {
               .getValue());
         }
         double dayDist =
-            dailyDistance.reduce((a, b) => a + b) / 100.toInt(); //udm: [m]
+            dailyDistance.reduce((a, b) => a + b) / 100000.toInt(); //udm: [m]
         stepsDistancedata[decodedResponse['data'][i]['date']] = dayDist.toInt();
         //stepsDistancedata.add(dayDist);
       }

@@ -59,7 +59,7 @@ class BarGraph extends StatelessWidget{
             borderRadius: BorderRadius.circular(60),
             backDrawRodData: BackgroundBarChartRodData(
               show: true,
-              toY: 1,
+              toY: 0.001,
               color: Color.fromARGB(255, 94, 61, 12)
             ),
           ),

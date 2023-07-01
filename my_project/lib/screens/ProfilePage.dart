@@ -116,6 +116,7 @@ class ProfilePageState extends State<ProfilePage> {
                           radius: 50.0,
                           backgroundImage: NetworkImage(
                               'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png'),
+                              
                         ),
                       ),
                     ],
@@ -125,7 +126,7 @@ class ProfilePageState extends State<ProfilePage> {
                   ),
                   //user name
                   Text(
-                    'Andrea Corrado',
+                    'Giovanni Gradenigo',
                     style: TextStyle(
                       fontSize: 35,
                       fontWeight: FontWeight.bold,

@@ -29,6 +29,7 @@ class Sens_page extends State<SensPage> {
   double FLoS = 0.0;
   var Trees = 0;
   var LoS = 0;
+  final th = 500;
 
 //check if the date is changed or not
   Future<bool> _newDataReady(String today) async {
@@ -357,11 +358,11 @@ class Sens_page extends State<SensPage> {
 
                         //store and update the number of trees, PS : to be used later
                         Future<void> updateTrees() async {
-                          Trees = FLoS ~/
-                              0.01; //every 1% we have a new planted tree
+                          Trees = FLoS ~/ th;
+                              //0.01; //every 1% we have a new planted tree
                           final sp = await SharedPreferences.getInstance();
                           sp.setInt('trees', Trees);
-                          sp.setDouble('FLoS', FLoS);
+                          sp.setDouble('FLoS', ((FLoS-th*Trees)/th));
                         }
 
                         updateTrees();
@@ -389,9 +390,9 @@ class Sens_page extends State<SensPage> {
                             radius: 80.0,
                             lineWidth: 12.0,
                             animation: true,
-                            percent: FLoS,
+                            percent: ((FLoS-th*Trees)/th),
                             center: Text(
-                              '${(FLoS * 100).toStringAsFixed(2)}%',
+                              '${(((FLoS-th*Trees)/th) * 100).toStringAsFixed(2)}%',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 20.0),
                             ),
@@ -553,6 +554,6 @@ double _reachedLoS(List<Achievements> data) {
   for (int i = 0; i <= data.length - 1; i++) {
     out += data[i].levelOfSustainability;
   }
-  out = out / 25000.0;
+  //out = out / 25000.0;
   return out;
 }

@@ -549,7 +549,7 @@ Future _getDistance(today) async {
                 decodedResponse['data']['data'][i])
             .getValue());
       } //for
-      double out = distance_data.reduce((a, b) => a + b) / 100000; //udm: [m]
+      double out = distance_data.reduce((a, b) => a + b) / 100000; //udm: [km]
       return out.toInt();
     } //if
     else {
@@ -684,7 +684,7 @@ Future _getWeekDistance(String startDate, String endDate) async {
               .getValue());
         }
         double dayDist =
-            dailyDistance.reduce((a, b) => a + b) / 100000.toInt(); //udm: [m]
+            dailyDistance.reduce((a, b) => a + b) / 100000.toInt(); //udm: [km]
         stepsDistancedata[decodedResponse['data'][i]['date']] = dayDist.toInt();
         //stepsDistancedata.add(dayDist);
       }

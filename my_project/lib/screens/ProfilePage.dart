@@ -116,7 +116,6 @@ class ProfilePageState extends State<ProfilePage> {
                           radius: 50.0,
                           backgroundImage: NetworkImage(
                               'https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-Vector-PNG-Pic.png'),
-                              
                         ),
                       ),
                     ],
@@ -231,7 +230,7 @@ class ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     subtitle: Text(
-                      'andrea.corrado00@gmail.com',
+                      'giovanni.gradenigo@gmail.com',
                       style: TextStyle(fontSize: 18),
                     ),
                   ),

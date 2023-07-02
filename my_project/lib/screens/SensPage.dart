@@ -139,7 +139,7 @@ class Sens_page extends State<SensPage> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-// initialize the question values after clicking on cancel
+                // initialize the question values after clicking on cancel
                 setState(() {
                   question1Value = null;
                   question2Value = null;
@@ -358,11 +358,11 @@ class Sens_page extends State<SensPage> {
 
                         //store and update the number of trees, PS : to be used later
                         Future<void> updateTrees() async {
-                          Trees = FLoS ~/ th;
-                              //0.01; //every 1% we have a new planted tree
+                          Trees = FLoS ~/
+                              th; //diveded by threshold to get trees number
                           final sp = await SharedPreferences.getInstance();
                           sp.setInt('trees', Trees);
-                          sp.setDouble('FLoS', ((FLoS-th*Trees)/th));
+                          sp.setDouble('FLoS', ((FLoS - th * Trees) / th)); //
                         }
 
                         updateTrees();
@@ -390,9 +390,9 @@ class Sens_page extends State<SensPage> {
                             radius: 80.0,
                             lineWidth: 12.0,
                             animation: true,
-                            percent: ((FLoS-th*Trees)/th),
+                            percent: ((FLoS - th * Trees) / th),
                             center: Text(
-                              '${(((FLoS-th*Trees)/th) * 100).toStringAsFixed(2)}%',
+                              '${(((FLoS - th * Trees) / th) * 100).toStringAsFixed(2)}%',
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 20.0),
                             ),
@@ -554,6 +554,5 @@ double _reachedLoS(List<Achievements> data) {
   for (int i = 0; i <= data.length - 1; i++) {
     out += data[i].levelOfSustainability;
   }
-  //out = out / 25000.0;
   return out;
 }

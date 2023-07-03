@@ -15,7 +15,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 // Using DateTime to read the date
 DateTime _today = DateTime.now();
-//DateTime _yesterday=DateTime.now().subtract(Duration(days:1));
+
 String _today_str = DateFormat.d().format(_today);
 int today = int.parse(_today_str);
 int cur_id = today % Cur_ln;
@@ -36,19 +36,12 @@ class TipsPageState extends State<TipsPage> {
   //-------------- Index for the state
   int _selectedIndex = 1;
   
-
-
-  // void _changeOpacity() {
-  //   setState(() => _opacityLevel = _opacityLevel == 0 ? 0.0 : 1.0);
-  // }
   
 
   static const routename = 'TipsPage';
   @override
   Widget build(BuildContext context) {
-    
-    // Future<List<int>> today_id=_todayIndex(today);
-    // Future<int> cur_id = today_id[];
+
 
     print('${TipsPageState.routename} built');
     return Scaffold(
@@ -314,74 +307,12 @@ class TipsPageState extends State<TipsPage> {
           ),),
         ],
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: const <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //       label: 'Home',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.tips_and_updates),
-      //       label: 'Advice and Tips',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.insights),
-      //       label: 'Statistics',
-      //     ),
-      //   ],
-      //   currentIndex: _selectedIndex,
-      //   backgroundColor: Constants.primaryColor,
-      //   selectedItemColor: Constants.secondarylightColor,
-      //   selectedFontSize: 14.0,
-      //   type: BottomNavigationBarType.fixed,
-      //   onTap: (int index) {
-      //     switch (index) {
-      //       case 0:
-      //         Navigator.of(context).pushReplacement(MaterialPageRoute(
-      //             builder: (context) => const HomeScreen()));
-      //       break;
-      //       case 1:
-      //         if (index != 1) {
-      //           Navigator.of(context).pushReplacement(
-      //               MaterialPageRoute(builder: (context) => const TipsPage()));
-      //         } else {
-      //           print('still in the Statistics page ');
-      //         }
-
-
-      //       break;
-      //       case 2:
-      //         Navigator.of(context).pushReplacement(MaterialPageRoute(
-      //             builder: (context) => const StatisticsPage()));
-
-      //         // Probably in this case you have to put an if: if the index is not pointing the home and you are in the case of the home, return to home
-      //         break;
-      //     }
-
-      //     //_changeOpacity();
-
-      //     setState(
-      //       () {
-      //         _selectedIndex = index;
-             
-      //       },
-      //     );
-      //   },
-      // ),
 
     );
   }
 
 void _OnLogoutTapConfirm(BuildContext context)  {
-    // set up the buttons
-
-    // Widget cancelButton = TextButton(
-    //   child: Text("Cancel"),
-    //   onPressed: ()  {
-    //     Navigator.of(context).pushReplacement(
-    //         MaterialPageRoute(builder: (context) => const TipsPage()));},// Must be changed to point at the current page 
-    //   style: Constants.TextButtonStyle_Alert,
-    // );
+    
     Widget continueButton = TextButton(
       child: Text("Continue"),
       onPressed: () async {
